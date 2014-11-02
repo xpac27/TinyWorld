@@ -1,21 +1,6 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
-void setupOpenGL()
-{
-    glShadeModel(GL_SMOOTH);
-    glCullFace(GL_FRONT);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_STENCIL_TEST);
-    glDepthMask(GL_FALSE);
-    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-    glClearDepth(GL_ONE);
-    glClearStencil(GL_ZERO);
-    glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-}
-
 void setupWindow(float width, float height)
 {
     float sceneWidth = 4.f;
@@ -43,35 +28,47 @@ void setupWindow(float width, float height)
     glLoadIdentity();
 }
 
+#include "Application.h"
+
+using namespace sf;
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "WIP", (sf::Style::Close | sf::Style::Resize));
-    sf::Clock clock;
+    RenderWindow window(VideoMode(800, 600), "WIP", (Style::Close | Style::Resize));
 
-    setupOpenGL();
+    glShadeModel(GL_SMOOTH);
+    glCullFace(GL_FRONT);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDepthMask(GL_FALSE);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glClearDepth(GL_ONE);
+    glClearStencil(GL_ZERO);
+    glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+
     setupWindow(800, 600);
 
-    // Game game;
+    Application application;
+    Clock clock;
 
     while (window.isOpen())
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        if (Keyboard::isKeyPressed(Keyboard::Escape))
             window.close();
 
-        sf::Event Event;
-        while (window.pollEvent(Event))
+        Event event;
+        while (window.pollEvent(event))
         {
-            if (Event.type == sf::Event::Closed)    window.close();
-            if (Event.type == sf::Event::Resized)   setupWindow(Event.size.width, Event.size.height);
+            if (event.type == Event::Closed)    window.close();
+            if (event.type == Event::Resized)   setupWindow(event.size.width, event.size.height);
         }
 
         glLoadIdentity();
-
-        // game.update(clock.getElapsedTime().asSeconds());
-        clock.restart();
-
-        // game.draw();
-
+        application.update(clock.getElapsedTime().asSeconds());
+        application.draw();
         window.display();
+        clock.restart();
     }
 }
