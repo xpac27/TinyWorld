@@ -1,62 +1,95 @@
-module Entity
+COMPONENT_TYPE_A = 0
+COMPONENT_TYPE_B = 1
 
-  @@entities = []
+class ComponentA
 
-  def self.create
-    id = @@entities.size
-    @@entities << id
-    puts '- Created entity #' << id.to_s
-    return id
-  end
+  @@type = COMPONENT_TYPE_A
 
-  def self.destroy id
-    puts '- Destroyed entity #' << id.to_s
-  end
+  def self.type; @@type; end
+  def type;      @@type; end
 
-  def self.add_component(id, component)
-    puts '- Add component ' << component.name << ' to entity #' << id.to_s
-  end
+  attr_accessor :x, :y
 
-  def self.del_component(id, component)
-    puts '- Delete component ' << component.name << ' from entity #' << id.to_s
-  end
-
-  def self.bind_system_to_component system, components
+  def initialize(x = 0, y = 0)
+    @x = x
+    @y = y
   end
 end
 
-class SystemA
+class ComponentB
 
-  Entity.bind_system_to_component self, [ComponentA]
-end
+  @@type = COMPONENT_TYPE_B
 
-class SystemB
+  def self.type; @@type; end
+  def type;      @@type; end
 
-  Entity.bind_system_to_component self, [ComponentA, ComponentB]
-end
+  attr_accessor :life
 
-class Component
-
-  def name
-    'Unnamed component'
+  def initialize(life = 100)
+    @life = life
   end
 end
 
-class ComponentA < Component
 
-  def name
-    'A'
+class World
+
+  def initialize
+    @entities = []
+    @components = [nil]
+    @entity_type_components = []
+  end
+
+  def add_entity
+    puts "entity ##{@entities.size} created"
+    @entities << @entities.size
+    @entity_type_components << [0, 0]
+    return @entities.size - 1
+  end
+
+  def add_entity_component e, c
+    puts "component #{c.type} added to entity ##{e}"
+    @components << c
+    @entity_type_components[e][c.type] = @components.size - 1
+    # Add e to the systems using c.type component
+  end
+
+  def get_entity_component e, c
+    puts "getting comment #{c.type} of entity ##{e}"
+    @components[@entity_type_components[e][c.type]]
+  end
+
+  def del_entity_component e, c
+    puts "component #{c.type} removed from entity ##{e}"
+    @entity_type_components[e][c.type] = nil
+    @components[@entity_type_components[e][c.type]] = nil
+  end
+
+  def del_entity e
+    puts "entity ##{e} deleted"
+    @components[@entity_type_components[e][0]] = nil
+    @components[@entity_type_components[e][1]] = nil
+    # Remove e to the systems using c.type component
   end
 end
 
-class ComponentB < Component
 
-  def name
-    'B'
-  end
-end
 
-e1 = Entity.create
-Entity.add_component(e1, ComponentA.new)
-Entity.add_component(e1, ComponentB.new)
+w = World.new
 
+e1 = w.add_entity
+
+w.add_entity_component e1, ComponentA.new(10, 20)
+w.add_entity_component e1, ComponentB.new(90)
+
+w.get_entity_component e1, ComponentA
+w.get_entity_component e1, ComponentB
+
+w.del_entity_component e1, ComponentA
+w.del_entity_component e1, ComponentB
+
+w.del_entity e1
+
+
+# puts ComponentB.type
+# puts ComponentB.new(90).class.type
+# puts ComponentB.new(90).type
