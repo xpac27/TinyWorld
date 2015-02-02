@@ -3,7 +3,7 @@ all: configure compile
 
 configure:
 	@echo ""; echo "[1;33m-- Configuring build[0m"
-	cd build && cmake .
+	cd build && cmake -DCMAKE_BUILD_TYPE=Debug .
 
 compile:
 	@echo ""; echo "[1;33m-- Compiling sources[0m"
