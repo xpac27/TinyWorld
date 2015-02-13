@@ -6,13 +6,16 @@ configure:
 	mkdir -p build-debug
 	cd build-debug && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ../cmake
 
+report:
+	@echo ""; echo "[1;33m-- Compile and create report[0m"
+	mkdir -p build-analyze reports
+	cd build-analyze && scan-build cmake ../cmake
+	scan-build -o reports make -C build-analyze
+	open reports/`ls reports | tail -1`/index.html
+
 compile:
 	@echo ""; echo "[1;33m-- Compiling sources[0m"
 	make -C build-debug
-
-toto:
-	mkdir -p build-analyze reports
-	cd build-analyze && cmake -DCMAKE_CXX_COMPILER=c++-analyzer -DCMAKE_C_COMPILER=ccc-analyzer ../cmake
 
 clean:
 	@echo ""; echo "[1;33m-- Removing all build data[0m"

@@ -10,9 +10,6 @@ set (EXECUTABLE_NAME "wip")
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 
 if (USE_CLANG)
-    # compiler
-    set (CMAKE_C_COMPILER   "clang")
-    set (CMAKE_CXX_COMPILER "clang++")
     # flags
     set (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
     set (CMAKE_CXX_FLAGS_DEBUG          "-g")
