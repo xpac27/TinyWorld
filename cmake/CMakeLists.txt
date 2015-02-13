@@ -1,0 +1,37 @@
+cmake_minimum_required (VERSION 2.8)
+
+project (wip)
+option  (USE_CLANG "build application with clang" ON)
+
+# configurations
+set (EXECUTABLE_NAME "wip")
+
+# CMake extra
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
+
+if (USE_CLANG)
+    # compiler
+    set (CMAKE_C_COMPILER   "clang")
+    set (CMAKE_CXX_COMPILER "clang++")
+    # flags
+    set (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
+    set (CMAKE_CXX_FLAGS_DEBUG          "-g")
+    set (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
+    set (CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
+    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+    # tools
+    set (CMAKE_TOOLCHAIN_PREFIX "llvm-") 
+endif()
+
+# get all *.cpp files recursively
+file (GLOB_RECURSE source_files ../src/*.cpp)
+add_executable (${EXECUTABLE_NAME} ${source_files})
+
+# libraries
+find_package (SFML 2 REQUIRED graphics window system)
+find_package (OpenGL REQUIRED)
+if (SFML_FOUND AND OPENGL_FOUND)
+  include_directories   (${SFML_INCLUDE_DIR})
+  include_directories   (${OPENGL_INCLUDE_DIR})
+  target_link_libraries (${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARIES})
+endif()
