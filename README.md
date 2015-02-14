@@ -1,27 +1,50 @@
 ## Requirements
 
-###### SFML
+* **SMFL** ([website](http://www.sfml-dev.org/tutorials/2.2/))
+* **CMake** ([website](http://www.cmake.org/))
+* **Clang Static Analyzer** ([website](http://clang-analyzer.llvm.org/index.html)) optional
 
-You need to install SMFL 2.2. There are great tutorials on how to install it on the [official website](http://www.sfml-dev.org/tutorials/2.2/).
+#### On Mac OSX
 
-###### CMake
+You can use [homebrew](http://mxcl.github.io/homebrew/) with the following command:
 
-CMake is used to compile the project. You can find information on how to get CMake on the [official website](http://www.cmake.org/). On MacOSX you can use [homebrew](http://mxcl.github.io/homebrew/) and  run `brew install cmake`.
+    brew install sfml cmake llvm
 
-###### LLVM
+In order to use Clang Static Analyzer you need to extend your PATH:
 
-CLang's analyzer scan-build is used to generate reports. You can find information on how to install scan-build on the [official website](http://clang-analyzer.llvm.org/index.html).
+    export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
 
-On MacOSX you can use [homebrew](http://mxcl.github.io/homebrew/) and  run `brew install llvm`. In order to use this version of llvm you need to set the following:
+Optionaly, to use clang as default compiler you can export those variables:
 
     export CC="/usr/local/Cellar/llvm/3.5.1/bin/clang"
     export CXX="/usr/local/Cellar/llvm/3.5.1/bin/clang++ -stdlib=libc++"
     export CXXFLAGS="$CXXFLAGS -nostdinc++ -I/usr/local/Cellar/llvm/3.5.1/include"
     export LDFLAGS="$LDFLAGS -L/usr/local/Cellar/llvm/3.5.1/lib"
-    export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
 
 ## Basic usage
 
-Running the `make` command will configure and compile the application. You can the start the generated executable file located in the build folder: `./build/wip`.
+You could type `make` and the application should configure, compile and run \o/
 
-Running `make report` will generate a static analysis report.
+Optionaly, you could run `make configure` once and use the commands above.
+
+#### Compile
+
+    make compile
+
+This will compile the application.
+
+#### Test
+
+    make tests
+
+This will compile and run the tests.
+
+#### Report
+
+    make report
+
+This will compile the application and run the static analyzer on it (which could take some time).
+
+    make report-open
+
+This will open the latest report.

@@ -1,26 +1,43 @@
-all: configure compile
-.PHONY: all
+all: configure compile run
+print = $(MAKE) MESSAGE=$(1) print
+print:
+	@echo ""; echo "[1;33m-- $(MESSAGE)[0m"
+
+.PHONY: all, print
 
 configure:
-	@echo ""; echo "[1;33m-- Configuring build[0m"
-	mkdir -p build-debug
-	cd build-debug && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ../cmake
-
-report:
-	@echo ""; echo "[1;33m-- Compile and create report[0m"
-	mkdir -p build-analyze reports
-	cd build-analyze && scan-build cmake ../cmake
-	scan-build -o reports make -C build-analyze
-	open reports/`ls reports | tail -1`/index.html
+	$(call print,"Configuring builds")
+	mkdir -p build && cd build && cmake ..
 
 compile:
-	@echo ""; echo "[1;33m-- Compiling sources[0m"
-	make -C build-debug
-
-clean:
-	@echo ""; echo "[1;33m-- Removing all build data[0m"
-	rm -rf build-*/*
+	$(call print,"Compiling sources")
+	make app -C build
 
 run:
-	@echo ""; echo "[1;33m-- Running the app[0m"
-	./build-debug/wip
+	$(call print,"Running the app")
+	./build/app/app
+
+tests:
+	$(call print,"Compiling tests")
+	make test -C build
+	$(call print,"Running tests")
+	./build/test/test
+
+report:
+	$(call print,"Compiling static analysis report")
+	scan-build -o reports make report -C build
+
+report-open:
+	$(call print,"Open the latest report")
+	open reports/`ls reports | tail -1`/index.html
+
+clean:
+	$(call print,"Compiling sources")
+	make clean -C build
+
+reset:
+	$(call print,"Removing all build data")
+	rm -rf build/app
+	rm -rf build/reports
+	rm -rf build/test
+	rm build/Makefile

@@ -1,4 +1,6 @@
 .*
 !.gitignore
-build-*
-reports
+build/*
+!build/modules
+reports/*
+!reports/CMakeLists.txt
