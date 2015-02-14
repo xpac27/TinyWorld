@@ -11,3 +11,4 @@ void Application::draw()
 void Application::update(float time)
 {
 }
+

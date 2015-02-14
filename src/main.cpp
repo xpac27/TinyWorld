@@ -1,34 +1,9 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
-void setupWindow(float width, float height)
-{
-    float sceneWidth = 4.f;
-    float sceneHeight = 3.f;
-    if (width > height)
-    {
-        sceneWidth = 100.f;
-        sceneHeight = 100.f * (height / width);
-    }
-    else if (width < height)
-    {
-        sceneWidth = 100.f * (width / height);
-        sceneHeight = 100.f;
-    }
-    else
-    {
-        sceneWidth = 100.f;
-        sceneHeight = 100.f;
-    }
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(sceneWidth / -2.f, sceneWidth / 2.f, sceneHeight / 2.f, sceneHeight / -2.f, 0.f, 1.f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
 #include "Application.h"
+
+void setupWindow(unsigned int width, unsigned int height);
 
 using namespace sf;
 
@@ -72,3 +47,31 @@ int main()
         clock.restart();
     }
 }
+
+void setupWindow(unsigned int width, unsigned int height)
+{
+    float sceneWidth = 4.f;
+    float sceneHeight = 3.f;
+    if (width > height)
+    {
+        sceneWidth = 100.f;
+        sceneHeight = 100.f * (height / width);
+    }
+    else if (width < height)
+    {
+        sceneWidth = 100.f * (width / height);
+        sceneHeight = 100.f;
+    }
+    else
+    {
+        sceneWidth = 100.f;
+        sceneHeight = 100.f;
+    }
+    glViewport(0, 0, GLsizei(width), GLsizei(height));
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(sceneWidth / -2.f, sceneWidth / 2.f, sceneHeight / 2.f, sceneHeight / -2.f, 0.f, 1.f);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+

@@ -1,8 +1,8 @@
 ## Requirements
 
-###### SFML 2.1
+###### SFML
 
-You need to install SMFL 2.1. There are great tutorials on how to install it on the [official website](http://www.sfml-dev.org/tutorials/2.1/).
+You need to install SMFL 2.2. There are great tutorials on how to install it on the [official website](http://www.sfml-dev.org/tutorials/2.2/).
 
 ###### CMake
 
