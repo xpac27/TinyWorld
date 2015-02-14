@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 
 project (wip)
-option  (USE_CLANG "build application with clang" ON)
 
 # configurations
 set (EXECUTABLE_NAME "wip")
@@ -9,16 +8,8 @@ set (EXECUTABLE_NAME "wip")
 # CMake extra
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 
-if (USE_CLANG)
-    # flags
-    set (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
-    set (CMAKE_CXX_FLAGS_DEBUG          "-g")
-    set (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
-    set (CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
-    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-    # tools
-    set (CMAKE_TOOLCHAIN_PREFIX "llvm-") 
-endif()
+# compiler flags
+set (CMAKE_CXX_FLAGS "-Weverything -std=c++11")
 
 # get all *.cpp files recursively
 file (GLOB_RECURSE source_files ../src/*.cpp)
