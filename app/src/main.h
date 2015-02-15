@@ -33,69 +33,99 @@ namespace Component
 
 // --------------------------
 
-struct Entity
+class Entity
 {
-    unsigned int componentIndexes[3] = {0};
+    public:
+        Entity(unsigned int i) :index(i){}
+
+        unsigned int index = 0;
+        int componentIndexes[3] = {-1};
 };
+
+// --------------------------
+
+class System
+{
+    public:
+        bool hasComponentType(Component::Type type) const;
+        void registerEntity(Entity* entity);
+        void removeEntity(Entity* entity);
+
+        // virtual void update() = 0;
+        // virtual ~System();
+
+    protected:
+        const unsigned int componentTypes = 0;
+
+    private:
+        std::vector<Entity*> entities;
+};
+
+class System_1 : public System
+{
+    // public:
+    //     void update();
+
+    protected:
+        const unsigned int componentTypes = Component::Mask::POSITION;
+};
+
+class System_2 : public System
+{
+    // public:
+    //     void update();
+
+    protected:
+        const unsigned int componentTypes = Component::Mask::POSITION | Component::Mask::VISIBILITY;
+};
+
+// --------------------------
 
 class EntitiesManager
 {
     public:
-        unsigned int addEntity();
-        // void deleteEntity(unsigned int entityIndex);
-        void addComponentToEntity(unsigned int entityIndex, Component::Type componentType);
-        // void removeComponentFromEntity(unsigned int entityIndex, Component::Type componentType);
+        Entity* addEntity();
+
+        void addComponentToEntity(Entity* entity, Component::Type componentType);
+        void deleteComponentFromEntity(Entity* entity, Component::Type componentType);
+        void deleteEntity(Entity* entity);
 
     private:
-        unsigned int totalEntities = 0;
-        // unsigned int totalComponents[3] = {0};
+        System *systems[2]{
+            new System_1(),
+            new System_2()};
 
         std::vector<Entity> entities;
 
         std::vector<Component::Position> positionComponents;
         std::vector<Component::Life> lifeComponents;
         std::vector<Component::Visibility> visibilityComponents;
+
+        unsigned int addPositionComponent();
+        unsigned int addVisibilityComponent();
+        unsigned int addLifeComponent();
+
+        void deletePositionComponent(unsigned int index);
+        void deleteVisibilityComponent(unsigned int index);
+        void deleteLifeComponent(unsigned int index);
+
+        void deleteComponent(Component::Type componentType, unsigned int index);
+        void deleteAllComponentsFromEntity(Entity* entity);
+
+        void registerEntity(Entity* entity, Component::Type componentType);
+        void unregisterEntity(Entity* entity, Component::Type componentType);
 };
-
-
-
-// --------------------------
-
-// class System
-// {
-//     public:
-//         unsigned int componentTypes = 0;
-//
-//     protected:
-//         unsigned int entities[20] {0};
-//         unsigned int totalEntities = 0;
-// };
-//
-// class System_1 : public System
-// {
-//     public:
-//         unsigned int componentTypes = Component::Mask::POSITION;
-// };
-//
-// class System_2 : public System
-// {
-//     public:
-//         unsigned int componentTypes = Component::Mask::POSITION | Component::Mask::VISIBILITY;
-// };
 
 // --------------------------
 
 class Game
 {
     public:
-        Game() :
-            // systems{new System_1(), new System_2()}, 
-            entityManager{EntitiesManager()} {}
+        Game() :entityManager{EntitiesManager()} {}
 
         void start();
 
     private:
-        // System *systems[2];
         EntitiesManager entityManager;
 };
 
