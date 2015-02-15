@@ -161,11 +161,11 @@ bool System::useComponent(Component::Type componentType) const
     {
         // TODO use template
         case Component::Type::position: 
-            return componentTypes & mask(Component::Index::position);
+            return componentTypes & mask(as_int(Component::Type::position));
         case Component::Type::life: 
-            return componentTypes & mask(Component::Index::life);
+            return componentTypes & mask(as_int(Component::Type::life));
         case Component::Type::visibility: 
-            return componentTypes & mask(Component::Index::visibility);
+            return componentTypes & mask(as_int(Component::Type::visibility));
     }
 }
 void System::registerEntity(unsigned int entity)
@@ -219,16 +219,16 @@ void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::
     {
         // TODO use template
         case Component::Type::position: 
-            deletePositionComponent(entitiesComponentsIndex.at(entity).at(Component::Index::position)); 
-            entitiesComponentsIndex.at(entity).at(Component::Index::position) = UINT_MAX;
+            deletePositionComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position))); 
+            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)) = UINT_MAX;
             break;
         case Component::Type::life: 
-            deleteLifeComponent(entitiesComponentsIndex.at(entity).at(Component::Index::life)); 
-            entitiesComponentsIndex.at(entity).at(Component::Index::life) = UINT_MAX;
+            deleteLifeComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life))); 
+            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)) = UINT_MAX;
             break;
         case Component::Type::visibility: 
-            deleteVisibilityComponent(entitiesComponentsIndex.at(entity).at(Component::Index::visibility)); 
-            entitiesComponentsIndex.at(entity).at(Component::Index::visibility) = UINT_MAX;
+            deleteVisibilityComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility))); 
+            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)) = UINT_MAX;
             break;
     }
 
@@ -236,26 +236,23 @@ void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::
     unregisterEntity(entity, componentType);
 }
 
-void EntitiesManager::deleteEntity(unsigned int entity)
+void EntitiesManager::resetEntity(unsigned int entity)
 {
     // Delete all its components
     deleteAllComponentsFromEntity(entity);
-
-    // Delete entity TODO
-    // entity's components references are left in entitiesComponentsIndex...
 }
 
 bool EntitiesManager::hasPositionComponent(unsigned int entity) const
 {
-    return entitiesComponentsIndex.at(entity).at(Component::Index::position) != UINT_MAX;
+    return entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)) != UINT_MAX;
 }
 bool EntitiesManager::hasLifeComponent(unsigned int entity) const
 {
-    return entitiesComponentsIndex.at(entity).at(Component::Index::life) != UINT_MAX;
+    return entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)) != UINT_MAX;
 }
 bool EntitiesManager::hasVisibilityComponent(unsigned int entity) const
 {
-    return entitiesComponentsIndex.at(entity).at(Component::Index::visibility) != UINT_MAX;
+    return entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)) != UINT_MAX;
 }
 
 
@@ -267,17 +264,17 @@ unsigned int EntitiesManager::getEntityCount() const
 Component::Position EntitiesManager::getPositionComponent(unsigned int entity) const
 {
     // TODO throw if component not avialable
-    return positionComponents.at(entitiesComponentsIndex.at(entity).at(Component::Index::position));
+    return positionComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)));
 }
 Component::Life EntitiesManager::getLifeComponent(unsigned int entity) const
 {
     // TODO throw if component not avialable
-    return lifeComponents.at(entitiesComponentsIndex.at(entity).at(Component::Index::life));
+    return lifeComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)));
 }
 Component::Visibility EntitiesManager::getVisibilityComponent(unsigned int entity) const
 {
     // TODO throw if component not avialable
-    return visibilityComponents.at(entitiesComponentsIndex.at(entity).at(Component::Index::visibility));
+    return visibilityComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)));
 }
 
 unsigned int EntitiesManager::addPositionComponent()
@@ -298,15 +295,15 @@ unsigned int EntitiesManager::addLifeComponent()
 
 void EntitiesManager::registerPositionComponent(unsigned int entity, unsigned int componentIndex)
 {
-    entitiesComponentsIndex.at(entity).at(Component::Index::position) = componentIndex;
+    entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)) = componentIndex;
 }
 void EntitiesManager::registerLifeComponent(unsigned int entity, unsigned int componentIndex)
 {
-    entitiesComponentsIndex.at(entity).at(Component::Index::life) = componentIndex;
+    entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)) = componentIndex;
 }
 void EntitiesManager::registerVisibilityComponent(unsigned int entity, unsigned int componentIndex)
 {
-    entitiesComponentsIndex.at(entity).at(Component::Index::visibility) = componentIndex;
+    entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)) = componentIndex;
 }
 
 void EntitiesManager::deletePositionComponent(unsigned int index)

@@ -2,14 +2,14 @@
 #include <array>
 #include <climits>
 
-#define mask(n)  ((1) << (n))
+#define mask(n)        ((1) << (n))
+#define as_int(e)  (int(e))
 
 // --------------------------
 
 namespace Component
 {
     enum class Type { position, life, visibility };
-    enum Index { position, life, visibility };
 
     struct Position
     {
@@ -65,7 +65,7 @@ class System_1 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(Component::Index::position);
+        const unsigned int componentTypes = mask(as_int(Component::Type::position));
 };
 
 class System_2 : public System
@@ -74,7 +74,7 @@ class System_2 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(Component::Index::position) | mask(Component::Index::visibility);
+        const unsigned int componentTypes = mask(as_int(Component::Type::position)) | mask(as_int(Component::Type::visibility));
 };
 
 // --------------------------
@@ -86,7 +86,7 @@ class EntitiesManager
 
         void addComponentToEntity(unsigned int entity, Component::Type componentType);
         void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
-        void deleteEntity(unsigned int entity);
+        void resetEntity(unsigned int entity);
 
         // TODO use template hasComponent<Component::Type>()
         bool hasPositionComponent(unsigned int entity) const;
@@ -111,7 +111,6 @@ class EntitiesManager
         // TODO use the size of the enum instead of harcoded 3
         std::vector<std::array<unsigned int, 3>> entitiesComponentsIndex;
 
-        // TODO use template
         std::vector<Component::Position> positionComponents;
         std::vector<Component::Life> lifeComponents;
         std::vector<Component::Visibility> visibilityComponents;
