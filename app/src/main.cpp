@@ -123,6 +123,35 @@ void Game::start()
     std::cout << "entity #" << e3 << " has component position? " << (entityManager.hasComponent(e3, Component::Type::position) ? "yes" : "no") << std::endl;
     std::cout << "entity #" << e3 << " has component life? " << (entityManager.hasComponent(e3, Component::Type::life) ? "yes" : "no") << std::endl;
     std::cout << "entity #" << e3 << " has component visibility? " << (entityManager.hasComponent(e3, Component::Type::visibility) ? "yes" : "no") << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "entity #" << e1 << ":" << std::endl;
+    Component::debugPosition(entityManager.getPositionComponent(e1));
+
+    std::cout << std::endl;
+    std::cout << "entity #" << e2 << ":" << std::endl;
+    Component::debugPosition(entityManager.getPositionComponent(e2));
+    Component::debugLife(entityManager.getLifeComponent(e2));
+
+    std::cout << std::endl;
+    std::cout << "entity #" << e3 << ":" << std::endl;
+    Component::debugPosition(entityManager.getPositionComponent(e3));
+    Component::debugLife(entityManager.getLifeComponent(e3));
+    Component::debugVisibility(entityManager.getVisibilityComponent(e3));
+}
+
+// --------------------------------------------------------------------------------- SYSTEM
+void Component::debugPosition(Component::Position position)
+{
+    std::cout << "Position (" << position.x << ", " << position.y << ")" << std::endl;
+}
+void Component::debugLife(Component::Life life)
+{
+    std::cout << "Life (" << life.amount << ")" << std::endl;
+}
+void Component::debugVisibility(Component::Visibility visibility)
+{
+    std::cout << "Visibility (" << (visibility.active ? "true" : "false") << ")" << std::endl;
 }
 
 // --------------------------------------------------------------------------------- SYSTEM
@@ -147,15 +176,16 @@ void System::unregisterEntity(unsigned int entity)
 
 unsigned int EntitiesManager::addEntity()
 {
+    // TODO check MAX_UINT > entityCount
     entitiesComponentsIndex.push_back({{}});
-    entitiesComponentsIndex.back().fill(-1);
+    entitiesComponentsIndex.back().fill(UINT_MAX);
     return ++entityCount - 1;
 }
 
 void EntitiesManager::addComponentToEntity(unsigned int entity, Component::Type componentType)
 {
     // Create a new component
-    int componentIndex = 0;
+    unsigned int componentIndex = 0;
     switch (componentType)
     {
         // TODO use template
@@ -177,7 +207,7 @@ void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::
     deleteComponent(componentType, entitiesComponentsIndex.at(entity)[componentType]);
 
     // Remove component's index for this entity
-    entitiesComponentsIndex.at(entity)[componentType] = -1;
+    entitiesComponentsIndex.at(entity)[componentType] = UINT_MAX;
 
     // Check witch system should know about this entity
     unregisterEntity(entity, componentType);
@@ -194,12 +224,25 @@ void EntitiesManager::deleteEntity(unsigned int entity)
 
 bool EntitiesManager::hasComponent(unsigned int entity, Component::Type componentType) const
 {
-    return entitiesComponentsIndex.at(entity)[componentType] != -1;
+    return entitiesComponentsIndex.at(entity)[componentType] != UINT_MAX;
 }
 
 unsigned int EntitiesManager::getEntityCount() const
 {
     return entityCount;
+}
+
+Component::Position EntitiesManager::getPositionComponent(unsigned int entity) const
+{
+    return positionComponents[entitiesComponentsIndex.at(entity)[Component::Type::position]];
+}
+Component::Life EntitiesManager::getLifeComponent(unsigned int entity) const
+{
+    return lifeComponents[entitiesComponentsIndex.at(entity)[Component::Type::life]];
+}
+Component::Visibility EntitiesManager::getVisibilityComponent(unsigned int entity) const
+{
+    return visibilityComponents[entitiesComponentsIndex.at(entity)[Component::Type::visibility]];
 }
 
 unsigned int EntitiesManager::addPositionComponent()
@@ -245,7 +288,7 @@ void EntitiesManager::deleteAllComponentsFromEntity(unsigned int entity)
 {
     for (auto i : entitiesComponentsIndex.at(entity))
     {
-        if (i != -1)
+        if (i != UINT_MAX)
         {
             deleteComponentFromEntity(entity, Component::Type(i));
         }

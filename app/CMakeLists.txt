@@ -12,7 +12,6 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything \
                                 -Wno-c++98-compat \
                                 -Wno-c++98-compat-pedantic \
                                 -Wno-newline-eof \
-                                -Wno-sign-conversion \
                                 -Wno-padded")
 
 # get all *.cpp files recursively

@@ -1,5 +1,6 @@
 #include <vector>
 #include <array>
+#include <climits>
 
 #define mask(n)  ((1) << (n))
 
@@ -11,19 +12,24 @@ namespace Component
 
     struct Position
     {
-        float x = 0.0;
-        float y = 0.0;
+        float x = 1.0;
+        float y = 1.0;
     };
 
     struct Life
     {
-        unsigned int amount = 100;
+        int amount = 123;
     };
 
     struct Visibility
     {
         bool active = true;
     };
+
+    // TODO use template debug<Component::Type>()
+    void debugPosition(Component::Position);
+    void debugLife(Component::Life);
+    void debugVisibility(Component::Visibility);
 }
 
 // --------------------------
@@ -78,6 +84,11 @@ class EntitiesManager
 
         unsigned int getEntityCount() const;
 
+        // TODO use template getComponent<Component::Type>()
+        Component::Position getPositionComponent(unsigned int entity) const;
+        Component::Life getLifeComponent(unsigned int entity) const;
+        Component::Visibility getVisibilityComponent(unsigned int entity) const;
+
     private:
         System *systems[2]{
             new System_1(),
@@ -86,16 +97,19 @@ class EntitiesManager
 
         unsigned int entityCount = 0;
 
-        std::vector<std::array<int, 3>> entitiesComponentsIndex;
+        std::vector<std::array<unsigned int, 3>> entitiesComponentsIndex;
 
+        // TODO use template
         std::vector<Component::Position> positionComponents;
         std::vector<Component::Life> lifeComponents;
         std::vector<Component::Visibility> visibilityComponents;
 
+        // TODO use template
         unsigned int addPositionComponent();
         unsigned int addVisibilityComponent();
         unsigned int addLifeComponent();
 
+        // TODO use template
         void deletePositionComponent(unsigned int index);
         void deleteVisibilityComponent(unsigned int index);
         void deleteLifeComponent(unsigned int index);
