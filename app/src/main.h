@@ -9,7 +9,7 @@
 
 namespace Component
 {
-    enum class Type { position, life, visibility };
+    enum class Type { position, life, visibility, COUNT };
 
     struct Position
     {
@@ -33,7 +33,6 @@ namespace Component
         bool active {true};
     };
 
-    // TODO use template debug<Component::Type>()
     void debugPosition(Component::Position);
     void debugLife(Component::Life);
     void debugVisibility(Component::Visibility);
@@ -88,14 +87,12 @@ class EntitiesManager
         void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
         void resetEntity(unsigned int entity);
 
-        // TODO use template hasComponent<Component::Type>()
-        bool hasPositionComponent(unsigned int entity) const;
-        bool hasLifeComponent(unsigned int entity) const;
-        bool hasVisibilityComponent(unsigned int entity) const;
+        template<Component::Type t> bool hasComponent(unsigned int entity) const;
 
         unsigned int getEntityCount() const;
 
         // TODO use template getComponent<Component::Type>()
+        // we would have to avoid having component lists as member but instead have a components list of lists
         Component::Position getPositionComponent(unsigned int entity) const;
         Component::Life getLifeComponent(unsigned int entity) const;
         Component::Visibility getVisibilityComponent(unsigned int entity) const;
@@ -108,9 +105,9 @@ class EntitiesManager
 
         unsigned int entityCount = 0;
 
-        // TODO use the size of the enum instead of harcoded 3
-        std::vector<std::array<unsigned int, 3>> entitiesComponentsIndex;
+        std::vector<std::array<unsigned int, as_int(Component::Type::COUNT)>> entitiesComponentsIndex;
 
+        // replace by a list of lists array
         std::vector<Component::Position> positionComponents;
         std::vector<Component::Life> lifeComponents;
         std::vector<Component::Visibility> visibilityComponents;
@@ -120,10 +117,7 @@ class EntitiesManager
         unsigned int addVisibilityComponent();
         unsigned int addLifeComponent();
 
-        // TODO use template
-        void registerPositionComponent(unsigned int entity, unsigned int componentIndex);
-        void registerLifeComponent(unsigned int entity, unsigned int componentIndex);
-        void registerVisibilityComponent(unsigned int entity, unsigned int componentIndex);
+        template<Component::Type t> void registerComponent(unsigned int entity, unsigned int componentIndex);
 
         // TODO use template
         void deletePositionComponent(unsigned int index);
