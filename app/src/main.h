@@ -8,22 +8,29 @@
 
 namespace Component
 {
-    enum Type { position, life, visibility };
+    enum class Type { position, life, visibility };
+    enum Index { position, life, visibility };
 
     struct Position
     {
-        float x = 1.0;
-        float y = 1.0;
+        // Position() :x(1.0), y(1.0) {}
+
+        float x {0.0};
+        float y {0.0};
     };
 
     struct Life
     {
-        int amount = 123;
+        // Life() :amount(123) {}
+
+        int amount {123};
     };
 
     struct Visibility
     {
-        bool active = true;
+        // Visibility() :active(true) {}
+
+        bool active {true};
     };
 
     // TODO use template debug<Component::Type>()
@@ -37,7 +44,8 @@ namespace Component
 class System
 {
     public:
-        bool hasComponentType(Component::Type type) const;
+        bool useComponent(Component::Type componentType) const;
+
         void registerEntity(unsigned int entity);
         void unregisterEntity(unsigned int entity);
 
@@ -57,7 +65,7 @@ class System_1 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(Component::Type::position);
+        const unsigned int componentTypes = mask(Component::Index::position);
 };
 
 class System_2 : public System
@@ -66,7 +74,7 @@ class System_2 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(Component::Type::position) | mask(Component::Type::visibility);
+        const unsigned int componentTypes = mask(Component::Index::position) | mask(Component::Index::visibility);
 };
 
 // --------------------------
@@ -80,7 +88,10 @@ class EntitiesManager
         void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
         void deleteEntity(unsigned int entity);
 
-        bool hasComponent(unsigned int entity, Component::Type componentType) const;
+        // TODO use template hasComponent<Component::Type>()
+        bool hasPositionComponent(unsigned int entity) const;
+        bool hasLifeComponent(unsigned int entity) const;
+        bool hasVisibilityComponent(unsigned int entity) const;
 
         unsigned int getEntityCount() const;
 
@@ -97,6 +108,7 @@ class EntitiesManager
 
         unsigned int entityCount = 0;
 
+        // TODO use the size of the enum instead of harcoded 3
         std::vector<std::array<unsigned int, 3>> entitiesComponentsIndex;
 
         // TODO use template
@@ -110,11 +122,15 @@ class EntitiesManager
         unsigned int addLifeComponent();
 
         // TODO use template
+        void registerPositionComponent(unsigned int entity, unsigned int componentIndex);
+        void registerLifeComponent(unsigned int entity, unsigned int componentIndex);
+        void registerVisibilityComponent(unsigned int entity, unsigned int componentIndex);
+
+        // TODO use template
         void deletePositionComponent(unsigned int index);
         void deleteVisibilityComponent(unsigned int index);
         void deleteLifeComponent(unsigned int index);
 
-        void deleteComponent(Component::Type componentType, unsigned int index);
         void deleteAllComponentsFromEntity(unsigned int entity);
 
         void registerEntity(unsigned int entity, Component::Type componentType);
