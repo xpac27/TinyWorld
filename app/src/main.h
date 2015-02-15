@@ -74,6 +74,10 @@ class EntitiesManager
         void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
         void deleteEntity(unsigned int entity);
 
+        bool hasComponent(unsigned int entity, Component::Type componentType) const;
+
+        unsigned int getEntityCount() const;
+
     private:
         System *systems[2]{
             new System_1(),
