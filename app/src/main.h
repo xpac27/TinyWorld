@@ -1,18 +1,13 @@
 #include <vector>
+#include <array>
 
-// TODO use const where it should be used
+#define mask(n)  ((1) << (n))
 
 // --------------------------
 
 namespace Component
 {
     enum Type { position, life, visibility };
-    enum Mask
-    {
-        POSITION   = 1 << 0,
-        LIFE       = 1 << 1,
-        VISIBILITY = 1 << 2
-    };
 
     struct Position
     {
@@ -33,23 +28,12 @@ namespace Component
 
 // --------------------------
 
-class Entity
-{
-    public:
-        Entity(unsigned int i) :index(i){}
-
-        unsigned int index = 0;
-        int componentIndexes[3] = {-1};
-};
-
-// --------------------------
-
 class System
 {
     public:
         bool hasComponentType(Component::Type type) const;
-        void registerEntity(Entity* entity);
-        void removeEntity(Entity* entity);
+        void registerEntity(unsigned int entity);
+        void unregisterEntity(unsigned int entity);
 
         // virtual void update() = 0;
         // virtual ~System();
@@ -58,7 +42,7 @@ class System
         const unsigned int componentTypes = 0;
 
     private:
-        std::vector<Entity*> entities;
+        std::vector<unsigned int> entities;
 };
 
 class System_1 : public System
@@ -67,7 +51,7 @@ class System_1 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = Component::Mask::POSITION;
+        const unsigned int componentTypes = mask(Component::Type::position);
 };
 
 class System_2 : public System
@@ -76,7 +60,7 @@ class System_2 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = Component::Mask::POSITION | Component::Mask::VISIBILITY;
+        const unsigned int componentTypes = mask(Component::Type::position) | mask(Component::Type::visibility);
 };
 
 // --------------------------
@@ -84,18 +68,21 @@ class System_2 : public System
 class EntitiesManager
 {
     public:
-        Entity* addEntity();
+        unsigned int addEntity();
 
-        void addComponentToEntity(Entity* entity, Component::Type componentType);
-        void deleteComponentFromEntity(Entity* entity, Component::Type componentType);
-        void deleteEntity(Entity* entity);
+        void addComponentToEntity(unsigned int entity, Component::Type componentType);
+        void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
+        void deleteEntity(unsigned int entity);
 
     private:
         System *systems[2]{
             new System_1(),
-            new System_2()};
+            new System_2()
+        };
 
-        std::vector<Entity> entities;
+        unsigned int entityCount = 0;
+
+        std::vector<std::array<int, 3>> entitiesComponentsIndex;
 
         std::vector<Component::Position> positionComponents;
         std::vector<Component::Life> lifeComponents;
@@ -110,10 +97,10 @@ class EntitiesManager
         void deleteLifeComponent(unsigned int index);
 
         void deleteComponent(Component::Type componentType, unsigned int index);
-        void deleteAllComponentsFromEntity(Entity* entity);
+        void deleteAllComponentsFromEntity(unsigned int entity);
 
-        void registerEntity(Entity* entity, Component::Type componentType);
-        void unregisterEntity(Entity* entity, Component::Type componentType);
+        void registerEntity(unsigned int entity, Component::Type componentType);
+        void unregisterEntity(unsigned int entity, Component::Type componentType);
 };
 
 // --------------------------
@@ -128,34 +115,4 @@ class Game
     private:
         EntitiesManager entityManager;
 };
-
-// --------------------------
-
-// class ComponentsManager
-// {
-//     protected:
-//         Component::None components[5];
-//         int totalComponents = 0;
-// };
-//
-// class PositionComponentsManager : public ComponentsManager
-// {
-//     protected:
-//         Component::Position components[5];
-//         int totalComponents = 0;
-// };
-//
-// class LifeComponentsManager : public ComponentsManager
-// {
-//     protected:
-//         Component::Life components[5];
-//         int totalComponents = 0;
-// };
-//
-// class VisibilityComponentsManager : public ComponentsManager
-// {
-//     protected:
-//         Component::Visibility components[5];
-//         int totalComponents = 0;
-// };
 

@@ -90,9 +90,9 @@ int main()
 // --------------------------------------------------------------------------------- GAME
 void Game::start()
 {
-    Entity* e1 = entityManager.addEntity();
-    Entity* e2 = entityManager.addEntity();
-    Entity* e3 = entityManager.addEntity();
+    unsigned int e1 = entityManager.addEntity();
+    unsigned int e2 = entityManager.addEntity();
+    unsigned int e3 = entityManager.addEntity();
 
     std::cout << e1 << std::endl;
     std::cout << e2 << std::endl;
@@ -111,16 +111,16 @@ void Game::start()
 // --------------------------------------------------------------------------------- SYSTEM
 bool System::hasComponentType(Component::Type type) const
 {
-    return type & componentTypes;
+    return componentTypes & mask(type);
 }
-void System::registerEntity(Entity* entity)
+void System::registerEntity(unsigned int entity)
 {
     entities.push_back(entity);
 }
-void System::removeEntity(Entity* entity)
+void System::unregisterEntity(unsigned int entity)
 {
     auto it = std::find(entities.begin(), entities.end(), entity);
-    if (it != entities.end()) 
+    if (it != entities.end())
     {
         entities.erase(it);
     }
@@ -128,13 +128,13 @@ void System::removeEntity(Entity* entity)
 
 // --------------------------------------------------------------------------------- ENTITY MANAGER
 
-Entity* EntitiesManager::addEntity()
+unsigned int EntitiesManager::addEntity()
 {
-    entities.push_back(Entity(unsigned(entities.size())));
-    return &entities.back();
+    entitiesComponentsIndex.push_back({{-1}});
+    return ++entityCount;
 }
 
-void EntitiesManager::addComponentToEntity(Entity* entity, Component::Type componentType)
+void EntitiesManager::addComponentToEntity(unsigned int entity, Component::Type componentType)
 {
     // Create a new component
     int componentIndex = 0;
@@ -147,31 +147,31 @@ void EntitiesManager::addComponentToEntity(Entity* entity, Component::Type compo
     }
 
     // Register component's index for this entity
-    entities.at(entity->index).componentIndexes[componentType] = componentIndex;
+    entitiesComponentsIndex.at(entity)[componentType] = componentIndex;
 
     // Check witch system should know about this entity
     registerEntity(entity, componentType);
 }
 
-void EntitiesManager::deleteComponentFromEntity(Entity* entity, Component::Type componentType)
+void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::Type componentType)
 {
     // Delete the component instance
-    deleteComponent(componentType, entities[entity->index].componentIndexes[componentType]);
+    deleteComponent(componentType, entitiesComponentsIndex.at(entity)[componentType]);
 
     // Remove component's index for this entity
-    entities.at(entity->index).componentIndexes[componentType] = -1;
+    entitiesComponentsIndex.at(entity)[componentType] = -1;
 
     // Check witch system should know about this entity
     unregisterEntity(entity, componentType);
 }
 
-void EntitiesManager::deleteEntity(Entity* entity)
+void EntitiesManager::deleteEntity(unsigned int entity)
 {
     // Delete all its components
     deleteAllComponentsFromEntity(entity);
 
-    // Delete entity
-    entities.erase(entities.begin() + entity->index);    
+    // Delete entity TODO
+    // entity's components references are left in entitiesComponentsIndex...
 }
 
 unsigned int EntitiesManager::addPositionComponent()
@@ -192,15 +192,15 @@ unsigned int EntitiesManager::addLifeComponent()
 
 void EntitiesManager::deletePositionComponent(unsigned int index)
 {
-    positionComponents.erase(positionComponents.begin() + index);    
+    positionComponents.erase(positionComponents.begin() + index);
 }
 void EntitiesManager::deleteVisibilityComponent(unsigned int index)
 {
-    visibilityComponents.erase(visibilityComponents.begin() + index);    
+    visibilityComponents.erase(visibilityComponents.begin() + index);
 }
 void EntitiesManager::deleteLifeComponent(unsigned int index)
 {
-    lifeComponents.erase(lifeComponents.begin() + index);    
+    lifeComponents.erase(lifeComponents.begin() + index);
 }
 
 void EntitiesManager::deleteComponent(Component::Type componentType, unsigned int index)
@@ -213,18 +213,18 @@ void EntitiesManager::deleteComponent(Component::Type componentType, unsigned in
         case Component::Type::life: deleteLifeComponent(index); break;
     }
 }
-void EntitiesManager::deleteAllComponentsFromEntity(Entity* entity)
+void EntitiesManager::deleteAllComponentsFromEntity(unsigned int entity)
 {
-    for (auto i : entity->componentIndexes) 
+    for (auto i : entitiesComponentsIndex.at(entity))
     {
         if (i != -1)
         {
             deleteComponentFromEntity(entity, Component::Type(i));
-        }     
+        }
     }
 }
 
-void EntitiesManager::registerEntity(Entity* entity, Component::Type componentType)
+void EntitiesManager::registerEntity(unsigned int entity, Component::Type componentType)
 {
     for (auto s : systems)
     {
@@ -234,13 +234,13 @@ void EntitiesManager::registerEntity(Entity* entity, Component::Type componentTy
         }
     }
 }
-void EntitiesManager::unregisterEntity(Entity* entity, Component::Type componentType)
+void EntitiesManager::unregisterEntity(unsigned int entity, Component::Type componentType)
 {
     for (auto s : systems)
     {
         if (s->hasComponentType(componentType))
         {
-            s->removeEntity(entity);
+            s->unregisterEntity(entity);
         }
     }
 }
