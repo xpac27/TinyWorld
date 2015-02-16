@@ -19,9 +19,9 @@ run:
 
 tests:
 	$(call print,"Compiling tests")
-	make test -C build
+	make tests -C build
 	$(call print,"Running tests")
-	./build/test/test
+	./build/tests/tests
 
 report:
 	$(call print,"Compiling static analysis report")
@@ -39,5 +39,5 @@ reset:
 	$(call print,"Removing all build data")
 	rm -rf build/app
 	rm -rf build/reports
-	rm -rf build/test
+	rm -rf build/tests
 	rm build/Makefile

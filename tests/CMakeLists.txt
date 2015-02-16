@@ -1,11 +1,11 @@
 # SHOULD NOT BE RUN DIRECTLY
 
-project(test)
+project(tests)
 
 enable_testing()
 
 # configurations
-set(EXECUTABLE_NAME "test")
+set(EXECUTABLE_NAME "tests")
 
 # compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++11")

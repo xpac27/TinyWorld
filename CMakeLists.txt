@@ -19,5 +19,5 @@ else()
 endif()
 
 add_subdirectory(app)
-add_subdirectory(test)
+add_subdirectory(tests)
 add_subdirectory(reports)
