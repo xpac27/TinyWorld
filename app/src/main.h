@@ -2,8 +2,9 @@
 #include <array>
 #include <climits>
 
-#define mask(n)        ((1) << (n))
-#define as_int(e)  (int(e))
+#define mask(n)     ((1) << (n))
+#define as_int(e)   (int(e))
+#define as_uint(e)  (unsigned(e))
 
 // --------------------------
 
@@ -87,7 +88,7 @@ class EntitiesManager
         void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
         void resetEntity(unsigned int entity);
 
-        template<Component::Type t> bool hasComponent(unsigned int entity) const;
+        bool hasComponent(Component::Type componentType, unsigned int entity) const ;
 
         unsigned int getEntityCount() const;
 

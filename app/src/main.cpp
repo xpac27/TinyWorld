@@ -112,17 +112,17 @@ void Game::start()
     entityManager.addComponentToEntity(e3, Component::Type::visibility);
 
     std::cout << std::endl;
-    std::cout << "entity #" << e1 << " has component position? " << (entityManager.hasComponent<Component::Type::position>(e1) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e1 << " has component life? " << (entityManager.hasComponent<Component::Type::life>(e1) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e1 << " has component visibility? " << (entityManager.hasComponent<Component::Type::visibility>(e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e1) ? "yes" : "no") << std::endl;
     std::cout << std::endl;
-    std::cout << "entity #" << e2 << " has component position? " << (entityManager.hasComponent<Component::Type::position>(e2) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e2 << " has component life? " << (entityManager.hasComponent<Component::Type::life>(e2) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e2 << " has component visibility? " << (entityManager.hasComponent<Component::Type::visibility>(e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e2) ? "yes" : "no") << std::endl;
     std::cout << std::endl;
-    std::cout << "entity #" << e3 << " has component position? " << (entityManager.hasComponent<Component::Type::position>(e3) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e3 << " has component life? " << (entityManager.hasComponent<Component::Type::life>(e3) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e3 << " has component visibility? " << (entityManager.hasComponent<Component::Type::visibility>(e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e3) ? "yes" : "no") << std::endl;
 
     std::cout << std::endl;
     std::cout << "entity #" << e1 << ":" << std::endl;
@@ -252,9 +252,9 @@ void EntitiesManager::resetEntity(unsigned int entity)
     deleteAllComponentsFromEntity(entity);
 }
 
-template<Component::Type t> bool EntitiesManager::hasComponent(unsigned int entity) const 
+bool EntitiesManager::hasComponent(Component::Type componentType, unsigned int entity) const 
 {
-    return entitiesComponentsIndex.at(entity).at(as_int(t)) != UINT_MAX;
+    return entitiesComponentsIndex.at(entity).at(as_uint(componentType)) != UINT_MAX;
 }
 
 
