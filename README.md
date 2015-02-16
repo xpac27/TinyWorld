@@ -8,7 +8,7 @@
 
 You can use [homebrew](http://mxcl.github.io/homebrew/) with the following command:
 
-    brew install sfml cmake llvm
+    brew install sfml cmake llvm --with-clang
 
 In order to use Clang Static Analyzer you need to extend your PATH:
 
