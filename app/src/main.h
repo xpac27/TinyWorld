@@ -118,7 +118,7 @@ class EntitiesManager
         unsigned int addVisibilityComponent();
         unsigned int addLifeComponent();
 
-        template<Component::Type t> void registerComponent(unsigned int entity, unsigned int componentIndex);
+        void registerComponent(Component::Type componentType, unsigned int entity, unsigned int componentIndex);
 
         // TODO use template
         void deletePositionComponent(unsigned int index);

@@ -204,13 +204,13 @@ void EntitiesManager::addComponentToEntity(unsigned int entity, Component::Type 
     {
         // TODO use template
         case Component::Type::position: 
-            registerComponent<Component::Type::position>(entity, addPositionComponent()); 
+            registerComponent(Component::Type::position, entity, addPositionComponent()); 
             break;
         case Component::Type::life: 
-            registerComponent<Component::Type::life>(entity, addLifeComponent()); 
+            registerComponent(Component::Type::life, entity, addLifeComponent()); 
             break;
         case Component::Type::visibility: 
-            registerComponent<Component::Type::visibility>(entity, addVisibilityComponent()); 
+            registerComponent(Component::Type::visibility, entity, addVisibilityComponent()); 
             break;
     }
 
@@ -295,9 +295,9 @@ unsigned int EntitiesManager::addLifeComponent()
     return unsigned(lifeComponents.size()) - 1;
 }
 
-template<Component::Type t> void EntitiesManager::registerComponent(unsigned int entity, unsigned int componentIndex) 
+void EntitiesManager::registerComponent(Component::Type componentType, unsigned int entity, unsigned int componentIndex) 
 {
-    entitiesComponentsIndex.at(entity).at(as_int(t)) = componentIndex;
+    entitiesComponentsIndex.at(entity).at(as_uint(componentType)) = componentIndex;
 }
 
 void EntitiesManager::deletePositionComponent(unsigned int index)
