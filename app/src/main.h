@@ -1,50 +1,17 @@
 #include <vector>
 #include <array>
 #include <climits>
+#include <iostream>
+#include <assert.h>
 
 #define mask(n)     ((1) << (n))
-#define as_int(e)   (int(e))
-#define as_uint(e)  (unsigned(e))
-
-// --------------------------
-
-namespace Component
-{
-    enum class Type { position, life, visibility, COUNT };
-
-    struct Position
-    {
-        // Position() :x(1.0), y(1.0) {}
-
-        float x {0.0};
-        float y {0.0};
-    };
-
-    struct Life
-    {
-        // Life() :amount(123) {}
-
-        int amount {123};
-    };
-
-    struct Visibility
-    {
-        // Visibility() :active(true) {}
-
-        bool active {true};
-    };
-
-    void debugPosition(Component::Position);
-    void debugLife(Component::Life);
-    void debugVisibility(Component::Visibility);
-}
 
 // --------------------------
 
 class System
 {
     public:
-        bool useComponent(Component::Type componentType) const;
+        // bool useComponent(Component::Type componentType) const;
 
         void registerEntity(unsigned int entity);
         void unregisterEntity(unsigned int entity);
@@ -65,7 +32,7 @@ class System_1 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(as_int(Component::Type::position));
+        // const unsigned int componentTypes = mask(as_int(Component::Type::position));
 };
 
 class System_2 : public System
@@ -74,61 +41,76 @@ class System_2 : public System
     //     void update();
 
     protected:
-        const unsigned int componentTypes = mask(as_int(Component::Type::position)) | mask(as_int(Component::Type::visibility));
+        // const unsigned int componentTypes = mask(as_int(Component::Type::position)) | mask(as_int(Component::Type::visibility));
 };
 
 // --------------------------
+
+template <class B>
+struct Component
+{
+    static unsigned int index;
+    static std::vector<B> list;
+};
+template <class B>
+unsigned int Component<B>::index = UINT_MAX;
+template <class B>
+std::vector<B> Component<B>::list = std::vector<B>();
+
+struct Position : Component<Position>
+{
+    float x {0.0};
+    float y {0.0};
+};
+
+struct Life : Component<Life>
+{
+    int amount {123};
+};
+
+struct Visibility : Component<Visibility>
+{
+    bool active {true};
+};
+
+template <class T>
+void print(const T* p);
+std::ostream& operator <<(std::ostream& os, const Position* p);
+std::ostream& operator <<(std::ostream& os, const Life* p);
+std::ostream& operator <<(std::ostream& os, const Visibility* p);
 
 class EntitiesManager
 {
     public:
         unsigned int addEntity();
-
-        void addComponentToEntity(unsigned int entity, Component::Type componentType);
-        void deleteComponentFromEntity(unsigned int entity, Component::Type componentType);
-        void resetEntity(unsigned int entity);
-
-        bool hasComponent(Component::Type componentType, unsigned int entity) const ;
-
         unsigned int getEntityCount() const;
 
-        // TODO use template getComponent<Component::Type>()
-        // we would have to avoid having component lists as member but instead have a components list of lists
-        Component::Position getPositionComponent(unsigned int entity) const;
-        Component::Life getLifeComponent(unsigned int entity) const;
-        Component::Visibility getVisibilityComponent(unsigned int entity) const;
+        template<typename T>
+            void registerComponent();
+        template<typename T>
+            bool hasComponent(unsigned int entity) const;
+        template<typename T>
+            T* addComponent(unsigned int entity);
+        template<typename T>
+            T* getComponent(unsigned int entity);
+
+        // template<typename T>
+        //     void delComponent(unsigned int entity);
+        //     void delComponent(unsigned int entity, Component::Type componentType);
+        //     void delComponent(unsigned int entity, Component::Base *component);
+
+        // void reset(unsigned int entity);
 
     private:
+        unsigned int entityCount = 0;
+        unsigned int componentTypeCount = 0;
+
+        std::vector<std::vector<unsigned int>> entitiesComponentsIndex;
+
         System *systems[2]{
             new System_1(),
             new System_2()
         };
-
-        unsigned int entityCount = 0;
-
-        std::vector<std::array<unsigned int, as_int(Component::Type::COUNT)>> entitiesComponentsIndex;
-
-        // replace by a list of lists array
-        std::vector<Component::Position> positionComponents;
-        std::vector<Component::Life> lifeComponents;
-        std::vector<Component::Visibility> visibilityComponents;
-
-        // TODO use template
-        unsigned int addPositionComponent();
-        unsigned int addVisibilityComponent();
-        unsigned int addLifeComponent();
-
-        void registerComponent(Component::Type componentType, unsigned int entity, unsigned int componentIndex);
-
-        // TODO use template
-        void deletePositionComponent(unsigned int index);
-        void deleteVisibilityComponent(unsigned int index);
-        void deleteLifeComponent(unsigned int index);
-
-        void deleteAllComponentsFromEntity(unsigned int entity);
-
-        void registerEntity(unsigned int entity, Component::Type componentType);
-        void unregisterEntity(unsigned int entity, Component::Type componentType);
 };
 
 // --------------------------

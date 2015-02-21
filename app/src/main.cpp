@@ -78,7 +78,6 @@
 //     glLoadIdentity();
 // }
 
-#include <iostream>
 #include "main.h"
 
 int main()
@@ -90,6 +89,10 @@ int main()
 // --------------------------------------------------------------------------------- GAME
 void Game::start()
 {
+    entityManager.registerComponent<Position>();
+    entityManager.registerComponent<Life>();
+    entityManager.registerComponent<Visibility>();
+
     unsigned int e1 = entityManager.addEntity();
     unsigned int e2 = entityManager.addEntity();
     unsigned int e3 = entityManager.addEntity();
@@ -102,245 +105,285 @@ void Game::start()
     std::cout << std::endl;
     std::cout << "total entities: " << entityManager.getEntityCount() << std::endl;
 
-    entityManager.addComponentToEntity(e1, Component::Type::position);
-
-    entityManager.addComponentToEntity(e2, Component::Type::position);
-    entityManager.addComponentToEntity(e2, Component::Type::life);
-
-    entityManager.addComponentToEntity(e3, Component::Type::position);
-    entityManager.addComponentToEntity(e3, Component::Type::life);
-    entityManager.addComponentToEntity(e3, Component::Type::visibility);
+    entityManager.addComponent<Position>(e1);
+    entityManager.addComponent<Position>(e2);
+    entityManager.addComponent<Position>(e3);
+    entityManager.addComponent<Life>(e2);
+    entityManager.addComponent<Life>(e3);
+    entityManager.addComponent<Visibility>(e3);
 
     std::cout << std::endl;
-    std::cout << "entity #" << e1 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e1) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e1 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e1) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e1 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component position? " << (entityManager.hasComponent<Position>(e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component life? " << (entityManager.hasComponent<Life>(e1) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e1 << " has component visibility? " << (entityManager.hasComponent<Visibility>(e1) ? "yes" : "no") << std::endl;
     std::cout << std::endl;
-    std::cout << "entity #" << e2 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e2) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e2 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e2) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e2 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component position? " << (entityManager.hasComponent<Position>(e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component life? " << (entityManager.hasComponent<Life>(e2) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e2 << " has component visibility? " << (entityManager.hasComponent<Visibility>(e2) ? "yes" : "no") << std::endl;
     std::cout << std::endl;
-    std::cout << "entity #" << e3 << " has component position? " << (entityManager.hasComponent(Component::Type::position, e3) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e3 << " has component life? " << (entityManager.hasComponent(Component::Type::life, e3) ? "yes" : "no") << std::endl;
-    std::cout << "entity #" << e3 << " has component visibility? " << (entityManager.hasComponent(Component::Type::visibility, e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component position? " << (entityManager.hasComponent<Position>(e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component life? " << (entityManager.hasComponent<Life>(e3) ? "yes" : "no") << std::endl;
+    std::cout << "entity #" << e3 << " has component visibility? " << (entityManager.hasComponent<Visibility>(e3) ? "yes" : "no") << std::endl;
 
     std::cout << std::endl;
     std::cout << "entity #" << e1 << ":" << std::endl;
-    Component::debugPosition(entityManager.getPositionComponent(e1));
+    print(entityManager.getComponent<Position>(e1));
+
 
     std::cout << std::endl;
     std::cout << "entity #" << e2 << ":" << std::endl;
-    Component::debugPosition(entityManager.getPositionComponent(e2));
-    Component::debugLife(entityManager.getLifeComponent(e2));
+    print(entityManager.getComponent<Position>(e2));
+    print(entityManager.getComponent<Life>(e2));
 
     std::cout << std::endl;
     std::cout << "entity #" << e3 << ":" << std::endl;
-    Component::debugPosition(entityManager.getPositionComponent(e3));
-    Component::debugLife(entityManager.getLifeComponent(e3));
-    Component::debugVisibility(entityManager.getVisibilityComponent(e3));
+    print(entityManager.getComponent<Position>(e3));
+    print(entityManager.getComponent<Life>(e3));
+    print(entityManager.getComponent<Visibility>(e3));
+}
+
+template <class T>
+void print(const T* p)
+{
+    std::cout << p << std::endl;
+}
+std::ostream& operator <<(std::ostream& os, const Position* p)
+{
+    return os << "- Position"
+        << " y:" << p->x
+        << " x:" << p->y;
+}
+std::ostream& operator <<(std::ostream& os, const Life* p)
+{
+    return os << "- Life"
+        << " amount:" << p->amount;
+}
+std::ostream& operator <<(std::ostream& os, const Visibility* p)
+{
+    return os << "- Visibility"
+        << " active:" << p->active;
 }
 
 // --------------------------------------------------------------------------------- SYSTEM
-void Component::debugPosition(Component::Position position)
-{
-    std::cout << "- Position (" << position.x << ", " << position.y << ")" << std::endl;
-}
-void Component::debugLife(Component::Life life)
-{
-    std::cout << "- Life (" << life.amount << ")" << std::endl;
-}
-void Component::debugVisibility(Component::Visibility visibility)
-{
-    std::cout << "- Visibility (" << (visibility.active ? "true" : "false") << ")" << std::endl;
-}
-
-// --------------------------------------------------------------------------------- SYSTEM
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wswitch"
-#pragma clang diagnostic ignored "-Wreturn-type"
-bool System::useComponent(Component::Type componentType) const
-{
-    switch (componentType)
-    {
-        // TODO use template
-        case Component::Type::position: 
-            return componentTypes & mask(as_int(Component::Type::position));
-        case Component::Type::life: 
-            return componentTypes & mask(as_int(Component::Type::life));
-        case Component::Type::visibility: 
-            return componentTypes & mask(as_int(Component::Type::visibility));
-    }
-}
-#pragma clang diagnostic pop
-void System::registerEntity(unsigned int entity)
-{
-    entities.push_back(entity);
-}
-void System::unregisterEntity(unsigned int entity)
-{
-    auto it = std::find(entities.begin(), entities.end(), entity);
-    if (it != entities.end())
-    {
-        entities.erase(it);
-    }
-}
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wswitch"
+// #pragma clang diagnostic ignored "-Wreturn-type"
+// bool System::useComponent(Component::Type componentType) const
+// {
+//     switch (componentType)
+//     {
+//         // TODO use template
+//         case Component::Type::position: 
+//             return componentTypes & mask(as_int(Component::Type::position));
+//         case Component::Type::life: 
+//             return componentTypes & mask(as_int(Component::Type::life));
+//         case Component::Type::visibility: 
+//             return componentTypes & mask(as_int(Component::Type::visibility));
+//     }
+// }
+// #pragma clang diagnostic pop
+// void System::registerEntity(unsigned int entity)
+// {
+//     entities.push_back(entity);
+// }
+// void System::unregisterEntity(unsigned int entity)
+// {
+//     auto it = std::find(entities.begin(), entities.end(), entity);
+//     if (it != entities.end())
+//     {
+//         entities.erase(it);
+//     }
+// }
 
 // --------------------------------------------------------------------------------- ENTITY MANAGER
 
 unsigned int EntitiesManager::addEntity()
 {
-    // TODO check MAX_UINT > entityCount
-    entitiesComponentsIndex.push_back({{}});
-    entitiesComponentsIndex.back().fill(UINT_MAX);
+    assert(entityCount < UINT_MAX);
+    entitiesComponentsIndex.push_back(std::vector<unsigned int>(componentTypeCount));
+    std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
     return ++entityCount - 1;
 }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wswitch"
-void EntitiesManager::addComponentToEntity(unsigned int entity, Component::Type componentType)
-{
-    // Create a new component and register it
-    switch (componentType)
-    {
-        // TODO use template
-        case Component::Type::position: 
-            registerComponent(Component::Type::position, entity, addPositionComponent()); 
-            break;
-        case Component::Type::life: 
-            registerComponent(Component::Type::life, entity, addLifeComponent()); 
-            break;
-        case Component::Type::visibility: 
-            registerComponent(Component::Type::visibility, entity, addVisibilityComponent()); 
-            break;
-    }
-
-    // Check witch system should know about this entity
-    registerEntity(entity, componentType);
-}
-#pragma clang diagnostic pop
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wswitch"
-void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::Type componentType)
-{
-    // Delete and unregister the component instance
-    switch (componentType)
-    {
-        // TODO use template
-        case Component::Type::position: 
-            deletePositionComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position))); 
-            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)) = UINT_MAX;
-            break;
-        case Component::Type::life: 
-            deleteLifeComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life))); 
-            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)) = UINT_MAX;
-            break;
-        case Component::Type::visibility: 
-            deleteVisibilityComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility))); 
-            entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)) = UINT_MAX;
-            break;
-    }
-
-    // Check witch system should know about this entity
-    unregisterEntity(entity, componentType);
-}
-#pragma clang diagnostic pop
-
-void EntitiesManager::resetEntity(unsigned int entity)
-{
-    // Delete all its components
-    deleteAllComponentsFromEntity(entity);
-}
-
-bool EntitiesManager::hasComponent(Component::Type componentType, unsigned int entity) const 
-{
-    return entitiesComponentsIndex.at(entity).at(as_uint(componentType)) != UINT_MAX;
-}
-
 
 unsigned int EntitiesManager::getEntityCount() const
 {
     return entityCount;
 }
 
-Component::Position EntitiesManager::getPositionComponent(unsigned int entity) const
+template<class T>
+void EntitiesManager::registerComponent()
 {
-    // TODO throw if component not avialable
-    return positionComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)));
-}
-Component::Life EntitiesManager::getLifeComponent(unsigned int entity) const
-{
-    // TODO throw if component not avialable
-    return lifeComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)));
-}
-Component::Visibility EntitiesManager::getVisibilityComponent(unsigned int entity) const
-{
-    // TODO throw if component not avialable
-    return visibilityComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)));
+    for (auto i : entitiesComponentsIndex) i.push_back(UINT_MAX);
+    Component<T>::index = componentTypeCount;
+    componentTypeCount ++;
 }
 
-unsigned int EntitiesManager::addPositionComponent()
+template<typename T>
+bool EntitiesManager::hasComponent(unsigned int entity) const 
 {
-    positionComponents.push_back(Component::Position());
-    return unsigned(positionComponents.size()) - 1;
-}
-unsigned int EntitiesManager::addVisibilityComponent()
-{
-    visibilityComponents.push_back(Component::Visibility());
-    return unsigned(visibilityComponents.size()) - 1;
-}
-unsigned int EntitiesManager::addLifeComponent()
-{
-    lifeComponents.push_back(Component::Life());
-    return unsigned(lifeComponents.size()) - 1;
+    assert(entitiesComponentsIndex.size() > entity);
+    assert(entitiesComponentsIndex.at(entity).size() > Component<T>::index);
+    return entitiesComponentsIndex.at(entity).at(Component<T>::index) != UINT_MAX;
 }
 
-void EntitiesManager::registerComponent(Component::Type componentType, unsigned int entity, unsigned int componentIndex) 
-{
-    entitiesComponentsIndex.at(entity).at(as_uint(componentType)) = componentIndex;
+template<class T>
+T* EntitiesManager::addComponent(unsigned int entity) {
+    assert(entitiesComponentsIndex.size() > entity);
+    assert(entitiesComponentsIndex.at(entity).size() > Component<T>::index);
+    entitiesComponentsIndex.at(entity).at(Component<T>::index) = Component<T>::list.size();
+    Component<T>::list.push_back(T());
+    return &Component<T>::list.back();
 }
 
-void EntitiesManager::deletePositionComponent(unsigned int index)
-{
-    positionComponents.erase(positionComponents.begin() + index);
-}
-void EntitiesManager::deleteVisibilityComponent(unsigned int index)
-{
-    visibilityComponents.erase(visibilityComponents.begin() + index);
-}
-void EntitiesManager::deleteLifeComponent(unsigned int index)
-{
-    lifeComponents.erase(lifeComponents.begin() + index);
+template<class T>
+T* EntitiesManager::getComponent(unsigned int entity) {
+    assert(entitiesComponentsIndex.size() > entity);
+    assert(entitiesComponentsIndex.at(entity).size() > Component<T>::index);
+    assert(Component<T>::list.size() > entitiesComponentsIndex.at(entity).at(Component<T>::index));
+    return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(Component<T>::index));
 }
 
-void EntitiesManager::deleteAllComponentsFromEntity(unsigned int entity)
-{
-    for (auto i : entitiesComponentsIndex.at(entity))
-    {
-        if (i != UINT_MAX)
-        {
-            deleteComponentFromEntity(entity, Component::Type(i));
-        }
-    }
-}
-
-void EntitiesManager::registerEntity(unsigned int entity, Component::Type componentType)
-{
-    for (auto s : systems)
-    {
-        if (s->useComponent(componentType))
-        {
-            s->registerEntity(entity);
-        }
-    }
-}
-void EntitiesManager::unregisterEntity(unsigned int entity, Component::Type componentType)
-{
-    for (auto s : systems)
-    {
-        if (s->useComponent(componentType))
-        {
-            s->unregisterEntity(entity);
-        }
-    }
-}
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wswitch"
+// void EntitiesManager::addComponentToEntity(unsigned int entity, Component::Type componentType)
+// {
+//     // Create a new component and register it
+//     switch (componentType)
+//     {
+//         // TODO use template
+//         case Component::Type::position: 
+//             registerComponent(Component::Type::position, entity, addPositionComponent()); 
+//             break;
+//         case Component::Type::life: 
+//             registerComponent(Component::Type::life, entity, addLifeComponent()); 
+//             break;
+//         case Component::Type::visibility: 
+//             registerComponent(Component::Type::visibility, entity, addVisibilityComponent()); 
+//             break;
+//     }
+//
+//     // Check witch system should know about this entity
+//     registerEntity(entity, componentType);
+// }
+// #pragma clang diagnostic pop
+//
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wswitch"
+// void EntitiesManager::deleteComponentFromEntity(unsigned int entity, Component::Type componentType)
+// {
+//     // Delete and unregister the component instance
+//     switch (componentType)
+//     {
+//         // TODO use template
+//         case Component::Type::position: 
+//             deletePositionComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position))); 
+//             entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)) = UINT_MAX;
+//             break;
+//         case Component::Type::life: 
+//             deleteLifeComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life))); 
+//             entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)) = UINT_MAX;
+//             break;
+//         case Component::Type::visibility: 
+//             deleteVisibilityComponent(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility))); 
+//             entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)) = UINT_MAX;
+//             break;
+//     }
+//
+//     // Check witch system should know about this entity
+//     unregisterEntity(entity, componentType);
+// }
+// #pragma clang diagnostic pop
+//
+// void EntitiesManager::resetEntity(unsigned int entity)
+// {
+//     // Delete all its components
+//     deleteAllComponentsFromEntity(entity);
+// }
+//
+// bool EntitiesManager::hasComponent(Component::Type componentType, unsigned int entity) const 
+// {
+//     return entitiesComponentsIndex.at(entity).at(as_uint(componentType)) != UINT_MAX;
+// }
+//
+//
+// Component::Position EntitiesManager::getPositionComponent(unsigned int entity) const
+// {
+//     // TODO throw if component not avialable
+//     return positionComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::position)));
+// }
+// Component::Life EntitiesManager::getLifeComponent(unsigned int entity) const
+// {
+//     // TODO throw if component not avialable
+//     return lifeComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::life)));
+// }
+// Component::Visibility EntitiesManager::getVisibilityComponent(unsigned int entity) const
+// {
+//     // TODO throw if component not avialable
+//     return visibilityComponents.at(entitiesComponentsIndex.at(entity).at(as_int(Component::Type::visibility)));
+// }
+//
+// unsigned int EntitiesManager::addPositionComponent()
+// {
+//     positionComponents.push_back(Component::Position());
+//     return unsigned(positionComponents.size()) - 1;
+// }
+// unsigned int EntitiesManager::addVisibilityComponent()
+// {
+//     visibilityComponents.push_back(Component::Visibility());
+//     return unsigned(visibilityComponents.size()) - 1;
+// }
+// unsigned int EntitiesManager::addLifeComponent()
+// {
+//     lifeComponents.push_back(Component::Life());
+//     return unsigned(lifeComponents.size()) - 1;
+// }
+//
+// void EntitiesManager::registerComponent(Component::Type componentType, unsigned int entity, unsigned int componentIndex) 
+// {
+//     entitiesComponentsIndex.at(entity).at(as_uint(componentType)) = componentIndex;
+// }
+//
+// void EntitiesManager::deletePositionComponent(unsigned int index)
+// {
+//     positionComponents.erase(positionComponents.begin() + index);
+// }
+// void EntitiesManager::deleteVisibilityComponent(unsigned int index)
+// {
+//     visibilityComponents.erase(visibilityComponents.begin() + index);
+// }
+// void EntitiesManager::deleteLifeComponent(unsigned int index)
+// {
+//     lifeComponents.erase(lifeComponents.begin() + index);
+// }
+//
+// void EntitiesManager::deleteAllComponentsFromEntity(unsigned int entity)
+// {
+//     for (auto i : entitiesComponentsIndex.at(entity))
+//     {
+//         if (i != UINT_MAX)
+//         {
+//             deleteComponentFromEntity(entity, Component::Type(i));
+//         }
+//     }
+// }
+//
+// void EntitiesManager::registerEntity(unsigned int entity, Component::Type componentType)
+// {
+//     for (auto s : systems)
+//     {
+//         if (s->useComponent(componentType))
+//         {
+//             s->registerEntity(entity);
+//         }
+//     }
+// }
+// void EntitiesManager::unregisterEntity(unsigned int entity, Component::Type componentType)
+// {
+//     for (auto s : systems)
+//     {
+//         if (s->useComponent(componentType))
+//         {
+//             s->unregisterEntity(entity);
+//         }
+//     }
+// }
