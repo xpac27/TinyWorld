@@ -9,7 +9,15 @@ set(EXECUTABLE_NAME "report")
 set(CMAKE_CXX_COMPILER "c++-analyzer")
 
 # compiler flags
-set(CMAKE_CXX_FLAGS "-Weverything -std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything \
+                                -Wno-global-constructors \
+                                -Wno-c++98-compat \
+                                -Wno-c++98-compat-pedantic \
+                                -Wno-newline-eof \
+                                -Wno-padded")
+
+# Add include directories
+include_directories("../app/inc")
 
 # get all *.cpp files recursively
 file(GLOB_RECURSE source_files "../app/src/*.cpp")

@@ -29,7 +29,7 @@ report:
 
 report-open:
 	$(call print,"Open the latest report")
-	open reports/`ls reports | tail -1`/index.html
+	open reports/`ls reports | grep -v txt | tail -1`/index.html
 
 clean:
 	$(call print,"Compiling sources")
