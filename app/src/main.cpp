@@ -1,7 +1,7 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "Application.h"
+#include "Application.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
 

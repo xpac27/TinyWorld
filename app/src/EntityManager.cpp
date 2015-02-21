@@ -1,4 +1,4 @@
-#include "EntityManager.h"
+#include "EntityManager.hpp"
 
 // TODO return the first available entity
 unsigned int EntitiesManager::addEntity()

@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-#include "components/Position.h"
-#include "components/Life.h"
-#include "components/Visibility.h"
+#include "components/Position.hpp"
+#include "components/Life.hpp"
+#include "components/Visibility.hpp"
 
 namespace Debug
 {

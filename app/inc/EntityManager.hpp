@@ -2,8 +2,8 @@
 #include <vector>
 #include <climits>
 #include <assert.h>
-#include "Component.h"
-#include "System.h"
+#include "Component.hpp"
+#include "System.hpp"
 
 #define mask(n) ((1) << (n))
 

@@ -1,4 +1,4 @@
-#include "System.h"
+#include "System.hpp"
 
 void System::registerEntity(unsigned int entity)
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include "System.h"
-#include "Component.h"
+#include "System.hpp"
+#include "Component.hpp"
 
 #define mask(n) ((1) << (n))
 

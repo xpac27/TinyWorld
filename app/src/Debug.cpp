@@ -1,4 +1,4 @@
-#include "Debug.h"
+#include "Debug.hpp"
 
 void Debug::dump(Position* p)
 {

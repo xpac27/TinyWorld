@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Component.h"
+#include "Component.hpp"
 
 #define mask(n) ((1) << (n))
 
