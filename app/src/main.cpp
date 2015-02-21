@@ -48,6 +48,8 @@ int main()
         window.display();
         clock.restart();
     }
+
+    return 1;
 }
 
 void setupWindow(unsigned int width, unsigned int height)
