@@ -14,6 +14,9 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything \
                                 -Wno-newline-eof \
                                 -Wno-padded")
 
+# Add include directories
+include_directories("inc")
+
 # get all *.cpp files recursively
 file(GLOB_RECURSE source_files "src/*.cpp")
 add_executable(${EXECUTABLE_NAME} ${source_files})
