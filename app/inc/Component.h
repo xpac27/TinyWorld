@@ -7,9 +7,9 @@ template <class B>
 struct Component
 {
     static unsigned int typeIndex;
-    static std::vector<B> list;
+    static std::vector<B>& list;
 };
 template <class B>
 unsigned int Component<B>::typeIndex = UINT_MAX;
 template <class B>
-std::vector<B> Component<B>::list = std::vector<B>();
+std::vector<B>& Component<B>::list = *new std::vector<B>();
