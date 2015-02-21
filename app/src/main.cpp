@@ -49,7 +49,7 @@ int main()
         clock.restart();
     }
 
-    return 1;
+    return 0;
 }
 
 void setupWindow(unsigned int width, unsigned int height)

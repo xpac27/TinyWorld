@@ -13,9 +13,9 @@ Game::Game()
     unsigned int e2 = entityManager.addEntity();
     unsigned int e3 = entityManager.addEntity();
 
-    Debug::print("new entity #");
-    Debug::print("new entity #");
-    Debug::print("new entity #");
+    Debug::printl("new entity #", e1);
+    Debug::printl("new entity #", e2);
+    Debug::printl("new entity #", e3);
 
     Debug::printl("total entities:", entityManager.getEntityCount());
 
@@ -39,16 +39,16 @@ Game::Game()
     Debug::printl("entity #", e3, "has component visibility?", (entityManager.hasComponent<Visibility>(e3) ? "yes" : "no"));
 
     Debug::printl("entity #", e1, ":");
-    Debug::print(entityManager.getComponent<Position>(e1));
+    Debug::dump(entityManager.getComponent<Position>(e1));
 
     Debug::printl("entity #", e2, ":");
-    Debug::print(entityManager.getComponent<Position>(e2));
-    Debug::print(entityManager.getComponent<Life>(e2));
+    Debug::dump(entityManager.getComponent<Position>(e2));
+    Debug::dump(entityManager.getComponent<Life>(e2));
 
     Debug::printl("entity #", e3, ":");
-    Debug::print(entityManager.getComponent<Position>(e3));
-    Debug::print(entityManager.getComponent<Life>(e3));
-    Debug::print(entityManager.getComponent<Visibility>(e3));
+    Debug::dump(entityManager.getComponent<Position>(e3));
+    Debug::dump(entityManager.getComponent<Life>(e3));
+    Debug::dump(entityManager.getComponent<Visibility>(e3));
 }
 
 void Game::draw()

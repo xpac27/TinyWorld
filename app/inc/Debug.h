@@ -6,20 +6,27 @@
 
 namespace Debug
 {
-    void print(Position* p);
-    void print(Life* p);
-    void print(Visibility* p);
+    void dump(Position* p);
+    void dump(Life* p);
+    void dump(Visibility* p);
 
     template <typename T>
     void print(const T p)
     {
-        std::cout << p << std::endl;
+        std::cout << p;
+    }
+
+    template <typename T>
+    void printl(const T p)
+    {
+        print(p);
+        std::cout << std::endl;
     }
 
     template<typename T, typename... Tail>
     void print(T const& f, Tail const&... tail)
     {
-        std::cout << f << " " << std::endl;
+        std::cout << f << " ";
         print(tail...);
     }
 
