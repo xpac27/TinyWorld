@@ -295,7 +295,7 @@ struct message : std::runtime_error
     ~message() throw() {}   // GCC 4.6
 
     message( text kind, location where, text expr, text note = "" )
-    : std::runtime_error( expr ), kind( kind ), where( where ), note( note ) {}
+    : std::runtime_error( expr ), kind( kind ), where( where ), note( "\n  " + note ) {}
 };
 
 struct failure : message
@@ -1040,7 +1040,7 @@ struct confirm : action
     {
         if ( failures > 0 )
         {
-            os << failures << " out of " << selected << " selected " << pluralise(selected, "test") << " " << colourise( "failed.\n" );
+            os << "\n" << failures << " out of " << selected << " selected " << pluralise(selected, "test") << " " << colourise( "failed.\n" ) << "\n";
         }
         else if ( option.pass )
         {

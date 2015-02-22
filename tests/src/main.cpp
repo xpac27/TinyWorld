@@ -1,7 +1,4 @@
-// #include <algorithm>
-#include "hamlest.hpp"
-// #include "test_EntityManager.cpp"
-// #define CASE( name ) lest_CASE( specification(), name )
+#include "lest.hpp"
 
 lest::tests & specification()
 {
@@ -12,8 +9,4 @@ lest::tests & specification()
 int main( int argc, char * argv[] )
 {
     return lest::run( specification(), argc, argv /*, std::cout */ );
-
-    // return std::min(
-    //     lest::run(test_EntityManager, argc, argv),
-    // 1);
 }
