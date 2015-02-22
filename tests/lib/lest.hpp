@@ -98,7 +98,7 @@
 
 #define lest_MODULE( specification, module ) \
     namespace { lest::add_module _( specification, module ); }
-    
+
 #define lest_TEST \
     lest_CASE
 
@@ -579,7 +579,7 @@ struct make_tuple_string
 {
     static std::string make( TU const & tuple )
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << to_string( std::get<N - 1>( tuple ) ) << ( N < std::tuple_size<TU>::value ? ", ": " ");
         return make_tuple_string<TU, N - 1>::make( tuple ) + os.str();
     }

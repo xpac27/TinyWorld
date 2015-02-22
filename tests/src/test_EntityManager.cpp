@@ -1,12 +1,26 @@
-#include "lest.hpp"
+#include "hamlest.hpp"
+#include "EntityManager.hpp"
+#define CASE( name ) lest_CASE( specification(), name )
+using namespace lest::matchers;
 
-using namespace std;
+extern lest::tests & specification();
 
-const lest::test test_EntityManager[] =
+namespace
 {
-    CASE( "Empty string has length zero" )
+    CASE("EntitiesManager" "[getEntityCount]")
     {
-        EXPECT( 0 == string(  ).length() );
-        EXPECT( 0 == string("").length() );
-    },
-};
+        SETUP("An EntityManager")
+        {
+            EntitiesManager entityManager;
+
+            SECTION("adding 3 entities increase entity count")
+            {
+                entityManager.addEntity();
+                entityManager.addEntity();
+                entityManager.addEntity();
+
+                EXPECT_THAT(entityManager.getEntityCount(), equal_to(3));
+            }
+        }
+    }
+}

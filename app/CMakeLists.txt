@@ -19,8 +19,11 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything \
 include_directories("inc")
 
 # get all *.cpp files recursively
-file(GLOB_RECURSE source_files "src/*.cpp")
-add_executable(${EXECUTABLE_NAME} ${source_files})
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+
+# Add the library
+add_library("wip" ${SOURCE_FILES})
 
 # link
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARIES})
