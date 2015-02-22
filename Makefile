@@ -1,42 +1,41 @@
 all: configure compile run
-print = $(MAKE) MESSAGE=$(1) print
-print:
-	@echo ""; echo "[1;33m-- $(MESSAGE)[0m"
+S = \n[1;33m--
+E = [0m
 
-.PHONY: all, print
+.PHONY: all
 
 configure:
-	$(call print,"Configuring builds")
+	@echo "$(S) Configuring builds $(E)"
 	mkdir -p build && cd build && cmake ..
 
 compile:
-	$(call print,"Compiling sources")
+	@echo "$(S) Compiling sources $(E)"
 	make app -C build
 
 run:
-	$(call print,"Running the app")
+	@echo "$(S) Running the app $(E)"
 	./build/app/app
 
-tests:
-	$(call print,"Compiling tests")
+test:
+	@echo "$(S) Compiling tests $(E)"
 	make tests -C build
-	$(call print,"Running tests")
-	./build/tests/tests
+	@echo "$(S) Running tests $(E)"
+	./build/tests/tests 
 
 report:
-	$(call print,"Compiling static analysis report")
+	@echo "$(S) Compiling static analysis report $(E)"
 	scan-build -o reports make report -C build
 
 report-open:
-	$(call print,"Open the latest report")
+	@echo "$(S) Open the latest report $(E)"
 	open reports/`ls reports | grep -v txt | tail -1`/index.html
 
 clean:
-	$(call print,"Compiling sources")
+	@echo "$(S) Compiling sources $(E)"
 	make clean -C build
 
 reset:
-	$(call print,"Removing all build data")
+	@echo "$(S) Removing all build data $(E)"
 	rm -rf build/app
 	rm -rf build/reports
 	rm -rf build/tests

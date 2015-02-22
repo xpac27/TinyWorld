@@ -27,11 +27,6 @@ Simply clone the repository:
 
     git clone https://github.com/xpac27/wip.git
 
-And download submodules:
-
-    git submodule init
-    git submodule update
-
 ## Basic usage
 
 You could type `make` and the application should configure, compile and run \o/. Optionaly, you could run `make configure` once and use the commands above.
@@ -42,7 +37,7 @@ This will compile the application:
 
 This will compile and run the tests:
 
-    make tests
+    make test
 
 This will compile the application and run the static analyzer on it (which could take some time):
 

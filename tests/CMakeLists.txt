@@ -6,16 +6,13 @@ enable_testing()
 
 # configurations
 set(EXECUTABLE_NAME "tests")
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
-# add .cpp file
-add_executable(${EXECUTABLE_NAME} "src/test_project1.cpp")
+# libs
+include_directories("lib")
 
-# GTest
-add_subdirectory("lib/googletest")
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-# link
-target_link_libraries(${EXECUTABLE_NAME} gtest gtest_main)
+file(GLOB_RECURSE source_files "src/*.cpp")
+add_executable(${EXECUTABLE_NAME} ${source_files})
