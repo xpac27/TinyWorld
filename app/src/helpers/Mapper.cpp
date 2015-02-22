@@ -2,7 +2,7 @@
 
 bool Mapper::has(unsigned int i)
 {
-    return (i < total && index.at(i) != UINT_MAX);
+    return (i < index.size() && index.at(i) != UINT_MAX);
 }
 
 bool Mapper::add(unsigned int i)

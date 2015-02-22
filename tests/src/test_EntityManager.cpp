@@ -1,132 +1,133 @@
-#include "lest.hpp"
+#include "catch.hpp"
 #include "EntityManager.hpp"
-#include "components/Position.hpp"
 #include "components/Life.hpp"
-#define CASE( name ) lest_CASE( specification(), name )
-
-extern lest::tests & specification();
+#include "components/Position.hpp"
 
 namespace
 {
-    CASE("EntitiesManager" "[getEntityCount]")
-    {
-        SETUP("create an EntityManager")
-        {
+    SCENARIO("EntitiesManager" "[getEntityCount]") {
+        GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
-            SECTION("getEntityCount is 0")
-                EXPECT(entityManager.getEntityCount() == 0);
-
-            SETUP("add 3 entities")
-            {
-                entityManager.addEntity();
-                entityManager.addEntity();
-                entityManager.addEntity();
-
-                SECTION("getEntityCount is 3")
-                    EXPECT(entityManager.getEntityCount() == 3);
+            WHEN("No entity are added") {
+                THEN("getEntityCount is 0") {
+                    CHECK(entityManager.getEntityCount() == 0);
+                }
             }
-        }
-    }
 
-    CASE("EntitiesManager" "[registerComponent-1]")
-    {
-        SETUP("create an EntityManager")
-        {
-            EntitiesManager entityManager;
+            WHEN("3 entities are added") {
+                entityManager.addEntity();
+                entityManager.addEntity();
+                entityManager.addEntity();
 
-            SECTION("registerComponent is valid")
-                EXPECT_NO_THROW(entityManager.registerComponent<Position>());
-        }
-    }
-
-    CASE("EntitiesManager" "[registerComponent-2]")
-    {
-        SETUP("create an EntityManager and register 1 component")
-        {
-            EntitiesManager entityManager;
-            entityManager.registerComponent<Position>();
-
-            SECTION("registerComponent again is invalid")
-                EXPECT_THROWS(entityManager.registerComponent<Position>());
-        }
-    }
-
-
-    CASE("EntitiesManager" "[addComponent-1]")
-    {
-        SETUP("create an EntityManager")
-        {
-            EntitiesManager entityManager;
-
-            SECTION("addComponent is invalid")
-                EXPECT_THROWS(entityManager.addComponent<Position>(1));
-
-            SETUP("add 1 entity")
-            {
-                Entity e = entityManager.addEntity();
-
-                SECTION("addComponent is invalid")
-                    EXPECT_THROWS(entityManager.addComponent<Position>(e));
-
-                SETUP("register 1 components")
-                {
-                    entityManager.registerComponent<Life>();
-
-                    SECTION("addComponent is valid")
-                        EXPECT_NO_THROW(entityManager.addComponent<Life>(e));
+                THEN("getEntityCount is 3") {
+                    CHECK(entityManager.getEntityCount() == 3);
                 }
             }
         }
     }
 
-    CASE("EntitiesManager" "[addComponent-2]")
-    {
-        SETUP("create an EntitiesManager, add 1 entity, register 2 components, add 1 component")
-        {
+    SCENARIO("EntitiesManager" "[registerComponent-1]") {
+        GIVEN("An EntityManager") {
             EntitiesManager entityManager;
-            Entity e = entityManager.addEntity();
-            entityManager.registerComponent<Position>();
-            entityManager.registerComponent<Life>();
-            entityManager.addComponent<Position>(e);
 
-            SECTION("addComponent is valid")
-                EXPECT_NO_THROW(entityManager.addComponent<Life>(e));
-            SECTION("addComponent again is invalid")
-                EXPECT_THROWS(entityManager.addComponent<Position>(e));
+            WHEN("Registering Position component") {
+                THEN( "No exeptions are thrown" ) {
+                    CHECK_NOTHROW(entityManager.registerComponent<Position>());
+                }
+            }
         }
     }
 
-    CASE("EntitiesManager" "[hasComponent]")
-    {
-        SETUP("create an EntityManager")
-        {
+    SCENARIO("EntitiesManager" "[registerComponent-2]") {
+        GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
-            SECTION("hasComponent is invalid")
-                EXPECT_THROWS(entityManager.hasComponent<Position>(1));
+            WHEN("Position component is registered") {
+                entityManager.registerComponent<Position>();
 
-            SETUP("add 1 entity")
-            {
+                THEN("RegisterComponent again is invalid") {
+                    CHECK_THROWS(entityManager.registerComponent<Position>());
+                }
+            }
+        }
+    }
+
+    SCENARIO("EntitiesManager" "[addComponent]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No component are registered") {
+                THEN("Call to addComponent is invalid") {
+                    CHECK_THROWS(entityManager.addComponent<Position>(1));
+                }
+
+                WHEN("1 entity added") {
+                    Entity e = entityManager.addEntity();
+
+                    THEN("Call to addcomponent is invalid") {
+                        CHECK_THROWS(entityManager.addComponent<Position>(e));
+                    }
+
+                    WHEN("Life component registered") {
+                        entityManager.registerComponent<Life>();
+
+                        THEN("Adding a Life component is valid") {
+                            CHECK_NOTHROW(entityManager.addComponent<Life>(e));
+                        }
+
+                        WHEN("Position components registered and 1 Life component added to entity") {
+                            entityManager.registerComponent<Position>();
+                            entityManager.addComponent<Life>(e);
+
+                            THEN("Adding a Life component again is invalid") {
+                                CHECK_THROWS(entityManager.addComponent<Life>(e));
+                            }
+                            THEN("Adding a Position component again is valid") {
+                                CHECK_NOTHROW(entityManager.addComponent<Position>(e));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SCENARIO("EntitiesManager" "[hasComponent]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No entity are added") {
+                THEN("Call to hasComponent is invalid") {
+                    CHECK_THROWS(entityManager.hasComponent<Position>(1));
+                }
+            }
+
+            WHEN("1 entity added") {
                 Entity e = entityManager.addEntity();
 
-                SECTION("hasComponent is invalid")
-                    EXPECT_THROWS(entityManager.hasComponent<Position>(e));
+                THEN("Call to hasComponent is invalid") {
+                    CHECK_THROWS(entityManager.hasComponent<Position>(e));
+                }
 
-                SETUP("register 2 components")
-                {
+                WHEN("2 components registered") {
                     entityManager.registerComponent<Position>();
                     entityManager.registerComponent<Life>();
 
-                    SECTION("hasComponent is false")
-                        EXPECT(entityManager.hasComponent<Position>(e) == false);
+                    THEN("The entity doesn't have those components yet") {
+                        CHECK(entityManager.hasComponent<Position>(e) == false);
+                        CHECK(entityManager.hasComponent<Life>(e) == false);
+                    }
 
-                    SETUP("add 1 component")
-                    {
+                    WHEN("1 Position component added to entity") {
                         entityManager.addComponent<Position>(e);
 
-                        SECTION("hasComponent is true")
-                            EXPECT(entityManager.hasComponent<Position>(e) == true);
+                        THEN("The entity doesn't have a Life component") {
+                            CHECK(entityManager.hasComponent<Life>(e) == false);
+                        }
+                        THEN("The entity has a Position component") {
+                            CHECK(entityManager.hasComponent<Position>(e) == true);
+                        }
                     }
                 }
             }

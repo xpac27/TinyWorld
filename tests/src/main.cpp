@@ -1,12 +1,2 @@
-#include "lest.hpp"
-
-lest::tests & specification()
-{
-    static lest::tests tests;
-    return tests;
-}
-
-int main( int argc, char * argv[] )
-{
-    return lest::run( specification(), argc, argv /*, std::cout */ );
-}
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"

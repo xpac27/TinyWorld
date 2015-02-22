@@ -20,7 +20,7 @@ test:
 	@echo "$(S) Compiling tests $(E)"
 	make tests -C build
 	@echo "$(S) Running tests $(E)"
-	./build/tests/tests -p
+	./build/tests/tests
 
 report:
 	@echo "$(S) Compiling static analysis report $(E)"

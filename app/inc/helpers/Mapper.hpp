@@ -8,6 +8,7 @@ class Mapper
 
         bool add(unsigned int i);
         bool has(unsigned int i);
+
         unsigned int at(unsigned int i) const;
 
     private:
