@@ -29,7 +29,31 @@ namespace
         }
     }
 
-    CASE("EntitiesManager" "[addComponent]")
+    CASE("EntitiesManager" "[registerComponent-1]")
+    {
+        SETUP("create an EntityManager")
+        {
+            EntitiesManager entityManager;
+
+            SECTION("registerComponent is valid")
+                EXPECT_NO_THROW(entityManager.registerComponent<Position>());
+        }
+    }
+
+    CASE("EntitiesManager" "[registerComponent-2]")
+    {
+        SETUP("create an EntityManager and register 1 component")
+        {
+            EntitiesManager entityManager;
+            entityManager.registerComponent<Position>();
+
+            SECTION("registerComponent again is invalid")
+                EXPECT_THROWS(entityManager.registerComponent<Position>());
+        }
+    }
+
+
+    CASE("EntitiesManager" "[addComponent-1]")
     {
         SETUP("create an EntityManager")
         {
@@ -52,19 +76,24 @@ namespace
                     SECTION("addComponent is valid")
                         EXPECT_NO_THROW(entityManager.addComponent<Life>(e));
                 }
-
-                SETUP("register 2 components and add 1 component")
-                {
-                    entityManager.registerComponent<Position>();
-                    entityManager.registerComponent<Life>();
-                    entityManager.addComponent<Position>(e);
-
-                    SECTION("addComponent is invalid")
-                        EXPECT_NO_THROW(entityManager.addComponent<Life>(e));
-                    SECTION("addComponent is valid")
-                        EXPECT_THROWS(entityManager.addComponent<Position>(e));
-                }
             }
+        }
+    }
+
+    CASE("EntitiesManager" "[addComponent-2]")
+    {
+        SETUP("create an EntitiesManager, add 1 entity, register 2 components, add 1 component")
+        {
+            EntitiesManager entityManager;
+            Entity e = entityManager.addEntity();
+            entityManager.registerComponent<Position>();
+            entityManager.registerComponent<Life>();
+            entityManager.addComponent<Position>(e);
+
+            SECTION("addComponent is valid")
+                EXPECT_NO_THROW(entityManager.addComponent<Life>(e));
+            SECTION("addComponent again is invalid")
+                EXPECT_THROWS(entityManager.addComponent<Position>(e));
         }
     }
 

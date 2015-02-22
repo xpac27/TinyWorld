@@ -295,7 +295,7 @@ struct message : std::runtime_error
     ~message() throw() {}   // GCC 4.6
 
     message( text kind, location where, text expr, text note = "" )
-    : std::runtime_error( expr ), kind( kind ), where( where ), note( "\n  " + note ) {}
+    : std::runtime_error( expr ), kind( kind ), where( where ), note( note ) {}
 };
 
 struct failure : message
