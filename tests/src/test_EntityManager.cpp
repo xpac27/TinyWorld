@@ -14,6 +14,7 @@ namespace
                     CHECK(entityManager.addEntity() == 0);
                 }
             }
+
             WHEN("3 entities are added") {
                 entityManager.addEntity();
                 entityManager.addEntity();
@@ -21,6 +22,26 @@ namespace
 
                 THEN("addEntity returns 3") {
                     CHECK(entityManager.addEntity() == 3);
+                }
+            }
+        }
+    }
+
+    SCENARIO("EntitiesManager" "[resetEntity]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No entity are added") {
+                THEN("Call to delEntity is invalid") {
+                    CHECK_THROWS(entityManager.resetEntity(0));
+                }
+            }
+
+            WHEN("1 entities is added") {
+                Entity e = entityManager.addEntity();
+
+                THEN("Call to delEntity is valid") {
+                    CHECK_NOTHROW(entityManager.resetEntity(e));
                 }
             }
         }

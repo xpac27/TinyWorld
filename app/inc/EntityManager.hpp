@@ -95,7 +95,7 @@ bool EntitiesManager::hasComponent(Entity entity) const
 {
     unsigned int index = Component<T>::typeIndex;
 
-    if (entitiesComponentsIndex.size() < entity)
+    if (entitiesComponentsIndex.size() <= entity)
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
@@ -115,7 +115,7 @@ T* EntitiesManager::addComponent(Entity entity)
 {
     unsigned int index = Component<T>::typeIndex;
 
-    if (entitiesComponentsIndex.size() < entity)
+    if (entitiesComponentsIndex.size() <= entity)
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
@@ -141,7 +141,7 @@ T* EntitiesManager::getComponent(Entity entity) const
 {
     unsigned int index = Component<T>::typeIndex;
 
-    if (entitiesComponentsIndex.size() < entity)
+    if (entitiesComponentsIndex.size() <= entity)
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
@@ -199,7 +199,6 @@ void EntitiesManager::unregisterEntity(Entity entity) const
 }
 
 // TODO return the first available entity
-// TODO throw instead of assert and TEST
 Entity EntitiesManager::addEntity()
 {
     if (entityCount >= UINT_MAX)
@@ -222,7 +221,10 @@ unsigned int EntitiesManager::getEntityCount() const
 // TODO throw instead of assert and TEST
 void EntitiesManager::resetEntity(Entity entity)
 {
-    assert(entitiesComponentsIndex.size() > entity);
+    if (entitiesComponentsIndex.size() <= entity)
+    {
+        throw std::invalid_argument("Entity index doesn't exist");
+    }
 
     std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
 }
