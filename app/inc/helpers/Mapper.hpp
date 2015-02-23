@@ -4,15 +4,13 @@
 
 class Mapper
 {
-    public:
+public:
+    void add(unsigned int i);
+    bool has(unsigned int i);
 
-        void add(unsigned int i);
-        bool has(unsigned int i);
+    unsigned int at(unsigned int i) const;
 
-        unsigned int at(unsigned int i) const;
-
-    private:
-
-        unsigned int total = 0;
-        std::vector<unsigned int> index;
+private:
+    unsigned int total = 0;
+    std::vector<unsigned int> index;
 };

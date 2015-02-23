@@ -3,12 +3,10 @@
 
 class Application
 {
-    public:
+public:
+    void draw();
+    void update(float time);
 
-        void draw();
-        void update(float time);
-
-    private:
-
-        Game game;
+private:
+    Game game;
 };

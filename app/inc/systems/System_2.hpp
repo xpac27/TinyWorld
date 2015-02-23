@@ -6,8 +6,6 @@
 
 class System_2 : public System
 {
-    public:
-        System_2() :System(
-                mask(Component<Position>::typeIndex) | 
-                mask(Component<Life>::typeIndex)) {}
+public:
+    System_2() : System(mask(Component<Position>::typeIndex) | mask(Component<Life>::typeIndex)) {}
 };

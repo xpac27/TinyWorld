@@ -4,4 +4,3 @@
 #include <assert.h>
 
 #define mask(n) ((1) << (n))
-

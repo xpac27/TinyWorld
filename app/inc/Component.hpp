@@ -4,8 +4,7 @@
 
 // CRT Patern Object Register
 template <class B>
-struct Component
-{
+struct Component {
     static unsigned int typeIndex;
     static std::vector<B>& list;
 };

@@ -10,14 +10,12 @@
 
 class Game
 {
-    public:
+public:
+    Game();
 
-        Game();
+    void draw();
+    void update(float time);
 
-        void draw();
-        void update(float time);
-
-    private:
-
-        EntitiesManager entityManager;
+private:
+    EntitiesManager entityManager;
 };
