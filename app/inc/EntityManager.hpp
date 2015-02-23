@@ -37,6 +37,12 @@ class EntitiesManager
 
         template<class T>
             unsigned int getComponentTypeIndex() const;
+        template<class T>
+            void registerEntity(Entity entity) const;
+        template<class T>
+            void unregisterEntity(Entity entity) const;
+        template<class T>
+            void initComponentIndex() const;
 
         unsigned int entityCount = 0;
 
@@ -47,6 +53,15 @@ class EntitiesManager
 };
 
 template<class T>
+void EntitiesManager::initComponentIndex() const
+{
+    if (Component<T>::typeIndex == UINT_MAX)
+    {
+        Component<T>::typeIndex = ++componentTypeCount - 1;
+    }
+}
+
+template<class T>
 unsigned int EntitiesManager::getComponentTypeIndex() const
 {
     return mapper.at(Component<T>::typeIndex);
@@ -55,18 +70,15 @@ unsigned int EntitiesManager::getComponentTypeIndex() const
 template<class T>
 void EntitiesManager::registerComponent()
 {
-    // TODO put in a method
+    initComponentIndex<T>();
     unsigned int index = Component<T>::typeIndex;
-    if (index == UINT_MAX)
+
+    if (mapper.has(index))
     {
-        Component<T>::typeIndex = index = ++componentTypeCount - 1;
+        throw std::invalid_argument("Component has already been registered");
     }
 
-    if (!mapper.add(index))
-    {
-        throw std::logic_error("Component has already been registered");
-    }
-
+    mapper.add(index);
     for (auto & i : entitiesComponentsIndex) i.push_back(UINT_MAX);
 }
 
@@ -83,11 +95,11 @@ bool EntitiesManager::hasComponent(Entity entity) const
 
     if (entitiesComponentsIndex.size() < entity)
     {
-        throw std::logic_error("Entity index doesn't exist");
+        throw std::invalid_argument("Entity index doesn't exist");
     }
     if (entitiesComponentsIndex.at(entity).size() < index)
     {
-        throw std::logic_error("Component has not been registered");
+        throw std::invalid_argument("Component has not been registered");
     }
 
     return entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX;
@@ -101,27 +113,20 @@ T* EntitiesManager::addComponent(Entity entity)
 
     if (entitiesComponentsIndex.size() < entity)
     {
-        throw std::logic_error("Entity index doesn't exist");
+        throw std::invalid_argument("Entity index doesn't exist");
     }
     if (!mapper.has(index))
     {
-        throw std::logic_error("Component has not been registered");
+        throw std::invalid_argument("Component has not been registered");
     }
     if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX)
     {
-        throw std::logic_error("Entity already has this component");
+        throw std::invalid_argument("Entity already has this component");
     }
 
     entitiesComponentsIndex.at(entity).at(mapper.at(index)) = unsigned(Component<T>::list.size());
     Component<T>::list.push_back(T());
-    // TODO put in a method
-    for (auto s : systems)
-    {
-        if (s.useComponent(mask(index)))
-        {
-            s.registerEntity(entity);
-        }
-    }
+    registerEntity<T>(entity);
     return &Component<T>::list.back();
 }
 
@@ -131,9 +136,18 @@ T* EntitiesManager::getComponent(Entity entity) const
 {
     unsigned int index = Component<T>::typeIndex;
 
-    assert(entitiesComponentsIndex.size() > entity);
-    assert(entitiesComponentsIndex.at(entity).size() > index);
-    assert(Component<T>::list.size() > entitiesComponentsIndex.at(entity).at(index));
+    if (entitiesComponentsIndex.size() < entity)
+    {
+        throw std::invalid_argument("Entity index doesn't exist");
+    }
+    if (entitiesComponentsIndex.at(entity).size() < index)
+    {
+        throw std::invalid_argument("Component has not been registered");
+    }
+    if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX)
+    {
+        throw std::invalid_argument("Entity already doesn't have this component");
+    }
 
     return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(index));
 }
@@ -148,7 +162,26 @@ void EntitiesManager::delComponent(Entity entity)
     assert(entitiesComponentsIndex.at(entity).size() > index);
 
     entitiesComponentsIndex.at(entity).at(mapper.at(index)) = UINT_MAX;
-    // TODO put in a method
+    unregisterEntity<T>(entity);
+}
+
+template<class T>
+void EntitiesManager::registerEntity(Entity entity) const
+{
+    unsigned int index = Component<T>::typeIndex;
+    for (auto s : systems)
+    {
+        if (s.useComponent(mask(index)))
+        {
+            s.registerEntity(entity);
+        }
+    }
+}
+
+template<class T>
+void EntitiesManager::unregisterEntity(Entity entity) const
+{
+    unsigned int index = Component<T>::typeIndex;
     for (auto s : systems)
     {
         if (s.useComponent(mask(index)))

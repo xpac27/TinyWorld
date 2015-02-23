@@ -6,7 +6,7 @@ class Mapper
 {
     public:
 
-        bool add(unsigned int i);
+        void add(unsigned int i);
         bool has(unsigned int i);
 
         unsigned int at(unsigned int i) const;

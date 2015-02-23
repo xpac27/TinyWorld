@@ -68,25 +68,26 @@ namespace
                     THEN("Call to addcomponent is invalid") {
                         CHECK_THROWS(entityManager.addComponent<Position>(e));
                     }
+                }
+            }
 
-                    WHEN("Life component registered") {
-                        entityManager.registerComponent<Life>();
+            WHEN("Life component registered and 1 entity added") {
+                entityManager.registerComponent<Life>();
+                Entity e = entityManager.addEntity();
 
-                        THEN("Adding a Life component is valid") {
-                            CHECK_NOTHROW(entityManager.addComponent<Life>(e));
-                        }
+                THEN("Adding a Life component is valid") {
+                    CHECK_NOTHROW(entityManager.addComponent<Life>(e));
+                }
 
-                        WHEN("Position components registered and 1 Life component added to entity") {
-                            entityManager.registerComponent<Position>();
-                            entityManager.addComponent<Life>(e);
+                WHEN("Position components registered and 1 Life component added to entity") {
+                    entityManager.registerComponent<Position>();
+                    entityManager.addComponent<Life>(e);
 
-                            THEN("Adding a Life component again is invalid") {
-                                CHECK_THROWS(entityManager.addComponent<Life>(e));
-                            }
-                            THEN("Adding a Position component again is valid") {
-                                CHECK_NOTHROW(entityManager.addComponent<Position>(e));
-                            }
-                        }
+                    THEN("Adding a Life component again is invalid") {
+                        CHECK_THROWS(entityManager.addComponent<Life>(e));
+                    }
+                    THEN("Adding a Position component again is valid") {
+                        CHECK_NOTHROW(entityManager.addComponent<Position>(e));
                     }
                 }
             }
@@ -128,6 +129,47 @@ namespace
                         THEN("The entity has a Position component") {
                             CHECK(entityManager.hasComponent<Position>(e) == true);
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    SCENARIO("EntitiesManager" "[getComponent]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No component are registered") {
+                THEN("Call to getComponent is invalid") {
+                    CHECK_THROWS(entityManager.getComponent<Position>(1));
+                }
+
+                WHEN("1 entity added") {
+                    Entity e = entityManager.addEntity();
+
+                    THEN("Call to getComponent is invalid") {
+                        CHECK_THROWS(entityManager.getComponent<Position>(e));
+                    }
+                }
+            }
+
+            WHEN("Position and Life component registered and 1 entity added") {
+                entityManager.registerComponent<Position>();
+                entityManager.registerComponent<Life>();
+                Entity e = entityManager.addEntity();
+
+                THEN("Get Life component is valid") {
+                    CHECK_THROWS(entityManager.getComponent<Position>(e));
+                }
+
+                WHEN("1 Life component added to entity") {
+                    entityManager.addComponent<Life>(e);
+
+                    THEN("Get Life component is valid") {
+                        CHECK_NOTHROW(entityManager.getComponent<Life>(e));
+                    }
+                    THEN("Get Position component is valid") {
+                        CHECK_THROWS(entityManager.getComponent<Position>(e));
                     }
                 }
             }
