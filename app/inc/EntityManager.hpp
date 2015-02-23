@@ -67,6 +67,7 @@ unsigned int EntitiesManager::getComponentTypeIndex() const
     return mapper.at(Component<T>::typeIndex);
 }
 
+// TODO remove this function and use variadic template thus avoiding all tests to component being registered (and tests)
 template<class T>
 void EntitiesManager::registerComponent()
 {
@@ -159,17 +160,25 @@ T* EntitiesManager::getComponent(Entity entity) const
     }
 }
 
-// TODO throw instead of assert and TEST
+// TODO TEST
 template<class T>
 void EntitiesManager::delComponent(Entity entity)
 {
     unsigned int index = Component<T>::typeIndex;
 
-    assert(entitiesComponentsIndex.size() > entity);
-    assert(entitiesComponentsIndex.at(entity).size() > index);
-
-    entitiesComponentsIndex.at(entity).at(mapper.at(index)) = UINT_MAX;
-    unregisterEntity<T>(entity);
+    if (entitiesComponentsIndex.size() <= entity)
+    {
+        throw std::invalid_argument("Entity index doesn't exist");
+    }
+    else if (entitiesComponentsIndex.at(entity).size() < index)
+    {
+        throw std::invalid_argument("Component has not been registered");
+    }
+    else
+    {
+        entitiesComponentsIndex.at(entity).at(mapper.at(index)) = UINT_MAX;
+        unregisterEntity<T>(entity);
+    }
 }
 
 template<class T>
@@ -218,13 +227,14 @@ unsigned int EntitiesManager::getEntityCount() const
     return entityCount;
 }
 
-// TODO throw instead of assert and TEST
 void EntitiesManager::resetEntity(Entity entity)
 {
     if (entitiesComponentsIndex.size() <= entity)
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
-
-    std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
+    else
+    {
+        std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
+    }
 }

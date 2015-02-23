@@ -69,7 +69,7 @@ namespace
         }
     }
 
-    SCENARIO("EntitiesManager" "[registerComponent-1]") {
+    SCENARIO("EntitiesManager" "[registerComponent]") {
         GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
@@ -78,12 +78,6 @@ namespace
                     CHECK_NOTHROW(entityManager.registerComponent<Position>());
                 }
             }
-        }
-    }
-
-    SCENARIO("EntitiesManager" "[registerComponent-2]") {
-        GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
 
             WHEN("Position component is registered") {
                 entityManager.registerComponent<Position>();
