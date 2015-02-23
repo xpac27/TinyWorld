@@ -5,6 +5,27 @@
 
 namespace
 {
+    SCENARIO("EntitiesManager" "[addEntity]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No entity are added") {
+                THEN("addEntity returns 0") {
+                    CHECK(entityManager.addEntity() == 0);
+                }
+            }
+            WHEN("3 entities are added") {
+                entityManager.addEntity();
+                entityManager.addEntity();
+                entityManager.addEntity();
+
+                THEN("addEntity returns 3") {
+                    CHECK(entityManager.addEntity() == 3);
+                }
+            }
+        }
+    }
+
     SCENARIO("EntitiesManager" "[getEntityCount]") {
         GIVEN("An EntityManager") {
             EntitiesManager entityManager;

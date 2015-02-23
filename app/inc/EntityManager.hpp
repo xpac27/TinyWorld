@@ -77,9 +77,11 @@ void EntitiesManager::registerComponent()
     {
         throw std::invalid_argument("Component has already been registered");
     }
-
-    mapper.add(index);
-    for (auto & i : entitiesComponentsIndex) i.push_back(UINT_MAX);
+    else
+    {
+        mapper.add(index);
+        for (auto & i : entitiesComponentsIndex) i.push_back(UINT_MAX);
+    }
 }
 
 template<class T>
@@ -97,12 +99,14 @@ bool EntitiesManager::hasComponent(Entity entity) const
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
-    if (entitiesComponentsIndex.at(entity).size() < index)
+    else if (entitiesComponentsIndex.at(entity).size() < index)
     {
         throw std::invalid_argument("Component has not been registered");
     }
-
-    return entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX;
+    else
+    {
+        return entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX;
+    }
 }
 
 // TODO return the first available component
@@ -115,22 +119,23 @@ T* EntitiesManager::addComponent(Entity entity)
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
-    if (!mapper.has(index))
+    else if (!mapper.has(index))
     {
         throw std::invalid_argument("Component has not been registered");
     }
-    if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX)
+    else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX)
     {
         throw std::invalid_argument("Entity already has this component");
     }
-
-    entitiesComponentsIndex.at(entity).at(mapper.at(index)) = unsigned(Component<T>::list.size());
-    Component<T>::list.push_back(T());
-    registerEntity<T>(entity);
-    return &Component<T>::list.back();
+    else
+    {
+        entitiesComponentsIndex.at(entity).at(mapper.at(index)) = unsigned(Component<T>::list.size());
+        Component<T>::list.push_back(T());
+        registerEntity<T>(entity);
+        return &Component<T>::list.back();
+    }
 }
 
-// TODO throw instead of assert and TEST
 template<class T>
 T* EntitiesManager::getComponent(Entity entity) const
 {
@@ -140,16 +145,18 @@ T* EntitiesManager::getComponent(Entity entity) const
     {
         throw std::invalid_argument("Entity index doesn't exist");
     }
-    if (entitiesComponentsIndex.at(entity).size() < index)
+    else if (entitiesComponentsIndex.at(entity).size() < index)
     {
         throw std::invalid_argument("Component has not been registered");
     }
-    if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX)
+    else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX)
     {
         throw std::invalid_argument("Entity already doesn't have this component");
     }
-
-    return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(index));
+    else
+    {
+        return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(index));
+    }
 }
 
 // TODO throw instead of assert and TEST
@@ -195,11 +202,16 @@ void EntitiesManager::unregisterEntity(Entity entity) const
 // TODO throw instead of assert and TEST
 Entity EntitiesManager::addEntity()
 {
-    assert(entityCount < UINT_MAX);
-
-    entitiesComponentsIndex.push_back(std::vector<unsigned int>(componentTypeCount));
-    std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
-    return ++entityCount - 1;
+    if (entityCount >= UINT_MAX)
+    {
+        throw std::out_of_range("You've reach the maximum number of entities!");
+    }
+    else
+    {
+        entitiesComponentsIndex.push_back(std::vector<unsigned int>(componentTypeCount));
+        std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
+        return ++entityCount - 1;
+    }
 }
 
 unsigned int EntitiesManager::getEntityCount() const
