@@ -194,7 +194,7 @@ namespace
                 entityManager.registerComponent<Life>();
                 Entity e = entityManager.addEntity();
 
-                THEN("Get Life component is valid") {
+                THEN("Get Life component is invalid") {
                     CHECK_THROWS(entityManager.getComponent<Position>(e));
                 }
 
@@ -204,8 +204,49 @@ namespace
                     THEN("Get Life component is valid") {
                         CHECK_NOTHROW(entityManager.getComponent<Life>(e));
                     }
-                    THEN("Get Position component is valid") {
+                    THEN("Get Position component is invalid") {
                         CHECK_THROWS(entityManager.getComponent<Position>(e));
+                    }
+                }
+            }
+        }
+    }
+
+    SCENARIO("EntitiesManager" "[delComponent]") {
+        GIVEN("An EntityManager") {
+            EntitiesManager entityManager;
+
+            WHEN("No component are registered") {
+                THEN("Call to delComponent is invalid") {
+                    CHECK_THROWS(entityManager.delComponent<Position>(1));
+                }
+
+                WHEN("1 entity added") {
+                    Entity e = entityManager.addEntity();
+
+                    THEN("Call to delComponent is invalid") {
+                        CHECK_THROWS(entityManager.delComponent<Position>(e));
+                    }
+                }
+            }
+
+            WHEN("Position and Life component registered and 1 entity added") {
+                entityManager.registerComponent<Position>();
+                entityManager.registerComponent<Life>();
+                Entity e = entityManager.addEntity();
+
+                THEN("Call to delComponent is invalid") {
+                    CHECK_THROWS(entityManager.delComponent<Position>(e));
+                }
+
+                WHEN("1 Life component added to entity") {
+                    entityManager.addComponent<Life>(e);
+
+                    THEN("Del Life component is valid") {
+                        CHECK_NOTHROW(entityManager.delComponent<Life>(e));
+                    }
+                    THEN("Del Position component is valid") {
+                        CHECK_THROWS(entityManager.delComponent<Position>(e));
                     }
                 }
             }

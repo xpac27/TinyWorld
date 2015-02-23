@@ -174,6 +174,10 @@ void EntitiesManager::delComponent(Entity entity)
     {
         throw std::invalid_argument("Component has not been registered");
     }
+    else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX)
+    {
+        throw std::invalid_argument("Entity doesn't have this component");
+    }
     else
     {
         entitiesComponentsIndex.at(entity).at(mapper.at(index)) = UINT_MAX;
