@@ -9,9 +9,9 @@ Game::Game()
     entityManager.registerSystem<System_1>();
     entityManager.registerSystem<System_2>();
 
-    Entity e1 = entityManager.addEntity();
-    Entity e2 = entityManager.addEntity();
-    Entity e3 = entityManager.addEntity();
+    Index e1 = entityManager.addEntity();
+    Index e2 = entityManager.addEntity();
+    Index e3 = entityManager.addEntity();
 
     Debug::printl("new entity #", e1);
     Debug::printl("new entity #", e2);

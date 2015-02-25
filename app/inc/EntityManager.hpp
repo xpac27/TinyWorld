@@ -8,45 +8,45 @@
 
 #define mask(n) ((1) << (n))
 
-typedef unsigned int Entity;
+typedef unsigned int Index;
 
 class EntitiesManager
 {
 public:
-    Entity addEntity();
-    Entity getEntityCount() const;
+    Index addEntity();
+    Index getEntityCount() const;
 
-    void resetEntity(Entity entity);
+    void resetEntity(Index entity);
 
     template <class T>
     void registerComponent();
     template <class T>
     void registerSystem();
     template <class T>
-    void delComponent(Entity entity);
+    void delComponent(Index entity);
     template <class T>
-    bool hasComponent(Entity entity) const;
+    bool hasComponent(Index entity) const;
     template <class T>
-    T* addComponent(Entity entity);
+    T* addComponent(Index entity);
     template <class T>
-    T* getComponent(Entity entity) const;
+    T* getComponent(Index entity) const;
 
 private:
     template <class T>
-    unsigned int getComponentTypeIndex() const;
+    void registerEntity(Index entity) const;
     template <class T>
-    void registerEntity(Entity entity) const;
-    template <class T>
-    void unregisterEntity(Entity entity) const;
+    void unregisterEntity(Index entity) const;
     template <class T>
     void initComponentIndex() const;
+    template <class T>
+    Index getComponentTypeIndex() const;
 
-    unsigned int entityCount = 0;
+    Index entityCount = 0;
 
     Mapper mapper;
 
     std::vector<System> systems;
-    std::vector<std::vector<unsigned int>> entitiesComponentsIndex;
+    std::vector<std::vector<Index>> entitiesComponentsIndex;
 };
 
 template <class T>
@@ -57,9 +57,8 @@ void EntitiesManager::initComponentIndex() const
     }
 }
 
-// TODO repace unsigned int by typedef Index
 template <class T>
-unsigned int EntitiesManager::getComponentTypeIndex() const
+Index EntitiesManager::getComponentTypeIndex() const
 {
     return mapper.at(Component<T>::typeIndex);
 }
@@ -69,7 +68,7 @@ template <class T>
 void EntitiesManager::registerComponent()
 {
     initComponentIndex<T>();
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
 
     if (mapper.has(index)) {
         throw std::invalid_argument("Component has already been registered");
@@ -86,12 +85,12 @@ void EntitiesManager::registerSystem()
 }
 
 template <class T>
-bool EntitiesManager::hasComponent(Entity entity) const
+bool EntitiesManager::hasComponent(Index entity) const
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
 
     if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
+        throw std::invalid_argument("Index index doesn't exist");
     } else if (entitiesComponentsIndex.at(entity).size() < index) {
         throw std::invalid_argument("Component has not been registered");
     } else {
@@ -101,16 +100,16 @@ bool EntitiesManager::hasComponent(Entity entity) const
 
 // TODO return the first available component
 template <class T>
-T* EntitiesManager::addComponent(Entity entity)
+T* EntitiesManager::addComponent(Index entity)
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
 
     if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
+        throw std::invalid_argument("Index index doesn't exist");
     } else if (!mapper.has(index)) {
         throw std::invalid_argument("Component has not been registered");
     } else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) != UINT_MAX) {
-        throw std::invalid_argument("Entity already has this component");
+        throw std::invalid_argument("Index already has this component");
     } else {
         entitiesComponentsIndex.at(entity).at(mapper.at(index)) = unsigned(Component<T>::list.size());
         Component<T>::list.push_back(T());
@@ -120,32 +119,32 @@ T* EntitiesManager::addComponent(Entity entity)
 }
 
 template <class T>
-T* EntitiesManager::getComponent(Entity entity) const
+T* EntitiesManager::getComponent(Index entity) const
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
 
     if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
+        throw std::invalid_argument("Index index doesn't exist");
     } else if (entitiesComponentsIndex.at(entity).size() < index) {
         throw std::invalid_argument("Component has not been registered");
     } else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX) {
-        throw std::invalid_argument("Entity already doesn't have this component");
+        throw std::invalid_argument("Index already doesn't have this component");
     } else {
         return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(index));
     }
 }
 
 template <class T>
-void EntitiesManager::delComponent(Entity entity)
+void EntitiesManager::delComponent(Index entity)
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
 
     if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
+        throw std::invalid_argument("Index index doesn't exist");
     } else if (entitiesComponentsIndex.at(entity).size() < index) {
         throw std::invalid_argument("Component has not been registered");
     } else if (entitiesComponentsIndex.at(entity).at(mapper.at(index)) == UINT_MAX) {
-        throw std::invalid_argument("Entity doesn't have this component");
+        throw std::invalid_argument("Index doesn't have this component");
     } else {
         entitiesComponentsIndex.at(entity).at(mapper.at(index)) = UINT_MAX;
         unregisterEntity<T>(entity);
@@ -153,9 +152,9 @@ void EntitiesManager::delComponent(Entity entity)
 }
 
 template <class T>
-void EntitiesManager::registerEntity(Entity entity) const
+void EntitiesManager::registerEntity(Index entity) const
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
     for (auto s : systems) {
         if (s.useComponent(mask(index))) {
             s.registerEntity(entity);
@@ -164,9 +163,9 @@ void EntitiesManager::registerEntity(Entity entity) const
 }
 
 template <class T>
-void EntitiesManager::unregisterEntity(Entity entity) const
+void EntitiesManager::unregisterEntity(Index entity) const
 {
-    unsigned int index = Component<T>::typeIndex;
+    Index index = Component<T>::typeIndex;
     for (auto s : systems) {
         if (s.useComponent(mask(index))) {
             s.unregisterEntity(entity);
@@ -175,26 +174,26 @@ void EntitiesManager::unregisterEntity(Entity entity) const
 }
 
 // TODO return the first available entity
-Entity EntitiesManager::addEntity()
+Index EntitiesManager::addEntity()
 {
     if (entityCount >= UINT_MAX) {
         throw std::out_of_range("You've reach the maximum number of entities!");
     } else {
-        entitiesComponentsIndex.push_back(std::vector<unsigned int>(componentTypeCount));
+        entitiesComponentsIndex.push_back(std::vector<Index>(componentTypeCount));
         std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
         return ++entityCount - 1;
     }
 }
 
-unsigned int EntitiesManager::getEntityCount() const
+Index EntitiesManager::getEntityCount() const
 {
     return entityCount;
 }
 
-void EntitiesManager::resetEntity(Entity entity)
+void EntitiesManager::resetEntity(Index entity)
 {
     if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
+        throw std::invalid_argument("Index index doesn't exist");
     } else {
         std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
     }
