@@ -2,7 +2,6 @@
 #include "EntityManager.hpp"
 #include "components/Life.hpp"
 #include "components/Position.hpp"
-#include <iostream>
 
 namespace
 {
@@ -93,38 +92,6 @@ namespace
                     }
                     THEN("Adding a Position component is valid") {
                         CHECK_NOTHROW(entityManager.addComponent<Position>(e));
-                    }
-                }
-            }
-        }
-    }
-
-    SCENARIO("EntitiesManager" "[hasComponent]") {
-        GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
-
-            WHEN("No entity are added") {
-                THEN("Call to hasComponent is invalid") {
-                    CHECK_THROWS(entityManager.hasComponent<Position>(1));
-                }
-            }
-
-            WHEN("1 entity added") {
-                Index e = entityManager.addEntity();
-
-                THEN("The entity doesn't have those components yet") {
-                    CHECK(entityManager.hasComponent<Position>(e) == false);
-                    CHECK(entityManager.hasComponent<Life>(e) == false);
-                }
-
-                WHEN("1 Position component added to entity") {
-                    entityManager.addComponent<Position>(e);
-
-                    THEN("The entity doesn't have a Life component") {
-                        CHECK(entityManager.hasComponent<Life>(e) == false);
-                    }
-                    THEN("The entity has a Position component") {
-                        CHECK(entityManager.hasComponent<Position>(e) == true);
                     }
                 }
             }

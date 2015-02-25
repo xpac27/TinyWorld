@@ -22,18 +22,6 @@ Game::Game()
     entityManager.addComponent<Life>(e3);
     entityManager.addComponent<Visibility>(e3);
 
-    Debug::printl("entity #", e1, "has component position?", (entityManager.hasComponent<Position>(e1) ? "yes" : "no"));
-    Debug::printl("entity #", e1, "has component life?", (entityManager.hasComponent<Life>(e1) ? "yes" : "no"));
-    Debug::printl("entity #", e1, "has component visibility?", (entityManager.hasComponent<Visibility>(e1) ? "yes" : "no"));
-
-    Debug::printl("entity #", e2, "has component position?", (entityManager.hasComponent<Position>(e2) ? "yes" : "no"));
-    Debug::printl("entity #", e2, "has component life?", (entityManager.hasComponent<Life>(e2) ? "yes" : "no"));
-    Debug::printl("entity #", e2, "has component visibility?", (entityManager.hasComponent<Visibility>(e2) ? "yes" : "no"));
-
-    Debug::printl("entity #", e3, "has component position?", (entityManager.hasComponent<Position>(e3) ? "yes" : "no"));
-    Debug::printl("entity #", e3, "has component life?", (entityManager.hasComponent<Life>(e3) ? "yes" : "no"));
-    Debug::printl("entity #", e3, "has component visibility?", (entityManager.hasComponent<Visibility>(e3) ? "yes" : "no"));
-
     Debug::printl("entity #", e1, ":");
     Debug::dump(entityManager.getComponent<Position>(e1));
 

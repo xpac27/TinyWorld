@@ -5,37 +5,27 @@ Index EntitiesManager::getEntityCount() const
     return entityCount;
 }
 
+// TODO return the first available entity
+Index EntitiesManager::addEntity()
+{
+    if (entityAvailable()) {
+        entitiesComponentsIndex.push_back(std::vector<Index>(componentTypeCount));
+        std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
+        entityCount ++;
+    }
+    return entityCount - 1;
+}
+
 void EntitiesManager::resetEntity(Index entity)
 {
-    if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
-    } else {
+    if (hasEntity(entity)) {
         std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
     }
 }
 
-// TODO return the first available entity
-Index EntitiesManager::addEntity()
+void EntitiesManager::addSystem(System system)
 {
-    if (entityCount >= UINT_MAX) {
-        throw std::out_of_range("You've reach the maximum number of entities!");
-    } else {
-        entitiesComponentsIndex.push_back(std::vector<Index>(componentTypeCount));
-        std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
-        return ++entityCount - 1;
-    }
-}
-
-void EntitiesManager::extendIndexCapacity()
-{
-    for (auto& i : entitiesComponentsIndex) {
-        i.push_back(UINT_MAX);
-    }
-}
-
-bool EntitiesManager::hasEntity(Index entity)
-{
-    return entitiesComponentsIndex.size() > entity;
+    systems.push_back(system);
 }
 
 void EntitiesManager::registerEntity(Index entity, Index index)
@@ -56,7 +46,45 @@ void EntitiesManager::unregisterEntity(Index entity, Index index)
     }
 }
 
-void EntitiesManager::addSystem(System system)
+void EntitiesManager::extendIndexCapacity()
 {
-    systems.push_back(system);
+    for (auto& i : entitiesComponentsIndex) {
+        i.push_back(UINT_MAX);
+    }
+}
+
+bool EntitiesManager::entityAvailable()
+{
+    if (entityCount < UINT_MAX) {
+        return true;
+    } else {
+        throw std::out_of_range("You've reach the maximum number of entities!");
+    }
+}
+
+bool EntitiesManager::hasEntity(Index entity)
+{
+    if (entitiesComponentsIndex.size() > entity) {
+        return true;
+    } else {
+        throw std::invalid_argument("Entity index doesn't exist");
+    }
+}
+
+bool EntitiesManager::hasComponent(Index entity, Index index)
+{
+    if (hasEntity(entity) && entitiesComponentsIndex.at(entity).at(index) != UINT_MAX) {
+        return true;
+    } else {
+        throw std::invalid_argument("Entity doesn't have this component");
+    }
+}
+
+bool EntitiesManager::hasNoComponent(Index entity, Index index)
+{
+    if (hasEntity(entity) && entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) {
+        return true;
+    } else {
+        throw std::invalid_argument("Entity already has this component");
+    }
 }
