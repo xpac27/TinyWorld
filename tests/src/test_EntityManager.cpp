@@ -69,60 +69,28 @@ namespace
         }
     }
 
-    SCENARIO("EntitiesManager" "[registerComponent]") {
-        GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
-
-            WHEN("Registering Position component") {
-                THEN( "No exeptions are thrown" ) {
-                    CHECK_NOTHROW(entityManager.registerComponent<Position>());
-                }
-            }
-
-            WHEN("Position component is registered") {
-                entityManager.registerComponent<Position>();
-
-                THEN("RegisterComponent again is invalid") {
-                    CHECK_THROWS(entityManager.registerComponent<Position>());
-                }
-            }
-        }
-    }
-
     SCENARIO("EntitiesManager" "[addComponent]") {
         GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
-            WHEN("No component are registered") {
-                THEN("Call to addComponent is invalid") {
-                    CHECK_THROWS(entityManager.addComponent<Position>(1));
-                }
-
-                WHEN("1 entity added") {
-                    Index e = entityManager.addEntity();
-
-                    THEN("Call to addcomponent is invalid") {
-                        CHECK_THROWS(entityManager.addComponent<Position>(e));
-                    }
-                }
+            THEN("Call to addComponent is invalid") {
+                CHECK_THROWS(entityManager.addComponent<Position>(1));
             }
 
-            WHEN("Life component registered and 1 entity added") {
-                entityManager.registerComponent<Life>();
+            WHEN("1 entity added") {
                 Index e = entityManager.addEntity();
 
                 THEN("Adding a Life component is valid") {
                     CHECK_NOTHROW(entityManager.addComponent<Life>(e));
                 }
 
-                WHEN("Position components registered and 1 Life component added to entity") {
-                    entityManager.registerComponent<Position>();
+                WHEN("Life component added to entity") {
                     entityManager.addComponent<Life>(e);
 
                     THEN("Adding a Life component again is invalid") {
                         CHECK_THROWS(entityManager.addComponent<Life>(e));
                     }
-                    THEN("Adding a Position component again is valid") {
+                    THEN("Adding a Position component is valid") {
                         CHECK_NOTHROW(entityManager.addComponent<Position>(e));
                     }
                 }
@@ -143,28 +111,19 @@ namespace
             WHEN("1 entity added") {
                 Index e = entityManager.addEntity();
 
-                THEN("Call to hasComponent is invalid") {
-                    CHECK_THROWS(entityManager.hasComponent<Position>(e));
+                THEN("The entity doesn't have those components yet") {
+                    CHECK(entityManager.hasComponent<Position>(e) == false);
+                    CHECK(entityManager.hasComponent<Life>(e) == false);
                 }
 
-                WHEN("2 components registered") {
-                    entityManager.registerComponent<Position>();
-                    entityManager.registerComponent<Life>();
+                WHEN("1 Position component added to entity") {
+                    entityManager.addComponent<Position>(e);
 
-                    THEN("The entity doesn't have those components yet") {
-                        CHECK(entityManager.hasComponent<Position>(e) == false);
+                    THEN("The entity doesn't have a Life component") {
                         CHECK(entityManager.hasComponent<Life>(e) == false);
                     }
-
-                    WHEN("1 Position component added to entity") {
-                        entityManager.addComponent<Position>(e);
-
-                        THEN("The entity doesn't have a Life component") {
-                            CHECK(entityManager.hasComponent<Life>(e) == false);
-                        }
-                        THEN("The entity has a Position component") {
-                            CHECK(entityManager.hasComponent<Position>(e) == true);
-                        }
+                    THEN("The entity has a Position component") {
+                        CHECK(entityManager.hasComponent<Position>(e) == true);
                     }
                 }
             }
@@ -175,23 +134,7 @@ namespace
         GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
-            WHEN("No component are registered") {
-                THEN("Call to getComponent is invalid") {
-                    CHECK_THROWS(entityManager.getComponent<Position>(1));
-                }
-
-                WHEN("1 entity added") {
-                    Index e = entityManager.addEntity();
-
-                    THEN("Call to getComponent is invalid") {
-                        CHECK_THROWS(entityManager.getComponent<Position>(e));
-                    }
-                }
-            }
-
-            WHEN("Position and Life component registered and 1 entity added") {
-                entityManager.registerComponent<Position>();
-                entityManager.registerComponent<Life>();
+            WHEN("1 entity added") {
                 Index e = entityManager.addEntity();
 
                 THEN("Get Life component is invalid") {
@@ -216,23 +159,7 @@ namespace
         GIVEN("An EntityManager") {
             EntitiesManager entityManager;
 
-            WHEN("No component are registered") {
-                THEN("Call to delComponent is invalid") {
-                    CHECK_THROWS(entityManager.delComponent<Position>(1));
-                }
-
-                WHEN("1 entity added") {
-                    Index e = entityManager.addEntity();
-
-                    THEN("Call to delComponent is invalid") {
-                        CHECK_THROWS(entityManager.delComponent<Position>(e));
-                    }
-                }
-            }
-
-            WHEN("Position and Life component registered and 1 entity added") {
-                entityManager.registerComponent<Position>();
-                entityManager.registerComponent<Life>();
+            WHEN("1 entity added") {
                 Index e = entityManager.addEntity();
 
                 THEN("Call to delComponent is invalid") {
