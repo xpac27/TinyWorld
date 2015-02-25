@@ -25,3 +25,38 @@ Index EntitiesManager::addEntity()
         return ++entityCount - 1;
     }
 }
+
+void EntitiesManager::extendIndexCapacity()
+{
+    for (auto& i : entitiesComponentsIndex) {
+        i.push_back(UINT_MAX);
+    }
+}
+
+bool EntitiesManager::hasEntity(Index entity)
+{
+    return entitiesComponentsIndex.size() > entity;
+}
+
+void EntitiesManager::registerEntity(Index entity, Index index)
+{
+    for (auto s : systems) {
+        if (s.useComponent(index)) {
+            s.registerEntity(entity);
+        }
+    }
+}
+
+void EntitiesManager::unregisterEntity(Index entity, Index index)
+{
+    for (auto s : systems) {
+        if (s.useComponent(index)) {
+            s.unregisterEntity(entity);
+        }
+    }
+}
+
+void EntitiesManager::addSystem(System system)
+{
+    systems.push_back(system);
+}

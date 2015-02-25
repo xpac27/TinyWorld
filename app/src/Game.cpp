@@ -2,8 +2,8 @@
 
 Game::Game()
 {
-    entityManager.addSystem<System_1>();
-    entityManager.addSystem<System_2>();
+    entityManager.addSystem(System_1());
+    entityManager.addSystem(System_2());
 
     Index e1 = entityManager.addEntity();
     Index e2 = entityManager.addEntity();

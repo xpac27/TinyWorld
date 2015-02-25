@@ -2,6 +2,7 @@
 #include "EntityManager.hpp"
 #include "components/Life.hpp"
 #include "components/Position.hpp"
+#include <iostream>
 
 namespace
 {
