@@ -61,6 +61,7 @@ Index EntitiesManager::getComponentTypeIndex()
         if (Component<T>::typeIndex == UINT_MAX) {
             Component<T>::typeIndex = index = ++componentTypeCount - 1;
         }
+        // TODO move in a function
         for (auto& i : entitiesComponentsIndex) {
             i.push_back(UINT_MAX);
         }
@@ -74,7 +75,8 @@ bool EntitiesManager::hasComponent(Index entity)
 {
     Index index = getComponentTypeIndex<T>();
 
-    if (entitiesComponentsIndex.size() <= entity) {
+    // TODO move in a function
+    if (entitiesComponentsIndex.size() <= entity) { // TODO use a function
         throw std::invalid_argument("Entity index doesn't exist");
     } else {
         return entitiesComponentsIndex.at(entity).at(index) != UINT_MAX;
@@ -85,13 +87,13 @@ bool EntitiesManager::hasComponent(Index entity)
 template <class T>
 T* EntitiesManager::addComponent(Index entity)
 {
-    if (entitiesComponentsIndex.size() <= entity) {
+    if (entitiesComponentsIndex.size() <= entity) { // TODO use a function
         throw std::invalid_argument("Entity index doesn't exist");
     }
 
     Index index = getComponentTypeIndex<T>();
 
-    if (entitiesComponentsIndex.at(entity).at(index) != UINT_MAX) {
+    if (entitiesComponentsIndex.at(entity).at(index) != UINT_MAX) { // TODO use a function
         throw std::invalid_argument("Entity already has this component");
     } else {
         entitiesComponentsIndex.at(entity).at(index) = unsigned(Component<T>::list.size());
@@ -106,9 +108,9 @@ T* EntitiesManager::getComponent(Index entity)
 {
     Index index = getComponentTypeIndex<T>();
 
-    if (entitiesComponentsIndex.size() <= entity) {
+    if (entitiesComponentsIndex.size() <= entity) { // TODO use a function
         throw std::invalid_argument("Entity index doesn't exist");
-    } else if (entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) {
+    } else if (entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) { // TODO use a function
         throw std::invalid_argument("Entity already doesn't have this component");
     } else {
         return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(index));
@@ -120,13 +122,14 @@ void EntitiesManager::delComponent(Index entity)
 {
     Index index = getComponentTypeIndex<T>();
 
-    if (entitiesComponentsIndex.size() <= entity) {
+    if (entitiesComponentsIndex.size() <= entity) { // TODO use a function
         throw std::invalid_argument("Entity index doesn't exist");
-    } else if (entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) {
+    } else if (entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) { // TODO use a function
         throw std::invalid_argument("Entity doesn't have this component");
     } else {
-        entitiesComponentsIndex.at(entity).at(index) = UINT_MAX;
         unregisterEntity<T>(entity);
+        // TODO move in a function
+        entitiesComponentsIndex.at(entity).at(index) = UINT_MAX;
     }
 }
 
@@ -134,6 +137,7 @@ template <class T>
 void EntitiesManager::registerEntity(Index entity)
 {
     Index index = getComponentTypeIndex<T>();
+    // TODO move in a function
     for (auto s : systems) {
         if (s.useComponent(index)) {
             s.registerEntity(entity);
@@ -145,35 +149,10 @@ template <class T>
 void EntitiesManager::unregisterEntity(Index entity)
 {
     Index index = getComponentTypeIndex<T>();
+    // TODO move in a function
     for (auto s : systems) {
         if (s.useComponent(index)) {
             s.unregisterEntity(entity);
         }
-    }
-}
-
-// TODO return the first available entity
-Index EntitiesManager::addEntity()
-{
-    if (entityCount >= UINT_MAX) {
-        throw std::out_of_range("You've reach the maximum number of entities!");
-    } else {
-        entitiesComponentsIndex.push_back(std::vector<Index>(componentTypeCount));
-        std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
-        return ++entityCount - 1;
-    }
-}
-
-Index EntitiesManager::getEntityCount() const
-{
-    return entityCount;
-}
-
-void EntitiesManager::resetEntity(Index entity)
-{
-    if (entitiesComponentsIndex.size() <= entity) {
-        throw std::invalid_argument("Entity index doesn't exist");
-    } else {
-        std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
     }
 }
