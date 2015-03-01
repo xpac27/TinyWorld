@@ -10,6 +10,6 @@ class System_2 : public ECS::System
 {
 public:
     System_2() : System(
-            ECS::getComponentTypeMask<Position>() |
-            ECS::getComponentTypeMask<Life>()) {}
+            ECS::getComponentMask<Position>() |
+            ECS::getComponentMask<Life>()) {}
 };

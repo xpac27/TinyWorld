@@ -41,6 +41,6 @@ void Game::draw()
 
 void Game::update(float time)
 {
-    system1.update(time);
-    system2.update(time);
+    // system1.update(time);
+    // system2.update(time);
 }

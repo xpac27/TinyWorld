@@ -9,6 +9,7 @@ public:
     bool has(unsigned int i);
 
     unsigned int at(unsigned int i) const;
+    unsigned int getTotal() const;
 
 private:
     unsigned int total = 0;

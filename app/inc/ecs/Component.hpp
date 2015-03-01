@@ -2,47 +2,37 @@
 #include <vector>
 #include <climits>
 
+#include "ecs/ComponentGUI.hpp"
+
 namespace ECS
 {
 
-typedef unsigned int Index;
-
 template <class B>      // CRT Patern Object Register
 struct Component {
-    static unsigned int type;
+    static ComponentGUI id;
     static std::vector<B>& list;
 };
 
-static unsigned int componentTypeCount = 0;
-
 template <class T>
-Index getComponentType();
-
+unsigned int getComponentId();
 template <class T>
-Index getComponentTypeMask();
+unsigned int getComponentMask();
 
 }
 
 template <class B>
-unsigned int ECS::Component<B>::type = UINT_MAX;
-
+ComponentGUI ECS::Component<B>::id = ComponentGUI();
 template <class B>
 std::vector<B>& ECS::Component<B>::list = *new std::vector<B>();
 
 template <class T>
-ECS::Index ECS::getComponentType()
+unsigned int ECS::getComponentId()
 {
-    if (Component<T>::type == UINT_MAX) {
-        Component<T>::type = ++ECS::componentTypeCount - 1;
-    }
-    return Component<T>::type;
+    return ECS::Component<T>::id.get();
 }
 
 template <class T>
-unsigned int ECS::getComponentTypeMask()
+unsigned int ECS::getComponentMask()
 {
-    if (Component<T>::type == UINT_MAX) {
-        Component<T>::type = ++ECS::componentTypeCount - 1;
-    }
-    return 1 << getComponentType<T>();
+    return 1 << getComponentId<T>();
 }

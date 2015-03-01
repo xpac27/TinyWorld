@@ -9,7 +9,7 @@ ECS::Index ECS::EntitiesManager::getEntityCount() const
 ECS::Index ECS::EntitiesManager::addEntity()
 {
     if (entityAvailable()) {
-        entitiesComponentsIndex.push_back(std::vector<ECS::Index>(componentTypeCount));
+        entitiesComponentsIndex.push_back(std::vector<ECS::Index>(mapper.getTotal()));
         std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
         entityCount ++;
     }

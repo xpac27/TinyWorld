@@ -38,7 +38,7 @@ private:
     bool hasNoComponent(Index entity, Index index);
 
     template <class T>
-    Index getComponentTypeIndex();
+    Index getComponentIndex();
 
     Index entityCount = 0;
 
@@ -52,9 +52,9 @@ private:
 template <class T>
 void ECS::EntitiesManager::delComponent(ECS::Index entity)
 {
-    if (hasComponent(entity, getComponentTypeIndex<T>())) {
-        entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()) = UINT_MAX;
-        unregisterEntity(entity, getComponentTypeIndex<T>());
+    if (hasComponent(entity, getComponentIndex<T>())) {
+        entitiesComponentsIndex.at(entity).at(getComponentIndex<T>()) = UINT_MAX;
+        unregisterEntity(entity, getComponentIndex<T>());
     }
 }
 
@@ -62,10 +62,10 @@ void ECS::EntitiesManager::delComponent(ECS::Index entity)
 template <class T>
 T* ECS::EntitiesManager::addComponent(ECS::Index entity)
 {
-    if (hasNoComponent(entity, getComponentTypeIndex<T>())) {
-        entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()) = unsigned(Component<T>::list.size());
+    if (hasNoComponent(entity, getComponentIndex<T>())) {
+        entitiesComponentsIndex.at(entity).at(getComponentIndex<T>()) = unsigned(Component<T>::list.size());
         Component<T>::list.push_back(T());
-        registerEntity(entity, getComponentTypeIndex<T>());
+        registerEntity(entity, getComponentIndex<T>());
     }
     return &Component<T>::list.back();
 }
@@ -73,17 +73,17 @@ T* ECS::EntitiesManager::addComponent(ECS::Index entity)
 template <class T>
 T* ECS::EntitiesManager::getComponent(ECS::Index entity)
 {
-    if (hasComponent(entity, getComponentTypeIndex<T>())) {
-        return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()));
+    if (hasComponent(entity, getComponentIndex<T>())) {
+        return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(getComponentIndex<T>()));
     } else {
         return nullptr;
     }
 }
 
 template <class T>
-ECS::Index ECS::EntitiesManager::getComponentTypeIndex()
+ECS::Index ECS::EntitiesManager::getComponentIndex()
 {
-    ECS::Index index = ECS::getComponentType<T>();
+    ECS::Index index = ECS::getComponentId<T>();
     if (mapper.has(index)) {
         return mapper.at(index);
     } else {

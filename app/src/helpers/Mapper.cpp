@@ -16,3 +16,8 @@ unsigned int Mapper::at(unsigned int i) const
 {
     return index.at(i);
 }
+
+unsigned int Mapper::getTotal() const
+{
+    return total;
+}
