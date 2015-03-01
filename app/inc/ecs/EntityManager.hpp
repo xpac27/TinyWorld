@@ -7,8 +7,6 @@
 
 #include "helpers/Mapper.hpp"
 
-#define mask(n) ((1) << (n))
-
 namespace ECS
 {
 
@@ -51,9 +49,6 @@ private:
 
 }
 
-// TODO find a better place for that (namespace?)
-static unsigned int componentTypeCount = 0;
-
 template <class T>
 void ECS::EntitiesManager::delComponent(ECS::Index entity)
 {
@@ -88,13 +83,10 @@ T* ECS::EntitiesManager::getComponent(ECS::Index entity)
 template <class T>
 ECS::Index ECS::EntitiesManager::getComponentTypeIndex()
 {
-    ECS::Index index = Component<T>::typeIndex;
+    ECS::Index index = ECS::getComponentType<T>();
     if (mapper.has(index)) {
         return mapper.at(index);
     } else {
-        if (Component<T>::typeIndex == UINT_MAX) {
-            Component<T>::typeIndex = index = ++componentTypeCount - 1;
-        }
         extendIndexCapacity();
         mapper.add(index);
     }

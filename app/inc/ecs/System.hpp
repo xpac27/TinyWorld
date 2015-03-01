@@ -3,8 +3,6 @@
 
 #include "ecs/Component.hpp"
 
-#define mask(n) ((1) << (n))
-
 namespace ECS
 {
 
@@ -18,8 +16,17 @@ public:
 
     bool useComponent(unsigned int mask) const;
 
-    template <typename T>
-    bool useComponent() const;
+    template <typename C, typename... Components>
+    void requires()
+    {
+        requires<C>();
+        requires<Components...>();
+    }
+
+    template <typename C>
+    void requires()
+    {
+    }
 
 protected:
     unsigned int componentTypes;
@@ -28,10 +35,4 @@ private:
     std::vector<unsigned int> entities;
 };
 
-}
-
-template <typename T>
-bool ECS::System::useComponent() const
-{
-    return useComponent(mask(ECS::Component<T>::typeIndex));
 }

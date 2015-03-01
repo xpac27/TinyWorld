@@ -3,10 +3,13 @@
 #include "ecs/System.hpp"
 #include "ecs/Component.hpp"
 
-#define mask(n) ((1) << (n))
+#include "components/Position.hpp"
+#include "components/Life.hpp"
 
 class System_2 : public ECS::System
 {
 public:
-    System_2() : System(mask(ECS::Component<Position>::typeIndex) | mask(ECS::Component<Life>::typeIndex)) {}
+    System_2() : System(
+            ECS::getComponentTypeMask<Position>() |
+            ECS::getComponentTypeMask<Life>()) {}
 };
