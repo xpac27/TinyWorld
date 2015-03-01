@@ -9,7 +9,7 @@
 #include "systems/System_1.hpp"
 #include "systems/System_2.hpp"
 
-#include "Debug.hpp"
+#include "helpers/Debug.hpp"
 
 class Game
 {
