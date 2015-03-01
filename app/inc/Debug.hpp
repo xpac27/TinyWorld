@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+
 #include "components/Position.hpp"
 #include "components/Life.hpp"
 #include "components/Visibility.hpp"

@@ -1,34 +1,34 @@
-#include "EntityManager.hpp"
+#include "ecs/EntityManager.hpp"
 
-Index EntitiesManager::getEntityCount() const
+ECS::Index ECS::EntitiesManager::getEntityCount() const
 {
     return entityCount;
 }
 
 // TODO return the first available entity
-Index EntitiesManager::addEntity()
+ECS::Index ECS::EntitiesManager::addEntity()
 {
     if (entityAvailable()) {
-        entitiesComponentsIndex.push_back(std::vector<Index>(componentTypeCount));
+        entitiesComponentsIndex.push_back(std::vector<ECS::Index>(componentTypeCount));
         std::fill(entitiesComponentsIndex.back().begin(), entitiesComponentsIndex.back().end(), UINT_MAX);
         entityCount ++;
     }
     return entityCount - 1;
 }
 
-void EntitiesManager::resetEntity(Index entity)
+void ECS::EntitiesManager::resetEntity(ECS::Index entity)
 {
     if (hasEntity(entity)) {
         std::fill(entitiesComponentsIndex.at(entity).begin(), entitiesComponentsIndex.at(entity).end(), UINT_MAX);
     }
 }
 
-void EntitiesManager::addSystem(System system)
+void ECS::EntitiesManager::addSystem(System system)
 {
     systems.push_back(system);
 }
 
-void EntitiesManager::registerEntity(Index entity, Index index)
+void ECS::EntitiesManager::registerEntity(ECS::Index entity, ECS::Index index)
 {
     for (auto s : systems) {
         if (s.useComponent(index)) {
@@ -37,7 +37,7 @@ void EntitiesManager::registerEntity(Index entity, Index index)
     }
 }
 
-void EntitiesManager::unregisterEntity(Index entity, Index index)
+void ECS::EntitiesManager::unregisterEntity(ECS::Index entity, ECS::Index index)
 {
     for (auto s : systems) {
         if (s.useComponent(index)) {
@@ -46,14 +46,14 @@ void EntitiesManager::unregisterEntity(Index entity, Index index)
     }
 }
 
-void EntitiesManager::extendIndexCapacity()
+void ECS::EntitiesManager::extendIndexCapacity()
 {
     for (auto& i : entitiesComponentsIndex) {
         i.push_back(UINT_MAX);
     }
 }
 
-bool EntitiesManager::entityAvailable()
+bool ECS::EntitiesManager::entityAvailable()
 {
     if (entityCount < UINT_MAX) {
         return true;
@@ -62,7 +62,7 @@ bool EntitiesManager::entityAvailable()
     }
 }
 
-bool EntitiesManager::hasEntity(Index entity)
+bool ECS::EntitiesManager::hasEntity(ECS::Index entity)
 {
     if (entitiesComponentsIndex.size() > entity) {
         return true;
@@ -71,7 +71,7 @@ bool EntitiesManager::hasEntity(Index entity)
     }
 }
 
-bool EntitiesManager::hasComponent(Index entity, Index index)
+bool ECS::EntitiesManager::hasComponent(ECS::Index entity, ECS::Index index)
 {
     if (hasEntity(entity) && entitiesComponentsIndex.at(entity).at(index) != UINT_MAX) {
         return true;
@@ -80,7 +80,7 @@ bool EntitiesManager::hasComponent(Index entity, Index index)
     }
 }
 
-bool EntitiesManager::hasNoComponent(Index entity, Index index)
+bool ECS::EntitiesManager::hasNoComponent(ECS::Index entity, ECS::Index index)
 {
     if (hasEntity(entity) && entitiesComponentsIndex.at(entity).at(index) == UINT_MAX) {
         return true;

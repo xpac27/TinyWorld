@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "EntityManager.hpp"
+#include "ecs/EntityManager.hpp"
 #include "components/Life.hpp"
 #include "components/Position.hpp"
 
@@ -7,7 +7,7 @@ namespace
 {
     SCENARIO("EntitiesManager" "[addEntity]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             WHEN("No entity are added") {
                 THEN("addEntity returns 0") {
@@ -29,7 +29,7 @@ namespace
 
     SCENARIO("EntitiesManager" "[resetEntity]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             WHEN("No entity are added") {
                 THEN("Call to delEntity is invalid") {
@@ -38,8 +38,7 @@ namespace
             }
 
             WHEN("1 entities is added") {
-                Index e = entityManager.addEntity();
-
+                ECS::Index e = entityManager.addEntity();
                 THEN("Call to delEntity is valid") {
                     CHECK_NOTHROW(entityManager.resetEntity(e));
                 }
@@ -49,7 +48,7 @@ namespace
 
     SCENARIO("EntitiesManager" "[getEntityCount]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             WHEN("No entity are added") {
                 THEN("getEntityCount is 0") {
@@ -71,14 +70,14 @@ namespace
 
     SCENARIO("EntitiesManager" "[addComponent]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             THEN("Call to addComponent is invalid") {
                 CHECK_THROWS(entityManager.addComponent<Position>(1));
             }
 
             WHEN("1 entity added") {
-                Index e = entityManager.addEntity();
+                ECS::Index e = entityManager.addEntity();
 
                 THEN("Adding a Life component is valid") {
                     CHECK_NOTHROW(entityManager.addComponent<Life>(e));
@@ -100,10 +99,10 @@ namespace
 
     SCENARIO("EntitiesManager" "[getComponent]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             WHEN("1 entity added") {
-                Index e = entityManager.addEntity();
+                ECS::Index e = entityManager.addEntity();
 
                 THEN("Get Life component is invalid") {
                     CHECK_THROWS(entityManager.getComponent<Position>(e));
@@ -125,10 +124,10 @@ namespace
 
     SCENARIO("EntitiesManager" "[delComponent]") {
         GIVEN("An EntityManager") {
-            EntitiesManager entityManager;
+            ECS::EntitiesManager entityManager;
 
             WHEN("1 entity added") {
-                Index e = entityManager.addEntity();
+                ECS::Index e = entityManager.addEntity();
 
                 THEN("Call to delComponent is invalid") {
                     CHECK_THROWS(entityManager.delComponent<Position>(e));

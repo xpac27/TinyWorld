@@ -1,6 +1,7 @@
 #pragma once
-#include "Component.hpp"
 
-struct Life : Component<Life> {
+#include "ecs/Component.hpp"
+
+struct Life : ECS::Component<Life> {
     int amount{123};
 };

@@ -1,11 +1,12 @@
 #pragma once
-#include "System.hpp"
-#include "Component.hpp"
+
+#include "ecs/System.hpp"
+#include "ecs/Component.hpp"
 
 #define mask(n) ((1) << (n))
 
-class System_2 : public System
+class System_2 : public ECS::System
 {
 public:
-    System_2() : System(mask(Component<Position>::typeIndex) | mask(Component<Life>::typeIndex)) {}
+    System_2() : System(mask(ECS::Component<Position>::typeIndex) | mask(ECS::Component<Life>::typeIndex)) {}
 };

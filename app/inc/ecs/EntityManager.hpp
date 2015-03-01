@@ -1,12 +1,16 @@
 #pragma once
 #include <vector>
 #include <climits>
-#include <assert.h>
-#include "System.hpp"
-#include "Component.hpp"
+
+#include "ecs/System.hpp"
+#include "ecs/Component.hpp"
+
 #include "helpers/Mapper.hpp"
 
 #define mask(n) ((1) << (n))
+
+namespace ECS
+{
 
 typedef unsigned int Index;
 
@@ -45,8 +49,13 @@ private:
     std::vector<std::vector<Index>> entitiesComponentsIndex;
 };
 
+}
+
+// TODO find a better place for that (namespace?)
+static unsigned int componentTypeCount = 0;
+
 template <class T>
-void EntitiesManager::delComponent(Index entity)
+void ECS::EntitiesManager::delComponent(ECS::Index entity)
 {
     if (hasComponent(entity, getComponentTypeIndex<T>())) {
         entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()) = UINT_MAX;
@@ -56,7 +65,7 @@ void EntitiesManager::delComponent(Index entity)
 
 // TODO return the first available component
 template <class T>
-T* EntitiesManager::addComponent(Index entity)
+T* ECS::EntitiesManager::addComponent(ECS::Index entity)
 {
     if (hasNoComponent(entity, getComponentTypeIndex<T>())) {
         entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()) = unsigned(Component<T>::list.size());
@@ -67,7 +76,7 @@ T* EntitiesManager::addComponent(Index entity)
 }
 
 template <class T>
-T* EntitiesManager::getComponent(Index entity)
+T* ECS::EntitiesManager::getComponent(ECS::Index entity)
 {
     if (hasComponent(entity, getComponentTypeIndex<T>())) {
         return &Component<T>::list.at(entitiesComponentsIndex.at(entity).at(getComponentTypeIndex<T>()));
@@ -77,9 +86,9 @@ T* EntitiesManager::getComponent(Index entity)
 }
 
 template <class T>
-Index EntitiesManager::getComponentTypeIndex()
+ECS::Index ECS::EntitiesManager::getComponentTypeIndex()
 {
-    Index index = Component<T>::typeIndex;
+    ECS::Index index = Component<T>::typeIndex;
     if (mapper.has(index)) {
         return mapper.at(index);
     } else {

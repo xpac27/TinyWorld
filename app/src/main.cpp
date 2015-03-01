@@ -1,5 +1,4 @@
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#include "main.hpp"
 
 #include "Application.hpp"
 

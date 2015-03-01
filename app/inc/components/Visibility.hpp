@@ -1,6 +1,7 @@
 #pragma once
-#include "Component.hpp"
 
-struct Visibility : Component<Visibility> {
+#include "ecs/Component.hpp"
+
+struct Visibility : ECS::Component<Visibility> {
     bool active{true};
 };

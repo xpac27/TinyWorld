@@ -2,8 +2,10 @@
 #include <vector>
 #include <climits>
 
-// CRT Patern Object Register
-template <class B>
+namespace ECS
+{
+
+template <class B>      // CRT Patern Object Register
 struct Component {
     static unsigned int typeIndex;
     static std::vector<B>& list;
@@ -13,5 +15,4 @@ unsigned int Component<B>::typeIndex = UINT_MAX;
 template <class B>
 std::vector<B>& Component<B>::list = *new std::vector<B>();
 
-// TODO find a better place for that (namespace?)
-static unsigned int componentTypeCount = 0;
+}

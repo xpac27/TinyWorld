@@ -1,7 +1,12 @@
 #pragma once
 #include <vector>
-#include "Component.hpp"
+
+#include "ecs/Component.hpp"
+
 #define mask(n) ((1) << (n))
+
+namespace ECS
+{
 
 class System
 {
@@ -22,3 +27,11 @@ protected:
 private:
     std::vector<unsigned int> entities;
 };
+
+}
+
+template <typename T>
+bool ECS::System::useComponent() const
+{
+    return useComponent(mask(ECS::Component<T>::typeIndex));
+}
