@@ -19,7 +19,7 @@ public:
     Index getEntityCount() const;
 
     void resetEntity(Index entity);
-    void addSystem(System system);
+    void addSystem(System* system);
 
     template <class T>
     void delComponent(Index entity);
@@ -43,7 +43,7 @@ private:
     Index entityCount = 0;
 
     Mapper mapper;
-    std::vector<System> systems;
+    std::vector<System*> systems;
     std::vector<std::vector<Index>> entitiesComponentsIndex;
 };
 

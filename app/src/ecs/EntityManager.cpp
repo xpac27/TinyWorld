@@ -23,7 +23,7 @@ void ECS::EntitiesManager::resetEntity(ECS::Index entity)
     }
 }
 
-void ECS::EntitiesManager::addSystem(System system)
+void ECS::EntitiesManager::addSystem(System* system)
 {
     systems.push_back(system);
 }
@@ -31,8 +31,8 @@ void ECS::EntitiesManager::addSystem(System system)
 void ECS::EntitiesManager::registerEntity(ECS::Index entity, ECS::Index index)
 {
     for (auto s : systems) {
-        if (s.useComponent(index)) {
-            s.registerEntity(entity);
+        if (s->useComponent(index)) {
+            s->registerEntity(entity);
         }
     }
 }
@@ -40,8 +40,8 @@ void ECS::EntitiesManager::registerEntity(ECS::Index entity, ECS::Index index)
 void ECS::EntitiesManager::unregisterEntity(ECS::Index entity, ECS::Index index)
 {
     for (auto s : systems) {
-        if (s.useComponent(index)) {
-            s.unregisterEntity(entity);
+        if (s->useComponent(index)) {
+            s->unregisterEntity(entity);
         }
     }
 }

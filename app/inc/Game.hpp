@@ -20,5 +20,8 @@ public:
     void update(float time);
 
 private:
+    System_1 system1;
+    System_2 system2;
+
     ECS::EntitiesManager entityManager;
 };

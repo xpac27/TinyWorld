@@ -11,22 +11,12 @@ class System
 public:
     System(unsigned int mask) : componentTypes(mask) {}
 
+    void update(float time);
+
     void registerEntity(unsigned int entity);
     void unregisterEntity(unsigned int entity);
 
     bool useComponent(unsigned int mask) const;
-
-    template <typename C, typename... Components>
-    void requires()
-    {
-        requires<C>();
-        requires<Components...>();
-    }
-
-    template <typename C>
-    void requires()
-    {
-    }
 
 protected:
     unsigned int componentTypes;

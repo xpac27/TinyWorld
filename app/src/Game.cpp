@@ -2,8 +2,8 @@
 
 Game::Game()
 {
-    entityManager.addSystem(System_1());
-    entityManager.addSystem(System_2());
+    entityManager.addSystem(&system1);
+    entityManager.addSystem(&system2);
 
     ECS::Index e1 = entityManager.addEntity();
     ECS::Index e2 = entityManager.addEntity();
@@ -41,4 +41,6 @@ void Game::draw()
 
 void Game::update(float time)
 {
+    system1.update(time);
+    system2.update(time);
 }
