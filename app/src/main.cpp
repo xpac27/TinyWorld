@@ -75,17 +75,27 @@
 
 using namespace std;
 
-struct A {
+struct A
+{
     int a;
+    static std::vector<A>& list;
 };
+std::vector<A>& A::list = *new std::vector<A>();
 
-struct B {
+struct B
+{
     int b;
+    static std::vector<B>& list;
 };
+std::vector<B>& B::list = *new std::vector<B>();
 
-class Factory {
+class Factory
+{
 public:
     long addEntity();
+
+    template<typename T>
+    T* addComponent(long entity);
 
 private:
     vector<A> aComponents;
@@ -93,7 +103,8 @@ private:
     vector<array<long, 3>> entitiesComponents;
 };
 
-long Factory::addEntity() {
+long Factory::addEntity()
+{
     for (auto& e : entitiesComponents) {
        if (e[0] == 0) {
            return &e - &entitiesComponents[0];
@@ -103,12 +114,27 @@ long Factory::addEntity() {
     return long(entitiesComponents.size()) - 1;
 }
 
+template<typename T>
+T* Factory::addComponent(long entity)
+{
+    T::list.push_back(T());
+    return &T::list.back();
+}
+
 int main()
 {
     Factory f;
+
     long e1 = f.addEntity();
     long e2 = f.addEntity();
+
+    f.addComponent<A>(e1);
+    f.addComponent<A>(e2);
+    f.addComponent<B>(e2);
+
     cout << e1 << endl;
     cout << e2 << endl;
+
     return 0;
 }
+
