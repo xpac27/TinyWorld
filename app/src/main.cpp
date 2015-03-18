@@ -84,14 +84,14 @@ namespace Type {
 // struct Component {
 //     static const unsigned int typeId = T().id;
 // };
-template <typename T>
-struct Container {
-    static vector<T>& list()
-    {
-          static vector<T>* l = new vector<T>();
-          return *l;
-    }
-};
+// template <typename T>
+// struct Container {
+//     static vector<T>& list()
+//     {
+//           static vector<T>* l = new vector<T>();
+//           return *l;
+//     }
+// };
 
 struct A
 {
@@ -118,9 +118,10 @@ public:
     T* delComponent(id entity);
 
 private:
-    // vector<A> aComponents;
-    // vector<B> bComponents;
     vector<array<id, 3>> entitiesComponents;
+
+    template<typename T>
+    vector<T>& list();
 };
 
 id Factory::addEntity()
@@ -135,12 +136,17 @@ id Factory::addEntity()
 }
 
 template<typename T>
+vector<T>& Factory::list()
+{
+    static vector<T> *l = new vector<T>();
+    return *l;
+}
+
+template<typename T>
 T* Factory::addComponent(id entity)
 {
-    Container<T>::list().push_back(T());
-    cout << Container<T>::list().size() << " " << &Container<T>::list() << " " << &Container<T>::list().back() << endl;
-    // entitiesComponents.at(entity).at(T::typeId) = Container<T>::list().size();
-    return &Container<T>::list().back();
+    list<T>().push_back(T());
+    return &list<T>().back();
 }
 
 // template<typename T>
@@ -160,6 +166,11 @@ int main()
     A *e2a = f.addComponent<A>(e2);
     B *e2b = f.addComponent<B>(e2);
 
+    cout << e1a << endl;
+    cout << e2a << endl;
+    cout << e2b << endl;
+
+    e1a->a = 5;
     e2a->a = 7;
     e2b->b = 9;
 
