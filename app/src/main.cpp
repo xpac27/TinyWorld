@@ -75,65 +75,96 @@
 
 using namespace std;
 
+namespace Type {
+    struct A { const unsigned int id = 1; };
+    struct B { const unsigned int id = 2; };
+}
+
+// template <typename T>
+// struct Component {
+//     static const unsigned int typeId = T().id;
+// };
+template <typename T>
+struct Container {
+    static vector<T>& list()
+    {
+          static vector<T>* l = new vector<T>();
+          return *l;
+    }
+};
+
 struct A
 {
-    int a;
-    static std::vector<A>& list;
+    int a = 0;
 };
-std::vector<A>& A::list = *new std::vector<A>();
 
 struct B
 {
-    int b;
-    static std::vector<B>& list;
+    int b = 0;
 };
-std::vector<B>& B::list = *new std::vector<B>();
+
+typedef size_t id;
 
 class Factory
 {
 public:
-    long addEntity();
+    id addEntity();
 
     template<typename T>
-    T* addComponent(long entity);
+    T* addComponent(id entity);
+    template<typename T>
+    T* getComponent(id entity);
+    template<typename T>
+    T* delComponent(id entity);
 
 private:
-    vector<A> aComponents;
-    vector<B> bComponents;
-    vector<array<long, 3>> entitiesComponents;
+    // vector<A> aComponents;
+    // vector<B> bComponents;
+    vector<array<id, 3>> entitiesComponents;
 };
 
-long Factory::addEntity()
+id Factory::addEntity()
 {
     for (auto& e : entitiesComponents) {
        if (e[0] == 0) {
-           return &e - &entitiesComponents[0];
+           return id(&e - &entitiesComponents[0]);
        }
     }
     entitiesComponents.push_back({{0, 0, 0}});
-    return long(entitiesComponents.size()) - 1;
+    return entitiesComponents.size() - 1;
 }
 
 template<typename T>
-T* Factory::addComponent(long entity)
+T* Factory::addComponent(id entity)
 {
-    T::list.push_back(T());
-    return &T::list.back();
+    Container<T>::list().push_back(T());
+    cout << Container<T>::list().size() << " " << &Container<T>::list() << " " << &Container<T>::list().back() << endl;
+    // entitiesComponents.at(entity).at(T::typeId) = Container<T>::list().size();
+    return &Container<T>::list().back();
 }
+
+// template<typename T>
+// T* Factory::getComponent(id entity)
+// {
+//     return &entitiesComponents.at(entity).at(T::typeId);
+// }
 
 int main()
 {
     Factory f;
 
-    long e1 = f.addEntity();
-    long e2 = f.addEntity();
+    id e1 = f.addEntity();
+    id e2 = f.addEntity();
 
-    f.addComponent<A>(e1);
-    f.addComponent<A>(e2);
-    f.addComponent<B>(e2);
+    A *e1a = f.addComponent<A>(e1);
+    A *e2a = f.addComponent<A>(e2);
+    B *e2b = f.addComponent<B>(e2);
 
-    cout << e1 << endl;
-    cout << e2 << endl;
+    e2a->a = 7;
+    e2b->b = 9;
+
+    cout << e1 << " (" << e1a->a << ")" << endl;
+    cout << e2 << " (" << e2a->a << "," << e2b->b << ")" << endl;
 
     return 0;
 }
