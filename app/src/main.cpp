@@ -72,17 +72,18 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <string>
 
 using namespace std;
 
-namespace Type {
-    struct A { const unsigned int id = 1; };
-    struct B { const unsigned int id = 2; };
-}
+// namespace Type {
+//     struct A { const unsigned int id = 1; };
+//     struct B { const unsigned int id = 2; };
+// }
 
 // template <typename T>
 // struct Component {
-//     static const unsigned int typeId = T().id;
+//     static crnst unsigned int typeId = T().id;
 // };
 // template <typename T>
 // struct Container {
@@ -105,26 +106,48 @@ struct B
 
 typedef size_t id;
 
-class Factory
+class Identity
+{
+public:
+    Identity(string name);
+    string GetName();
+private:
+    string name;
+};
+
+template <typename T>
+class ComponentManager : public Identity
+{
+public:
+    T* addComponent(id entity);
+    T* getComponent(id entity);
+    T* delComponent(id entity);
+private:
+    vector<T> laura;
+};
+
+class ComponentManagers
+{
+public:
+    template <typename T>
+    ComponentManager<T>* CreateComponentManager(string name);
+    template <typename T>
+    ComponentManager<T>* GetComponentManager(string name);
+private:
+    vector<Identity*> randy;
+};
+
+class World
 {
 public:
     id addEntity();
-
-    template<typename T>
-    T* addComponent(id entity);
-    template<typename T>
-    T* getComponent(id entity);
-    template<typename T>
-    T* delComponent(id entity);
-
+    ComponentManagers& GetComponentManagers();
 private:
+    ComponentManagers componentsManagers;
     vector<array<id, 3>> entitiesComponents;
-
-    template<typename T>
-    vector<T>& list();
 };
 
-id Factory::addEntity()
+id World::addEntity()
 {
     for (auto& e : entitiesComponents) {
        if (e[0] == 0) {
@@ -135,36 +158,20 @@ id Factory::addEntity()
     return entitiesComponents.size() - 1;
 }
 
-template<typename T>
-vector<T>& Factory::list()
-{
-    static vector<T> *l = new vector<T>();
-    return *l;
-}
-
-template<typename T>
-T* Factory::addComponent(id entity)
-{
-    list<T>().push_back(T());
-    return &list<T>().back();
-}
-
-// template<typename T>
-// T* Factory::getComponent(id entity)
-// {
-//     return &entitiesComponents.at(entity).at(T::typeId);
-// }
 
 int main()
 {
-    Factory f;
+    World w;
 
-    id e1 = f.addEntity();
-    id e2 = f.addEntity();
+    id e1 = w.addEntity();
+    id e2 = w.addEntity();
 
-    A *e1a = f.addComponent<A>(e1);
-    A *e2a = f.addComponent<A>(e2);
-    B *e2b = f.addComponent<B>(e2);
+    ComponentManager<A> *a = w.GetComponentManagers().CreateComponentManager<A>("A");
+    ComponentManager<B> *b = w.GetComponentManagers().CreateComponentManager<B>("B");
+
+    A *e1a = a->addComponent(e1);
+    A *e2a = a->addComponent(e2);
+    B *e2b = b->addComponent(e2);
 
     cout << e1a << endl;
     cout << e2a << endl;
