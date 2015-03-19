@@ -71,28 +71,9 @@
 
 #include <iostream>
 #include <vector>
-#include <array>
 #include <string>
 
 using namespace std;
-
-// namespace Type {
-//     struct A { const unsigned int id = 1; };
-//     struct B { const unsigned int id = 2; };
-// }
-
-// template <typename T>
-// struct Component {
-//     static crnst unsigned int typeId = T().id;
-// };
-// template <typename T>
-// struct Container {
-//     static vector<T>& list()
-//     {
-//           static vector<T>* l = new vector<T>();
-//           return *l;
-//     }
-// };
 
 struct A
 {
@@ -106,84 +87,86 @@ struct B
 
 typedef size_t id;
 
-class Identity
-{
-public:
-    Identity(string name);
-    string GetName();
-private:
-    string name;
-};
-
 template <typename T>
-class ComponentManager : public Identity
+class ComponentManager
 {
 public:
-    T* addComponent(id entity);
-    T* getComponent(id entity);
-    T* delComponent(id entity);
+    T& createComponent();
+    T& getComponent(id entity);
+    void addComponent(T &component, id entity);
+    void delComponent(id entity);
+    bool hasComponent(id entity);
 private:
-    vector<T> laura;
+    vector<T> components {};
+    vector<T*> entitiesComponents {};
 };
 
-class ComponentManagers
-{
-public:
-    template <typename T>
-    ComponentManager<T>* CreateComponentManager(string name);
-    template <typename T>
-    ComponentManager<T>* GetComponentManager(string name);
-private:
-    vector<Identity*> randy;
-};
-
-class World
+class EntityManager
 {
 public:
     id addEntity();
-    ComponentManagers& GetComponentManagers();
 private:
-    ComponentManagers componentsManagers;
-    vector<array<id, 3>> entitiesComponents;
+    unsigned int totalEntities = 0;
 };
-
-id World::addEntity()
-{
-    for (auto& e : entitiesComponents) {
-       if (e[0] == 0) {
-           return id(&e - &entitiesComponents[0]);
-       }
-    }
-    entitiesComponents.push_back({{0, 0, 0}});
-    return entitiesComponents.size() - 1;
-}
-
 
 int main()
 {
-    World w;
+    EntityManager e;
+    id e1 = e.addEntity();
+    id e2 = e.addEntity();
 
-    id e1 = w.addEntity();
-    id e2 = w.addEntity();
+    ComponentManager<A> a = ComponentManager<A>();
+    ComponentManager<B> b = ComponentManager<B>();
+    A a1 = a.createComponent();
+    A a2 = a.createComponent();
+    B b1 = b.createComponent();
+    a.addComponent(a1, e1);
+    a.addComponent(a2, e2);
+    b.addComponent(b1, e2);
 
-    ComponentManager<A> *a = w.GetComponentManagers().CreateComponentManager<A>("A");
-    ComponentManager<B> *b = w.GetComponentManagers().CreateComponentManager<B>("B");
+    a1.a = 5;
+    a2.a = 7;
+    b1.b = 9;
 
-    A *e1a = a->addComponent(e1);
-    A *e2a = a->addComponent(e2);
-    B *e2b = b->addComponent(e2);
-
-    cout << e1a << endl;
-    cout << e2a << endl;
-    cout << e2b << endl;
-
-    e1a->a = 5;
-    e2a->a = 7;
-    e2b->b = 9;
-
-    cout << e1 << " (" << e1a->a << ")" << endl;
-    cout << e2 << " (" << e2a->a << "," << e2b->b << ")" << endl;
+    cout << e1 << " (" << a1.a << ")" << endl;
+    cout << e2 << " (" << a2.a << "," << b1.b << ")" << endl;
 
     return 0;
 }
 
+template <typename T>
+T& ComponentManager<T>::createComponent()
+{
+    components.push_back(T());
+    return components.back();
+}
+template <typename T>
+T& ComponentManager<T>::getComponent(id entity)
+{
+    return entitiesComponents.at(entity);
+}
+template <typename T>
+void ComponentManager<T>::addComponent(T &component, id entity)
+{
+    if (entitiesComponents.size() <= entity) {
+        entitiesComponents.resize(entity + 1, nullptr);
+    }
+    entitiesComponents.at(entity) = &component;
+}
+template <typename T>
+void ComponentManager<T>::delComponent(id entity)
+{
+    delete entitiesComponents.at(entity); // is that nessecary?
+    components.erase(entitiesComponents.at(entity)); // this wont work
+    entitiesComponents.at(entity) = nullptr;
+}
+template <typename T>
+bool ComponentManager<T>::hasComponent(id entity)
+{
+    return entity < entitiesComponents.size() && entitiesComponents.at(entity);
+}
+
+id EntityManager::addEntity()
+{
+    return ++totalEntities - 1;
+}
