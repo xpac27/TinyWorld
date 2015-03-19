@@ -78,11 +78,17 @@ using namespace std;
 struct A
 {
     int a = 0;
+
+    A() {}
+    A(int aValue) : a(aValue) {}
 };
 
 struct B
 {
     int b = 0;
+
+    B() {}
+    B(int bValue) : b(bValue) {}
 };
 
 typedef size_t id;
@@ -91,7 +97,7 @@ template <typename T>
 class ComponentManager
 {
 public:
-    T& createComponent();
+    T& registerComponent(const T &component);
     T& getComponent(id entity);
     void addComponent(T &component, id entity);
     void delComponent(id entity);
@@ -117,16 +123,12 @@ int main()
 
     ComponentManager<A> a = ComponentManager<A>();
     ComponentManager<B> b = ComponentManager<B>();
-    A a1 = a.createComponent();
-    A a2 = a.createComponent();
-    B b1 = b.createComponent();
+    A a1 = a.registerComponent(A());
+    A a2 = a.registerComponent(A(7));
+    B b1 = b.registerComponent(B(9));
     a.addComponent(a1, e1);
     a.addComponent(a2, e2);
     b.addComponent(b1, e2);
-
-    a1.a = 5;
-    a2.a = 7;
-    b1.b = 9;
 
     cout << e1 << " (" << a1.a << ")" << endl;
     cout << e2 << " (" << a2.a << "," << b1.b << ")" << endl;
@@ -135,9 +137,9 @@ int main()
 }
 
 template <typename T>
-T& ComponentManager<T>::createComponent()
+T& ComponentManager<T>::registerComponent(const T &component)
 {
-    components.push_back(T());
+    components.push_back(component);
     return components.back();
 }
 template <typename T>
