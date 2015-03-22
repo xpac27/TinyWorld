@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything \
                                 -Wno-newline-eof")
 
 # Add include directories
-include_directories("inc")
+include_directories("src")
 
 # get all *.cpp files recursively
 file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
