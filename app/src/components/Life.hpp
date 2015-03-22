@@ -1,7 +1,11 @@
 #pragma once
 
-#include "ecs/Component.hpp"
+struct Life
+{
+    int amount {123};
 
-struct Life : ECS::Component<Life> {
-    int amount{123};
+    Life() {}
+    Life(int init_amount)
+        : amount(init_amount)
+    {}
 };

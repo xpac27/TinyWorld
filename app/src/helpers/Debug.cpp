@@ -1,16 +1,19 @@
 #include "helpers/Debug.hpp"
+#include "components/Position.hpp"
+#include "components/Life.hpp"
+#include "components/Visibility.hpp"
 
-void Debug::dump(Position* p)
+void Debug::dump(Position &c)
 {
-    return printl("- Position", "y:", p->x, "x:", p->y);
+    return printl("- Position", "y:", c.x, "x:", c.y);
 }
 
-void Debug::dump(Life* p)
+void Debug::dump(Life &c)
 {
-    printl("- Life", " amount:", p->amount);
+    printl("- Life", " amount:", c.amount);
 }
 
-void Debug::dump(Visibility* p)
+void Debug::dump(Visibility &c)
 {
-    printl("- Visibility", " active:", p->active);
+    printl("- Visibility", " active:", c.active);
 }

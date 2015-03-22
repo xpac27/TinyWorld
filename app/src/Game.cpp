@@ -1,38 +1,48 @@
 #include "Game.hpp"
 
+#include "helpers/Debug.hpp"
+
 Game::Game()
 {
-    entityManager.addSystem(&system1);
-    entityManager.addSystem(&system2);
+    ECS::id e1 = entities.addEntity();
+    ECS::id e2 = entities.addEntity();
+    ECS::id e3 = entities.addEntity();
 
-    ECS::Index e1 = entityManager.addEntity();
-    ECS::Index e2 = entityManager.addEntity();
-    ECS::Index e3 = entityManager.addEntity();
+    Position p1 = positionComponents.registerComponent(Position());
+    Position p2 = positionComponents.registerComponent(Position());
+    Position p3 = positionComponents.registerComponent(Position());
 
-    Debug::printl("new entity #", e1);
-    Debug::printl("new entity #", e2);
-    Debug::printl("new entity #", e3);
+    Visibility v1 = visibilityComponents.registerComponent(Visibility());
+    Visibility v2 = visibilityComponents.registerComponent(Visibility());
 
-    Debug::printl("total entities:", entityManager.getEntityCount());
+    Life l1 = lifeComponents.registerComponent(Life());
 
-    entityManager.addComponent<Position>(e1);
-    entityManager.addComponent<Position>(e2);
-    entityManager.addComponent<Position>(e3);
-    entityManager.addComponent<Life>(e2);
-    entityManager.addComponent<Life>(e3);
-    entityManager.addComponent<Visibility>(e3);
+    positionComponents.addComponent(p1, e1);
+    positionComponents.addComponent(p2, e2);
+    positionComponents.addComponent(p3, e3);
+
+    visibilityComponents.addComponent(v1, e1);
+    visibilityComponents.addComponent(v2, e2);
+
+    lifeComponents.addComponent(l1, e1);
+
+    Debug::printl("new entity, id:", e1);
+    Debug::printl("new entity, id:", e2);
+    Debug::printl("new entity, id:", e3);
+
+    Debug::printl("total entities:", entities.getTotal());
 
     Debug::printl("entity #", e1, ":");
-    Debug::dump(entityManager.getComponent<Position>(e1));
+    Debug::dump(positionComponents.getComponent(e1));
+    Debug::dump(visibilityComponents.getComponent(e1));
+    Debug::dump(lifeComponents.getComponent(e1));
 
     Debug::printl("entity #", e2, ":");
-    Debug::dump(entityManager.getComponent<Position>(e2));
-    Debug::dump(entityManager.getComponent<Life>(e2));
+    Debug::dump(positionComponents.getComponent(e2));
+    Debug::dump(visibilityComponents.getComponent(e2));
 
     Debug::printl("entity #", e3, ":");
-    Debug::dump(entityManager.getComponent<Position>(e3));
-    Debug::dump(entityManager.getComponent<Life>(e3));
-    Debug::dump(entityManager.getComponent<Visibility>(e3));
+    Debug::dump(positionComponents.getComponent(e3));
 }
 
 void Game::draw()

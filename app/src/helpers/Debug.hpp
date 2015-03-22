@@ -1,15 +1,16 @@
 #pragma once
 #include <iostream>
 
-#include "components/Position.hpp"
-#include "components/Life.hpp"
-#include "components/Visibility.hpp"
+struct Position;
+struct Life;
+struct Visibility;
 
 namespace Debug
 {
-void dump(Position* p);
-void dump(Life* p);
-void dump(Visibility* p);
+
+void dump(Position &p);
+void dump(Life &p);
+void dump(Visibility &p);
 
 template <typename T>
 void print(const T p)
@@ -37,4 +38,5 @@ void printl(T const& f, Tail const&... tail)
     print(f, tail...);
     std::cout << std::endl;
 }
+
 }

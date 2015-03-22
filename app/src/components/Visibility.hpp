@@ -1,7 +1,11 @@
 #pragma once
 
-#include "ecs/Component.hpp"
+struct Visibility
+{
+    bool active {true};
 
-struct Visibility : ECS::Component<Visibility> {
-    bool active{true};
+    Visibility() {}
+    Visibility(bool init_active)
+        : active(init_active)
+    {}
 };
