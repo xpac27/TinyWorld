@@ -12,9 +12,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 add_definitions(-Dlest_FEATURE_AUTO_REGISTER=1)
 add_definitions(-Dlest_FEATURE_COLOURISE=1)
 
-# compiler flags
-set(CMAKE_CXX_FLAGS "-std=c++11")
-
 # libs
 include_directories("lib")
 include_directories("../app/src")

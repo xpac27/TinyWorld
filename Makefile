@@ -39,4 +39,8 @@ reset:
 	rm -rf build/app
 	rm -rf build/reports
 	rm -rf build/tests
+	rm -rf build/CMakeCache.txt
+	rm -rf build/CMakeFiles
+	rm -rf build/cmake_install.cmake
+	rm -rf build/compile_commands.json
 	rm build/Makefile

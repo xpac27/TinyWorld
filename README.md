@@ -1,3 +1,7 @@
+# TinyWorld [![Build Status](https://travis-ci.org/xpac27/TinyWorld.svg?branch=master)](https://travis-ci.org/xpac27/TinyWorld)
+
+This is a work in progress which purpose is for me to learn C++.
+
 ## Requirements
 
 * **SMFL** ([website](http://www.sfml-dev.org/tutorials/2.2/))

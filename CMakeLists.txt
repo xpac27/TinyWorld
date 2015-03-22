@@ -18,6 +18,13 @@ else()
   message(FATAL_ERROR "Cannot find SFML library.")
 endif()
 
+# compiler flags
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS "-std=c++11")
+endif()
+
 add_subdirectory(app)
 add_subdirectory(tests)
 add_subdirectory(reports)

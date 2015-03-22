@@ -8,11 +8,8 @@ set(EXECUTABLE_NAME "report")
 # change compiler
 set(CMAKE_CXX_COMPILER "c++-analyzer")
 
-# compiler flags
-set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof")
-
 # Add include directories
-include_directories("../app/inc")
+include_directories("../app/src")
 
 # get all *.cpp files recursively
 file(GLOB_RECURSE source_files "../app/src/*.cpp")
