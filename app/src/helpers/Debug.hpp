@@ -8,9 +8,9 @@ struct Visibility;
 namespace Debug
 {
 
-void dump(Position &p);
-void dump(Life &p);
-void dump(Visibility &p);
+void dump(Position *p);
+void dump(Life *p);
+void dump(Visibility *p);
 
 template <typename T>
 void print(const T p)

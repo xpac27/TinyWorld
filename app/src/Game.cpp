@@ -8,14 +8,14 @@ Game::Game()
     ECS::id e2 = entities.addEntity();
     ECS::id e3 = entities.addEntity();
 
-    Position p1 = positionComponents.registerComponent(Position());
-    Position p2 = positionComponents.registerComponent(Position());
-    Position p3 = positionComponents.registerComponent(Position());
+    Position *p1 = positionComponents.createComponent();
+    Position *p2 = positionComponents.createComponent();
+    Position *p3 = positionComponents.createComponent();
 
-    Visibility v1 = visibilityComponents.registerComponent(Visibility());
-    Visibility v2 = visibilityComponents.registerComponent(Visibility());
+    Visibility *v1 = visibilityComponents.createComponent();
+    Visibility *v2 = visibilityComponents.createComponent();
 
-    Life l1 = lifeComponents.registerComponent(Life());
+    Life *l1 = lifeComponents.createComponent();
 
     positionComponents.addComponent(p1, e1);
     positionComponents.addComponent(p2, e2);

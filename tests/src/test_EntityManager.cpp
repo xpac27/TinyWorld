@@ -3,7 +3,7 @@
 
 namespace
 {
-    SCENARIO("EntityManager" "[addEntity]")
+    SCENARIO("EntityManager" "[EntityManager, addEntity]")
     {
         GIVEN("An EntityManager") {
             ECS::EntityManager entityManager;
@@ -14,17 +14,23 @@ namespace
                 }
             }
 
-            WHEN("1 entities are added") {
-                entityManager.addEntity();
+            WHEN("2 entities are added") {
+                ECS::id e1 = entityManager.addEntity();
+                ECS::id e2 = entityManager.addEntity();
 
-                THEN("addEntity returns 1") {
-                    CHECK(entityManager.addEntity() == 1);
+                THEN("The entities are valid") {
+                    CHECK(e1 == 0);
+                    CHECK(e2 == 1);
+                }
+
+                THEN("addEntity returns 2") {
+                    CHECK(entityManager.addEntity() == 2);
                 }
             }
         }
     }
 
-    SCENARIO("EntityManager" "[getTotal]")
+    SCENARIO("EntityManager" "[EntityManager, getTotal]")
     {
         GIVEN("An EntityManager") {
             ECS::EntityManager entityManager;

@@ -2,7 +2,7 @@
 
 struct Life
 {
-    int amount {123};
+    int amount {100};
 
     Life() {}
     Life(int init_amount)
