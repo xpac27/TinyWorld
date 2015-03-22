@@ -3,6 +3,9 @@ language: cpp
 compiler:
     - clang
 
+before_install:
+    - sudo apt-get update
+
 before_script:
     - wget http://www.sfml-dev.org/files/SFML-2.2-linux-gcc-64-bit.tar.gz
     - tar -zxvf SFML-2.2-linux-gcc-64-bit.tar.gz --directory /tmp
