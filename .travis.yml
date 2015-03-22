@@ -10,7 +10,7 @@ before_script:
     - wget http://www.sfml-dev.org/files/SFML-2.2-linux-gcc-64-bit.tar.gz
     - tar -zxvf SFML-2.2-linux-gcc-64-bit.tar.gz --directory /tmp
     - sudo cp -r /tmp/SFML-2.2/* /usr/
-    - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.10 libglew1.10-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1 libxrandr2 libxrender1 libsoil1
+    - sudo apt-get install -y libpthread-stubs0-dev libgl1-mesa-dev libxrandr-dev libfreetype6-dev libglew-dev libjpeg8-dev libsndfile1-dev libopenal-dev libudev-dev
 
 branches:
     only:
