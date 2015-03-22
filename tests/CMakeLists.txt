@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # libs
 include_directories("lib")
-include_directories("../app/inc")
+include_directories("../app/src")
 
 # get all *.cpp files recursively
 file(GLOB_RECURSE source_files "src/*.cpp")
