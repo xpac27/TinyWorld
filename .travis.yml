@@ -4,10 +4,11 @@ compiler:
     - clang
 
 os:
-    - linux
+    - osx
 
 before_script:
-    - sudo apt-get install -y libsfml-dev
+    - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install -y libsfml-dev; fi
+    - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install sfml cmake; fi
 
 branches:
     only:
