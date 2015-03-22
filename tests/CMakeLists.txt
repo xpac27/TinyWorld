@@ -24,4 +24,4 @@ file(GLOB_RECURSE source_files "src/*.cpp")
 add_executable(${EXECUTABLE_NAME} ${source_files})
 
 # link
-target_link_libraries(${EXECUTABLE_NAME} "wip")
+target_link_libraries(${EXECUTABLE_NAME} "TinyWorld")

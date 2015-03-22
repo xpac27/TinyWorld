@@ -8,24 +8,11 @@
 
 You can use [homebrew](http://mxcl.github.io/homebrew/) with the following command:
 
-    brew install sfml cmake llvm --with-clang
+    brew install sfml cmake llvm
 
 In order to use Clang Static Analyzer you need to extend your PATH:
 
     export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
-
-Optionaly, to use clang as default compiler you can export those variables:
-
-    export CC="/usr/local/Cellar/llvm/3.5.1/bin/clang"
-    export CXX="/usr/local/Cellar/llvm/3.5.1/bin/clang++ -stdlib=libc++"
-    export CXXFLAGS="$CXXFLAGS -nostdinc++ -I/usr/local/Cellar/llvm/3.5.1/include"
-    export LDFLAGS="$LDFLAGS -L/usr/local/Cellar/llvm/3.5.1/lib"
-
-## How to installing
-
-Simply clone the repository:
-
-    git clone https://github.com/xpac27/wip.git
 
 ## Basic usage
 

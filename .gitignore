@@ -1,5 +1,7 @@
-.*
-!.gitignore
+.DS_Store
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+.lvimrc
 build/*
 !build/modules
 reports/*

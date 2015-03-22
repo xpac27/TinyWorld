@@ -21,7 +21,7 @@ file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 
 # Add the library
-add_library("wip" ${SOURCE_FILES})
+add_library("TinyWorld" ${SOURCE_FILES})
 
 # link
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARIES})
