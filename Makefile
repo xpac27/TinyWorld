@@ -36,11 +36,4 @@ clean:
 
 reset:
 	@echo "$(S) Removing all build data $(E)"
-	rm -rf build/app
-	rm -rf build/reports
-	rm -rf build/tests
-	rm -rf build/CMakeCache.txt
-	rm -rf build/CMakeFiles
-	rm -rf build/cmake_install.cmake
-	rm -rf build/compile_commands.json
-	rm build/Makefile
+	rm -rf build
