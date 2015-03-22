@@ -1,20 +1,14 @@
 language: cpp
 
-compiler:
-    - clang
+branches:
+    only: master
+
+compiler: gcc
 
 before_script:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew-dev libjpeg8-dev libgpgme11-dev libsndfile1-dev libopenal-dev libudev-dev libjpeg62
-  - wget -O SFML.tar.gz https://github.com/LaurentGomila/SFML/archive/2.2.tar.gz
-  - tar -xzf SFML.tar.gz
-  - cd SFML-2.2
-  - cmake .
-  - make && sudo make install
-  - cd ..
-
-branches:
-    only:
-        - master
+    - wget http://sfml-dev.org/download/sfml/2.1/SFML-2.1-linux-gcc-64bits.tar.bz2 -O /tmp/sfml.tar.bz2
+    - tar -xjvf /tmp/sfml.tar.bz2
+    - sudo cp -r SFML-2.1/* /usr/
+    - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1
 
 script: make configure && make compile && make test
