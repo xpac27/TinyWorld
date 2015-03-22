@@ -10,7 +10,7 @@ configure:
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
-	make -j8 app -C build
+	make app -C build
 
 run:
 	@echo "$(S) Running the app $(E)"
@@ -18,13 +18,13 @@ run:
 
 test:
 	@echo "$(S) Compiling tests $(E)"
-	make -j8 tests -C build
+	make tests -C build
 	@echo "$(S) Running tests $(E)"
 	./build/tests/tests
 
 report:
 	@echo "$(S) Compiling static analysis report $(E)"
-	scan-build -o reports make -j8 report -C build
+	scan-build -o reports make report -C build
 
 report-open:
 	@echo "$(S) Open the latest report $(E)"
