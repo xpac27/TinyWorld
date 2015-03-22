@@ -1,11 +1,10 @@
 language: cpp
 
 compiler:
-    - gcc
+    - clang
 
 os:
     - linux
-    - osx
 
 before_script:
     - pwd
