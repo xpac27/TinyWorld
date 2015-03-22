@@ -1,8 +1,7 @@
 #pragma once
-#include <vector> // fix
 
 namespace ECS {
-typedef size_t id;
+typedef unsigned long id;
 
 class EntityManager
 {

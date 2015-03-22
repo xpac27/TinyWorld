@@ -2,7 +2,7 @@
 #include <vector>
 
 namespace ECS {
-typedef size_t id;
+typedef unsigned long id;
 
 template <typename T>
 class ComponentManager
