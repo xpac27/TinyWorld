@@ -1,0 +1,20 @@
+language: cpp
+
+compiler:
+    - gcc
+
+os:
+    - linux
+    - osx
+
+before_script:
+    - wget http://www.sfml-dev.org/files/SFML-2.2-linux-gcc-64-bit.tar.gz -O /tmp/sfml.tar.bz2
+    - tar -xjvf /tmp/sfml.tar.bz2
+    - sudo cp -r SFML-2.2/* /usr/
+    - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1 libxrandr2 libxrender1 libsoil1
+
+branches:
+    only:
+        - master
+
+script: make && make test
