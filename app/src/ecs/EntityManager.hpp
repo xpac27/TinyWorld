@@ -15,5 +15,4 @@ private:
 
     unsigned int totalEntities = 0;
 };
-
 }

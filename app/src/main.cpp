@@ -38,10 +38,14 @@ int main()
             if (event.type == Event::Resized) setupWindow(event.size.width, event.size.height);
         }
 
-        glLoadIdentity();
         application.update(clock.getElapsedTime().asSeconds());
-        application.draw();
-        window.display();
+
+        if (clock.getElapsedTime().asMilliseconds() % 16 == 0) {
+            glLoadIdentity();
+            application.draw();
+            window.display();
+        }
+
         clock.restart();
     }
 

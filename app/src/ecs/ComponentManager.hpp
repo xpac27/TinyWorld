@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
+#include "ComponentManagerBase.hpp"
 
 namespace ECS {
 typedef unsigned long id;
 
 template <typename T>
-class ComponentManager
+class ComponentManager : public ComponentManagerBase
 {
 public:
 
@@ -43,6 +44,7 @@ void ComponentManager<T>::addComponent(T *component, id entity)
         entitiesComponents.resize(entity + 1, nullptr);
     }
     entitiesComponents.at(entity) = component;
+    addEntity(entity);
 }
 
 template <typename T>
@@ -51,6 +53,7 @@ void ComponentManager<T>::delComponent(id entity)
     // delete entitiesComponents.at(entity); // is that nessecary?
     // components.erase(entitiesComponents.at(entity)); // this wont work
     entitiesComponents.at(entity) = nullptr;
+    delEntity(entity);
 }
 
 template <typename T>
@@ -58,5 +61,4 @@ bool ComponentManager<T>::hasComponent(id entity)
 {
     return entity < entitiesComponents.size() && entitiesComponents.at(entity);
 }
-
 }

@@ -1,9 +1,12 @@
 #include "Game.hpp"
+#include "systems/RenderSystem.hpp"
 
 #include "helpers/Debug.hpp"
 
 Game::Game()
 {
+    visualSystems.addSystem(new RenderSystem(&visibilityComponents, &positionComponents));
+
     ECS::id e1 = entities.addEntity();
     ECS::id e2 = entities.addEntity();
     ECS::id e3 = entities.addEntity();
@@ -45,12 +48,12 @@ Game::Game()
     Debug::dump(positionComponents.getComponent(e3));
 }
 
-void Game::draw()
-{
-}
-
 void Game::update(float time)
 {
-    // system1.update(time);
-    // system2.update(time);
+    simulationSystems.update(time);
+}
+
+void Game::draw()
+{
+    visualSystems.update();
 }
