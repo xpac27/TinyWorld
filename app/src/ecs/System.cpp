@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <iterator>
 #include "System.hpp"
 #include "helpers/Debug.hpp"
 
@@ -38,10 +40,10 @@ std::vector<id>* System::getEntities()
         // TODO put that in a function
         entities.reserve(totalEntities);
         for (auto componentManager : componentManagers) {
-            copy(componentManager->getEntities()->begin(), componentManager->getEntities()->end(), back_inserter(entities));
+            std::copy(componentManager->getEntities()->begin(), componentManager->getEntities()->end(), back_inserter(entities));
         }
-        sort(entities.begin(), entities.end());
-        entities.erase(unique(entities.begin(), entities.end() ), entities.end());
+        std::sort(entities.begin(), entities.end());
+        entities.erase(std::unique(entities.begin(), entities.end() ), entities.end());
     }
 
     return &entities;
