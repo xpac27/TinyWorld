@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
+#include "Entity.hpp"
 
 namespace ECS {
-typedef unsigned long id;
 
 class ComponentManagerBase
 {

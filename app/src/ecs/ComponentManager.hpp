@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
+#include "Entity.hpp"
 #include "ComponentManagerBase.hpp"
 
 namespace ECS {
-typedef unsigned long id;
 
 template <typename T>
 class ComponentManager : public ComponentManagerBase

@@ -1,7 +1,7 @@
 #pragma once
+#include "Entity.hpp"
 
 namespace ECS {
-typedef unsigned long id;
 
 class EntityManager
 {
