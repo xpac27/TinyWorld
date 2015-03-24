@@ -2,19 +2,23 @@
 
 namespace ECS {
 
-std::vector<id>* ComponentManagerBase::getEntities()
+Signal<System, id>* ComponentManagerBase::getEntityAddedSignal()
 {
-    return &entities;
+    return &entityAddedSignal;
 }
 
-void ComponentManagerBase::addEntity(id entity)
+Signal<System, id>* ComponentManagerBase::getEntityRemovedSignal()
 {
-    entities.push_back(entity);
+    return &entityRemovedSignal;
 }
 
-void ComponentManagerBase::delEntity(id /*entity*/)
+void ComponentManagerBase::fireEntityAddedSignal(id entity)
 {
-    // TODO
-    // entities.erase(entities at entity);
+    entityAddedSignal.fire(entity);
+}
+
+void ComponentManagerBase::fireEntityRemovedSignal(id entity)
+{
+    entityRemovedSignal.fire(entity);
 }
 }

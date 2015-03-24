@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iterator>
 #include "System.hpp"
 #include "helpers/Debug.hpp"
 
@@ -7,13 +6,22 @@ namespace ECS {
 
 System::System(std::initializer_list<ComponentManagerBase*> c)
 {
-    // TODO see if we can listen ot entityAdded and entityDeleted
-    // event ot maintain the entities list instead of updating
-    // it on demand
-    Debug::printl("CONSTRUCTOR 3");
     for (auto componentManager : c) {
-        componentManagers.push_back(componentManager);
+        componentManager->getEntityAddedSignal()->addCallback(this, &System::onEntityAdded);
+        componentManager->getEntityRemovedSignal()->addCallback(this, &System::onEntityRemoved);
     }
+}
+
+void System::onEntityAdded(id entity)
+{
+    if (std::find(entities.begin(), entities.end(), entity) == entities.end()) {
+        entities.push_back(entity);
+    }
+}
+
+void System::onEntityRemoved(id /*entity*/)
+{
+    // TODO implement
 }
 
 void System::update(float /*time*/)
@@ -28,24 +36,6 @@ void System::update()
 
 std::vector<id>* System::getEntities()
 {
-    // TODO put that in a function
-    unsigned int newTotalEntities {0};
-    for (auto componentManager : componentManagers) {
-        newTotalEntities += componentManager->getEntities()->size();
-    }
-
-    if (newTotalEntities != totalEntities) {
-        totalEntities = newTotalEntities;
-
-        // TODO put that in a function
-        entities.reserve(totalEntities);
-        for (auto componentManager : componentManagers) {
-            std::copy(componentManager->getEntities()->begin(), componentManager->getEntities()->end(), back_inserter(entities));
-        }
-        std::sort(entities.begin(), entities.end());
-        entities.erase(std::unique(entities.begin(), entities.end() ), entities.end());
-    }
-
     return &entities;
 }
 }

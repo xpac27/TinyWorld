@@ -1,23 +1,28 @@
 #pragma once
 #include <vector>
 #include "Entity.hpp"
+#include "utils/Signal.hpp"
+
 
 namespace ECS {
+class System;
 
 class ComponentManagerBase
 {
 
 public:
 
-    std::vector<id>* getEntities();
+    Signal<System, id>* getEntityAddedSignal();
+    Signal<System, id>* getEntityRemovedSignal();
 
 protected:
 
-    void addEntity(id entity);
-    void delEntity(id entity);
+    void fireEntityAddedSignal(id entity);
+    void fireEntityRemovedSignal(id entity);
 
 private:
 
-    std::vector<id> entities;
+    Signal<System, id> entityAddedSignal = {};
+    Signal<System, id> entityRemovedSignal = {};
 };
 }

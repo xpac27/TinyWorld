@@ -39,21 +39,21 @@ T* ComponentManager<T>::getComponent(id entity)
 template <typename T>
 void ComponentManager<T>::addComponent(T *component, id entity)
 {
-    // TODO check if this pointer is within components vector
     if (entitiesComponents.size() <= entity) {
         entitiesComponents.resize(entity + 1, nullptr);
     }
     entitiesComponents.at(entity) = component;
-    addEntity(entity);
+    fireEntityAddedSignal(entity);
 }
 
 template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
+    // TODO implement
     // delete entitiesComponents.at(entity); // is that nessecary?
     // components.erase(entitiesComponents.at(entity)); // this wont work
     entitiesComponents.at(entity) = nullptr;
-    delEntity(entity);
+    fireEntityRemovedSignal(entity);
 }
 
 template <typename T>

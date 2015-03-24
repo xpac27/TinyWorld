@@ -2,9 +2,9 @@
 #include <vector>
 #include <initializer_list>
 #include "ComponentManagerBase.hpp"
+#include "Entity.hpp"
 
 namespace ECS {
-typedef unsigned long id;
 
 class System
 {
@@ -24,9 +24,10 @@ protected:
 
 private:
 
-    unsigned int totalEntities {0};
+    void onEntityAdded(id entity);
+    void onEntityRemoved(id entity);
 
-    std::vector<id> entities;
-    std::vector<ComponentManagerBase*> componentManagers = {};
+    std::vector<id> entities {};
+    std::vector<ComponentManagerBase*> componentManagers {};
 };
 }
