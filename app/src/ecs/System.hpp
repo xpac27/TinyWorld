@@ -18,8 +18,6 @@ public:
     virtual void update();
     virtual void update(float time);
 
-protected:
-
     std::vector<id>* getEntities();
 
 private:

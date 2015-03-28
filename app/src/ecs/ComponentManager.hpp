@@ -50,7 +50,7 @@ template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
     entitiesComponents.at(entity) = nullptr;
-    components.erase(components.begin() + entity); // NOTE could be optimized
+    components.erase(components.begin() + long(entity)); // NOTE could be optimized
     fireEntityRemovedSignal(entity);
 }
 
