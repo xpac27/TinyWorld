@@ -19,9 +19,9 @@ void System::onEntityAdded(id entity)
     }
 }
 
-void System::onEntityRemoved(id /*entity*/)
+void System::onEntityRemoved(id entity)
 {
-    // TODO implement
+    entities.erase(std::find(entities.begin(), entities.end(), entity));
 }
 
 void System::update(float /*time*/)
