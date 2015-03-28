@@ -49,10 +49,8 @@ void ComponentManager<T>::addComponent(T *component, id entity)
 template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
-    // TODO implement
-    // delete entitiesComponents.at(entity); // is that nessecary?
-    // components.erase(entitiesComponents.at(entity)); // this wont work
     entitiesComponents.at(entity) = nullptr;
+    components.erase(components.begin() + entity); // NOTE could be optimized
     fireEntityRemovedSignal(entity);
 }
 
