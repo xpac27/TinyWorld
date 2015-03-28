@@ -3,17 +3,30 @@
 #include "components/Life.hpp"
 #include "components/Visibility.hpp"
 
+void Debug::dump(ECS::id entity)
+{
+    printl("Entity", entity);
+}
+
 void Debug::dump(Position *c)
 {
-    return printl("- Position", "y:", c->x, "x:", c->y);
+    printl("Position");
+    printl("  y:", c->x, "x:", c->y);
 }
 
 void Debug::dump(Life *c)
 {
-    printl("- Life", " amount:", c->amount);
+    printl("Life");
+    printl("  amount:", c->amount);
 }
 
 void Debug::dump(Visibility *c)
 {
-    printl("- Visibility", " active:", c->active);
+    printl("Visibility");
+    printl("  active:", c->active);
+}
+
+void Debug::nl()
+{
+    std::cout << std::endl;
 }

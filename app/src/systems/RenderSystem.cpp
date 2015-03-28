@@ -4,6 +4,6 @@
 void RenderSystem::update()
 {
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
-        Debug::printl(" >", getEntities()->at(i));
+        // Debug::printl(" >", getEntities()->at(i));
     }
 }

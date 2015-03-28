@@ -29,22 +29,18 @@ Game::Game()
 
     lifeComponents.addComponent(l1, e1);
 
-    Debug::printl("new entity, id:", e1);
-    Debug::printl("new entity, id:", e2);
-    Debug::printl("new entity, id:", e3);
-
     Debug::printl("total entities:", entities.getTotal());
 
-    Debug::printl("entity #", e1, ":");
+    Debug::dump(e1);
     Debug::dump(positionComponents.getComponent(e1));
     Debug::dump(visibilityComponents.getComponent(e1));
     Debug::dump(lifeComponents.getComponent(e1));
 
-    Debug::printl("entity #", e2, ":");
+    Debug::dump(e2);
     Debug::dump(positionComponents.getComponent(e2));
     Debug::dump(visibilityComponents.getComponent(e2));
 
-    Debug::printl("entity #", e3, ":");
+    Debug::dump(e3);
     Debug::dump(positionComponents.getComponent(e3));
 }
 
