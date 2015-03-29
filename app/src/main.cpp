@@ -9,7 +9,11 @@ using namespace sf;
 
 int main()
 {
-    RenderWindow window(VideoMode(800, 600), "WIP", (Style::Close | Style::Resize));
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 4;
+
+    RenderWindow window(VideoMode(800, 600), "TinyWorld", (Style::Close | Style::Resize), settings);
+    window.setVerticalSyncEnabled(true);
 
     glShadeModel(GL_SMOOTH);
     glCullFace(GL_FRONT);
@@ -51,6 +55,7 @@ int main()
 
     return 0;
 }
+#include "helpers/Debug.hpp"
 
 void setupWindow(unsigned int width, unsigned int height)
 {
@@ -58,14 +63,16 @@ void setupWindow(unsigned int width, unsigned int height)
     float sceneHeight = 3.f;
     if (width > height) {
         sceneWidth = 100.f;
-        sceneHeight = 100.f * (height / width);
+        sceneHeight = 100.f * (float(height) / float(width));
     } else if (width < height) {
-        sceneWidth = 100.f * (width / height);
+        sceneWidth = 100.f * (float(width) / float(height));
         sceneHeight = 100.f;
     } else {
         sceneWidth = 100.f;
         sceneHeight = 100.f;
     }
+    Debug::printl(width, "x", height);
+    Debug::printl(sceneWidth, "x", sceneHeight);
     glViewport(0, 0, GLsizei(width), GLsizei(height));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

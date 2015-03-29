@@ -31,6 +31,15 @@ Game::Game()
 
     Debug::printl("total entities:", entities.getTotal());
 
+    p1->x = 0;
+    p1->y = 0;
+    p2->x = 10;
+    p2->y = -20;
+    p3->x = -20;
+    p3->y = 10;
+    v1->active = true;
+    v2->active = true;
+
     Debug::dump(e1);
     Debug::dump(positionComponents.getComponent(e1));
     Debug::dump(visibilityComponents.getComponent(e1));
