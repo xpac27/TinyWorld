@@ -8,19 +8,19 @@ void Debug::dump(ECS::id entity)
     printl("Entity", entity);
 }
 
-void Debug::dump(Position *c)
+void Debug::dump(Position* c)
 {
     printl("Position");
     printl("  y:", c->x, "x:", c->y);
 }
 
-void Debug::dump(Life *c)
+void Debug::dump(Life* c)
 {
     printl("Life");
     printl("  amount:", c->amount);
 }
 
-void Debug::dump(Visibility *c)
+void Debug::dump(Visibility* c)
 {
     printl("Visibility");
     printl("  active:", c->active);

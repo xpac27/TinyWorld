@@ -13,7 +13,7 @@ public:
     T* createComponent();
     T* getComponent(id entity);
 
-    void addComponent(T *component, id entity);
+    void addComponent(T* component, id entity);
     void delComponent(id entity);
     bool hasComponent(id entity);
 
@@ -37,7 +37,7 @@ T* ComponentManager<T>::getComponent(id entity)
 }
 
 template <typename T>
-void ComponentManager<T>::addComponent(T *component, id entity)
+void ComponentManager<T>::addComponent(T* component, id entity)
 {
     if (entitiesComponents.size() <= entity) {
         entitiesComponents.resize(entity + 1, nullptr);

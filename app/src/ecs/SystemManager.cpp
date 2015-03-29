@@ -2,7 +2,7 @@
 
 namespace ECS {
 
-void SystemManager::addSystem(System *system)
+void SystemManager::addSystem(System* system)
 {
     systems.push_back(system);
 }

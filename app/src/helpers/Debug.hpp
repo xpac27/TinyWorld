@@ -10,9 +10,9 @@ namespace Debug
 {
 
 void dump(ECS::id entity);
-void dump(Position *p);
-void dump(Life *p);
-void dump(Visibility *p);
+void dump(Position* p);
+void dump(Life* p);
+void dump(Visibility* p);
 
 void nl();
 

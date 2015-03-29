@@ -9,8 +9,8 @@ class RenderSystem : public ECS::System {
 public:
 
     RenderSystem(
-        ECS::ComponentManager<Visibility> *vc,
-        ECS::ComponentManager<Position> *pc
+        ECS::ComponentManager<Visibility>* vc,
+        ECS::ComponentManager<Position>* pc
     )
         : System({vc, pc})
         , visibilityComponents(vc)
@@ -21,6 +21,6 @@ public:
 
 private:
 
-    ECS::ComponentManager<Visibility> *visibilityComponents;
-    ECS::ComponentManager<Position> *positionComponents;
+    ECS::ComponentManager<Visibility>* visibilityComponents;
+    ECS::ComponentManager<Position>* positionComponents;
 };

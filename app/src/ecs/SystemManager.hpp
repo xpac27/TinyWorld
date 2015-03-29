@@ -9,7 +9,7 @@ class SystemManager
 
 public:
 
-    void addSystem(System *system);
+    void addSystem(System* system);
     void update(float time);
     void update();
 
