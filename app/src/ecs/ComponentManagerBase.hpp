@@ -22,7 +22,7 @@ protected:
 
 private:
 
-    Signal<System, id> entityAddedSignal = {};
-    Signal<System, id> entityRemovedSignal = {};
+    Signal<System, id> entityAddedSignal {};
+    Signal<System, id> entityRemovedSignal {};
 };
 }
