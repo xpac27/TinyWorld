@@ -1,56 +1,19 @@
+#include <stdlib.h>
 #include "Game.hpp"
 #include "systems/RenderSystem.hpp"
-
+#include "systems/MovementSystem.hpp"
 #include "helpers/Debug.hpp"
 
 Game::Game()
 {
+    srand(unsigned(time(NULL)));
+
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &positionComponents));
+    visualSystems.addSystem(new MovementSystem(&positionComponents, &physicsComponents));
 
-    ECS::id e1 = entities.addEntity();
-    ECS::id e2 = entities.addEntity();
-    ECS::id e3 = entities.addEntity();
-
-    Position* p1 = positionComponents.createComponent();
-    Position* p2 = positionComponents.createComponent();
-    Position* p3 = positionComponents.createComponent();
-
-    Visibility* v1 = visibilityComponents.createComponent();
-    Visibility* v2 = visibilityComponents.createComponent();
-
-    Life* l1 = lifeComponents.createComponent();
-
-    positionComponents.addComponent(p1, e1);
-    positionComponents.addComponent(p2, e2);
-    positionComponents.addComponent(p3, e3);
-
-    visibilityComponents.addComponent(v1, e1);
-    visibilityComponents.addComponent(v2, e2);
-
-    lifeComponents.addComponent(l1, e1);
-
-    Debug::printl("total entities:", entities.getTotal());
-
-    p1->x = 0;
-    p1->y = 0;
-    p2->x = 10;
-    p2->y = -20;
-    p3->x = -20;
-    p3->y = 10;
-    v1->active = true;
-    v2->active = true;
-
-    Debug::dump(e1);
-    Debug::dump(positionComponents.getComponent(e1));
-    Debug::dump(visibilityComponents.getComponent(e1));
-    Debug::dump(lifeComponents.getComponent(e1));
-
-    Debug::dump(e2);
-    Debug::dump(positionComponents.getComponent(e2));
-    Debug::dump(visibilityComponents.getComponent(e2));
-
-    Debug::dump(e3);
-    Debug::dump(positionComponents.getComponent(e3));
+    for (int i = 0; i < 100; i ++) {
+        addEntity();
+    }
 }
 
 void Game::update(float time)
@@ -61,4 +24,16 @@ void Game::update(float time)
 void Game::draw()
 {
     visualSystems.update();
+}
+
+void Game::addEntity()
+{
+    ECS::id entity = entities.addEntity();
+    positionComponents.addComponent(positionComponents.createComponent(), entity);
+    visibilityComponents.addComponent(visibilityComponents.createComponent(), entity);
+    physicsComponents.addComponent(physicsComponents.createComponent(), entity);
+    positionComponents.getComponent(entity)->x = 0.f;
+    positionComponents.getComponent(entity)->y = 0.f;
+    physicsComponents.getComponent(entity)->velocity_x = float(rand() % 100 - 50) / 100.f;
+    physicsComponents.getComponent(entity)->velocity_y = float(rand() % 100 - 50) / 100.f;
 }

@@ -55,7 +55,6 @@ int main()
 
     return 0;
 }
-#include "helpers/Debug.hpp"
 
 void setupWindow(unsigned int width, unsigned int height)
 {
@@ -71,8 +70,6 @@ void setupWindow(unsigned int width, unsigned int height)
         sceneWidth = 100.f;
         sceneHeight = 100.f;
     }
-    Debug::printl(width, "x", height);
-    Debug::printl(sceneWidth, "x", sceneHeight);
     glViewport(0, 0, GLsizei(width), GLsizei(height));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

@@ -10,6 +10,8 @@ class ComponentManager : public ComponentManagerBase
 {
 public:
 
+    ComponentManager();
+
     T* createComponent();
     T* getComponent(id entity);
 
@@ -22,6 +24,13 @@ private:
     std::vector<T> components {};
     std::vector<T*> entitiesComponents {};
 };
+
+template <typename T>
+ComponentManager<T>::ComponentManager()
+{
+    components.reserve(10);
+    entitiesComponents.reserve(10);
+}
 
 template <typename T>
 T* ComponentManager<T>::createComponent()
@@ -40,7 +49,7 @@ template <typename T>
 void ComponentManager<T>::addComponent(T* component, id entity)
 {
     if (entitiesComponents.size() <= entity) {
-        entitiesComponents.resize(entity + 1, nullptr);
+        entitiesComponents.resize(entity + 10, nullptr);
     }
     entitiesComponents.at(entity) = component;
     fireEntityAddedSignal(entity);
