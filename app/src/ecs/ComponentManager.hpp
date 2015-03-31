@@ -12,9 +12,6 @@ class ComponentManager : public ComponentManagerBase
 {
 public:
 
-    ComponentManager() {
-        components.reserve(100);
-    }
     T* getComponent(id entity);
 
     void addComponent(id entity);
