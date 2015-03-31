@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "ecs/Entity.hpp"
+#include "ecs/Id.hpp"
 
 struct Position;
 struct Life;

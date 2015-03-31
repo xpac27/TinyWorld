@@ -1,6 +1,6 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
-#include "ecs/Entity.hpp"
+#include "ecs/Id.hpp"
 #include "RenderSystem.hpp"
 #include "helpers/Debug.hpp"
 

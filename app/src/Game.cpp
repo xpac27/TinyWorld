@@ -11,34 +11,16 @@ Game::Game()
     ECS::id e2 = entities.addEntity();
     ECS::id e3 = entities.addEntity();
 
-    Position* p1 = positionComponents.createComponent();
-    Position* p2 = positionComponents.createComponent();
-    Position* p3 = positionComponents.createComponent();
+    positionComponents.addComponent(e1);
+    positionComponents.addComponent(e2);
+    positionComponents.addComponent(e3);
 
-    Visibility* v1 = visibilityComponents.createComponent();
-    Visibility* v2 = visibilityComponents.createComponent();
+    visibilityComponents.addComponent(e1);
+    visibilityComponents.addComponent(e2);
 
-    Life* l1 = lifeComponents.createComponent();
-
-    positionComponents.addComponent(p1, e1);
-    positionComponents.addComponent(p2, e2);
-    positionComponents.addComponent(p3, e3);
-
-    visibilityComponents.addComponent(v1, e1);
-    visibilityComponents.addComponent(v2, e2);
-
-    lifeComponents.addComponent(l1, e1);
+    lifeComponents.addComponent(e1);
 
     Debug::printl("total entities:", entities.getTotal());
-
-    p1->x = 0;
-    p1->y = 0;
-    p2->x = 10;
-    p2->y = -20;
-    p3->x = -20;
-    p3->y = 10;
-    v1->active = true;
-    v2->active = true;
 
     Debug::dump(e1);
     Debug::dump(positionComponents.getComponent(e1));

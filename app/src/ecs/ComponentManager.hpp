@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
-#include "Entity.hpp"
+#include <assert.h>
 #include "ComponentManagerBase.hpp"
+#include "helpers/Debug.hpp"
+#include "Id.hpp"
 
 namespace ECS {
 
@@ -10,53 +12,53 @@ class ComponentManager : public ComponentManagerBase
 {
 public:
 
-    T* createComponent();
+    ComponentManager() {
+        components.reserve(100);
+    }
     T* getComponent(id entity);
 
-    void addComponent(T* component, id entity);
+    void addComponent(id entity);
     void delComponent(id entity);
     bool hasComponent(id entity);
 
 private:
 
-    std::vector<T> components {};
-    std::vector<T*> entitiesComponents {};
+    std::vector<T> components;
+    std::vector<int> entitiesComponents;
 };
-
-template <typename T>
-T* ComponentManager<T>::createComponent()
-{
-    components.push_back(T());
-    return &components.back();
-}
 
 template <typename T>
 T* ComponentManager<T>::getComponent(id entity)
 {
-    return entitiesComponents.at(entity);
+    assert(entitiesComponents.size() > entity);
+    return &components[unsigned(entitiesComponents[entity])];
 }
 
 template <typename T>
-void ComponentManager<T>::addComponent(T* component, id entity)
+void ComponentManager<T>::addComponent(id entity)
 {
     if (entitiesComponents.size() <= entity) {
-        entitiesComponents.resize(entity + 1, nullptr);
+        entitiesComponents.resize(entity + 1, -1);
     }
-    entitiesComponents.at(entity) = component;
-    fireEntityAddedSignal(entity);
+    if (entitiesComponents[entity] == -1) {
+        // TODO find the first available component instead
+        components.push_back(T());
+        entitiesComponents[entity] = int(components.size()) - 1;
+        fireEntityAddedSignal(entity);
+    }
 }
 
 template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
-    entitiesComponents.at(entity) = nullptr;
-    components.erase(components.begin() + long(entity)); // NOTE could be optimized
+    assert(entitiesComponents.size() > entity);
+    entitiesComponents[entity] = -1;
     fireEntityRemovedSignal(entity);
 }
 
 template <typename T>
 bool ComponentManager<T>::hasComponent(id entity)
 {
-    return entity < entitiesComponents.size() && entitiesComponents.at(entity);
+    return entity < entitiesComponents.size() && entitiesComponents[entity] != -1;
 }
 }

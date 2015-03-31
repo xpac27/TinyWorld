@@ -15,8 +15,6 @@ namespace
                 ECS::System system({&lifeComponents});
                 ECS::id e1 = entities.addEntity();
                 ECS::id e2 = entities.addEntity();
-                Life *l1 = lifeComponents.createComponent();
-                Life *l2 = lifeComponents.createComponent();
 
                 THEN("The system has no entities") {
                     CHECK(system.getEntities()->size() == 0);
@@ -29,8 +27,8 @@ namespace
                 }
 
                 WHEN("Adding 2 components") {
-                    lifeComponents.addComponent(l1, e1);
-                    lifeComponents.addComponent(l2, e2);
+                    lifeComponents.addComponent(e1);
+                    lifeComponents.addComponent(e2);
 
                     THEN("The system has 2 entities") {
                         CHECK(system.getEntities()->size() == 2);

@@ -2,7 +2,7 @@
 #include <vector>
 #include <initializer_list>
 #include "ComponentManagerBase.hpp"
-#include "Entity.hpp"
+#include "Id.hpp"
 
 namespace ECS {
 
