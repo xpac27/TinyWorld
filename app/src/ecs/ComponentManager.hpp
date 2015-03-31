@@ -20,27 +20,31 @@ public:
 
 private:
 
+    void createComponent(id entity);
+    void reuseComponent(id entity);
+    void resetComponent(id entity);
+    void reserveComponentIndex(id entity);
+
     std::vector<T> components;
-    std::vector<int> entitiesComponents;
+    std::vector<int> deletedComponentsIndex;
+    std::vector<int> entitiesComponentsIndex;
 };
 
 template <typename T>
 T* ComponentManager<T>::getComponent(id entity)
 {
-    assert(entitiesComponents.size() > entity);
-    return &components[unsigned(entitiesComponents[entity])];
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    return &components[unsigned(entitiesComponentsIndex[entity])];
 }
 
 template <typename T>
 void ComponentManager<T>::addComponent(id entity)
 {
-    if (entitiesComponents.size() <= entity) {
-        entitiesComponents.resize(entity + 1, -1);
-    }
-    if (entitiesComponents[entity] == -1) {
-        // TODO find the first available component instead
-        components.push_back(T());
-        entitiesComponents[entity] = int(components.size()) - 1;
+    if (hasComponent(entity)) {
+        resetComponent(entity);
+    } else {
+        reserveComponentIndex(entity);
+        deletedComponentsIndex.size() == 0 ? createComponent(entity) : reuseComponent(entity);
         fireEntityAddedSignal(entity);
     }
 }
@@ -48,14 +52,46 @@ void ComponentManager<T>::addComponent(id entity)
 template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
-    assert(entitiesComponents.size() > entity);
-    entitiesComponents[entity] = -1;
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    deletedComponentsIndex.push_back(entitiesComponentsIndex[entity]);
+    entitiesComponentsIndex[entity] = -1;
     fireEntityRemovedSignal(entity);
 }
 
 template <typename T>
 bool ComponentManager<T>::hasComponent(id entity)
 {
-    return entity < entitiesComponents.size() && entitiesComponents[entity] != -1;
+    return entity < entitiesComponentsIndex.size() && entitiesComponentsIndex[entity] != -1;
+}
+
+template <typename T>
+void ComponentManager<T>::createComponent(id entity)
+{
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    entitiesComponentsIndex[entity] = int(components.size());
+    components.push_back(T());
+}
+
+template <typename T>
+void ComponentManager<T>::reuseComponent(id entity)
+{
+    assert(deletedComponentsIndex.size() > 0 && "ComponentManager: no reusable components");
+    entitiesComponentsIndex[entity] = deletedComponentsIndex.back();
+    deletedComponentsIndex.pop_back();
+    resetComponent(entity);
+}
+
+template <typename T>
+void ComponentManager<T>::resetComponent(id entity)
+{
+    components[unsigned(entitiesComponentsIndex[unsigned(entity)])] = T();
+}
+
+template <typename T>
+void ComponentManager<T>::reserveComponentIndex(id entity)
+{
+    if (entitiesComponentsIndex.size() <= entity) {
+        entitiesComponentsIndex.resize(entity + 1, -1);
+    }
 }
 }
