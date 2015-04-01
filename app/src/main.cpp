@@ -40,6 +40,8 @@ int main()
     FPS loopRate = FPS("LPS");
     FPS frameRate = FPS("FPS");
 
+    Time drawTime;
+
     while (window.isOpen()) {
         if (Keyboard::isKeyPressed(Keyboard::Escape))
             window.close();
@@ -51,16 +53,19 @@ int main()
         }
 
         application.update(loopClock.getElapsedTime().asSeconds());
-        loopClock.restart();
         loopRate.tick();
 
-        if (frameClock.getElapsedTime().asMilliseconds() > 1000 / 60) {
+        if (frameClock.getElapsedTime().asSeconds() > 1.f / 60.f - (drawTime + loopClock.getElapsedTime()).asSeconds()) {
+            frameClock.restart();
             glLoadIdentity();
             application.draw();
             window.display();
+            drawTime = frameClock.getElapsedTime();
             frameClock.restart();
             frameRate.tick();
         }
+
+        loopClock.restart();
     }
 
     return 0;
