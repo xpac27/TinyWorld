@@ -29,9 +29,9 @@ void Game::draw()
 void Game::addEntity()
 {
     ECS::id entity = entities.addEntity();
-    positionComponents.addComponent(positionComponents.createComponent(), entity);
-    visibilityComponents.addComponent(visibilityComponents.createComponent(), entity);
-    physicsComponents.addComponent(physicsComponents.createComponent(), entity);
+    positionComponents.addComponent(entity);
+    visibilityComponents.addComponent(entity);
+    physicsComponents.addComponent(entity);
     positionComponents.getComponent(entity)->x = 0.f;
     positionComponents.getComponent(entity)->y = 0.f;
     physicsComponents.getComponent(entity)->velocity_x = float(rand() % 100 - 50) / 100.f;

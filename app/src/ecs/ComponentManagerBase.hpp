@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Entity.hpp"
+#include "Id.hpp"
 #include "utils/Signal.hpp"
 
 

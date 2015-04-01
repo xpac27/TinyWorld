@@ -1,4 +1,4 @@
-#include "ecs/Entity.hpp"
+#include "ecs/Id.hpp"
 #include "RenderSystem.hpp"
 #include "helpers/Debug.hpp"
 #include "systems/MovementSystem.hpp"

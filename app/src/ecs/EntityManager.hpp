@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.hpp"
+#include "Id.hpp"
 
 namespace ECS {
 

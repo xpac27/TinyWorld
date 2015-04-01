@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
-#include "Entity.hpp"
+#include <assert.h>
 #include "ComponentManagerBase.hpp"
+#include "helpers/Debug.hpp"
+#include "Id.hpp"
 
 namespace ECS {
 
@@ -10,62 +12,86 @@ class ComponentManager : public ComponentManagerBase
 {
 public:
 
-    ComponentManager();
-
-    T* createComponent();
     T* getComponent(id entity);
 
-    void addComponent(T* component, id entity);
+    void addComponent(id entity);
     void delComponent(id entity);
     bool hasComponent(id entity);
 
 private:
 
-    std::vector<T> components {};
-    std::vector<T*> entitiesComponents {};
+    void createComponent(id entity);
+    void reuseComponent(id entity);
+    void resetComponent(id entity);
+    void reserveComponentIndex(id entity);
+
+    std::vector<T> components;
+    std::vector<int> deletedComponentsIndex;
+    std::vector<int> entitiesComponentsIndex;
 };
-
-template <typename T>
-ComponentManager<T>::ComponentManager()
-{
-    components.reserve(10);
-    entitiesComponents.reserve(10);
-}
-
-template <typename T>
-T* ComponentManager<T>::createComponent()
-{
-    components.push_back(T());
-    return &components.back();
-}
 
 template <typename T>
 T* ComponentManager<T>::getComponent(id entity)
 {
-    return entitiesComponents.at(entity);
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    return &components[unsigned(entitiesComponentsIndex[entity])];
 }
 
 template <typename T>
-void ComponentManager<T>::addComponent(T* component, id entity)
+void ComponentManager<T>::addComponent(id entity)
 {
-    if (entitiesComponents.size() <= entity) {
-        entitiesComponents.resize(entity + 10, nullptr);
+    if (hasComponent(entity)) {
+        resetComponent(entity);
+    } else {
+        reserveComponentIndex(entity);
+        deletedComponentsIndex.size() == 0 ? createComponent(entity) : reuseComponent(entity);
+        fireEntityAddedSignal(entity);
     }
-    entitiesComponents.at(entity) = component;
-    fireEntityAddedSignal(entity);
 }
 
 template <typename T>
 void ComponentManager<T>::delComponent(id entity)
 {
-    entitiesComponents.at(entity) = nullptr;
-    components.erase(components.begin() + long(entity)); // NOTE could be optimized
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    deletedComponentsIndex.push_back(entitiesComponentsIndex[entity]);
+    entitiesComponentsIndex[entity] = -1;
     fireEntityRemovedSignal(entity);
 }
 
 template <typename T>
 bool ComponentManager<T>::hasComponent(id entity)
 {
-    return entity < entitiesComponents.size() && entitiesComponents.at(entity);
+    return entity < entitiesComponentsIndex.size() && entitiesComponentsIndex[entity] != -1;
+}
+
+template <typename T>
+void ComponentManager<T>::createComponent(id entity)
+{
+    assert(entitiesComponentsIndex.size() > entity && "ComponentManager: entity out of range");
+    entitiesComponentsIndex[entity] = int(components.size());
+    components.push_back(T());
+}
+
+template <typename T>
+void ComponentManager<T>::reuseComponent(id entity)
+{
+    assert(deletedComponentsIndex.size() > 0 && "ComponentManager: no reusable components");
+    entitiesComponentsIndex[entity] = deletedComponentsIndex.back();
+    deletedComponentsIndex.pop_back();
+    resetComponent(entity);
+}
+
+template <typename T>
+void ComponentManager<T>::resetComponent(id entity)
+{
+    components[unsigned(entitiesComponentsIndex[unsigned(entity)])] = T();
+}
+
+template <typename T>
+void ComponentManager<T>::reserveComponentIndex(id entity)
+{
+    if (entitiesComponentsIndex.size() <= entity) {
+        entitiesComponentsIndex.resize(entity + 1, -1);
+    }
 }
 }
