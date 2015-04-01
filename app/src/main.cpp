@@ -1,19 +1,24 @@
+#include <stdlib.h>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "Application.hpp"
+#include "utils/FPS.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
 
 using namespace sf;
+using namespace std;
 
 int main()
 {
+    srand(unsigned(time(NULL)));
+
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
 
     RenderWindow window(VideoMode(800, 600), "TinyWorld", (Style::Close | Style::Resize), settings);
-    window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(false);
 
     glShadeModel(GL_SMOOTH);
     glCullFace(GL_FRONT);
@@ -29,8 +34,11 @@ int main()
 
     setupWindow(800, 600);
 
+    Clock loopClock;
+    Clock frameClock;
     Application application;
-    Clock clock;
+    FPS loopRate = FPS("LPS");
+    FPS frameRate = FPS("FPS");
 
     while (window.isOpen()) {
         if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -42,15 +50,17 @@ int main()
             if (event.type == Event::Resized) setupWindow(event.size.width, event.size.height);
         }
 
-        application.update(clock.getElapsedTime().asSeconds());
+        application.update(loopClock.getElapsedTime().asSeconds());
+        loopClock.restart();
+        loopRate.tick();
 
-        if (clock.getElapsedTime().asMilliseconds() % 16 == 0) {
+        if (frameClock.getElapsedTime().asMilliseconds() > 1000 / 60) {
             glLoadIdentity();
             application.draw();
             window.display();
+            frameClock.restart();
+            frameRate.tick();
         }
-
-        clock.restart();
     }
 
     return 0;

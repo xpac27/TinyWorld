@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Game.hpp"
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
@@ -6,12 +5,10 @@
 
 Game::Game()
 {
-    srand(unsigned(time(NULL)));
-
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &positionComponents));
     visualSystems.addSystem(new MovementSystem(&positionComponents, &physicsComponents));
 
-    for (int i = 0; i < 100; i ++) {
+    for (int i = 0; i < 5000; i ++) {
         addEntity();
     }
 }
