@@ -6,12 +6,8 @@
 
 void RenderSystem::update()
 {
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
-
-    glBlendFunc(GL_ONE, GL_ONE);
-    glDepthFunc(GL_LEQUAL);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -36,7 +32,7 @@ void RenderSystem::update()
                 }
 
                 glBegin(GL_TRIANGLES);
-                glColor4f(1.f, 1.f, 0.f, 0.6f);
+                glColor4f(1.f, 1.f, 0.f, 0.2f);
                 glVertex3f(0.f, 0.f, 0.f);
                 glVertex3f(1.f, 1.f, 0.f);
                 glVertex3f(0.f, 1.f, 0.f);

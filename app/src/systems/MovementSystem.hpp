@@ -21,6 +21,8 @@ public:
 
 private:
 
+    float count {0.f};
+
     ECS::ComponentManager<Position>* positionComponents;
     ECS::ComponentManager<Physics>* physicsComponents;
 };
