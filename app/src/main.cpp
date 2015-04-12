@@ -27,10 +27,15 @@ int main()
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
     glDepthMask(GL_FALSE);
-    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glClearDepth(GL_ONE);
     glClearStencil(GL_ZERO);
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+
+    // VBO
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
 
     setupWindow(800, 600);
 

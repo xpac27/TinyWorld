@@ -15,6 +15,7 @@ public:
 
     virtual ~System() = default;
 
+    virtual void initialize();
     virtual void update();
     virtual void update(float time);
 

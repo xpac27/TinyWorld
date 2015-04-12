@@ -29,6 +29,11 @@ void System::update(float /*time*/)
     Debug::printl("Warning: update(time) function called but not implemented by System");
 }
 
+void System::initialize()
+{
+    Debug::printl("Warning: initialize() function called but not implemented by System");
+}
+
 void System::update()
 {
     Debug::printl("Warning: update() function called but not implemented by System");

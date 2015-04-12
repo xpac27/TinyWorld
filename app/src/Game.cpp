@@ -11,6 +11,9 @@ Game::Game()
     for (int i = 0; i < 5000; i ++) {
         addEntity();
     }
+
+    simulationSystems.initialize();
+    visualSystems.initialize();
 }
 
 void Game::update(float time)

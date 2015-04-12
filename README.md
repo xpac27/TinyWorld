@@ -5,7 +5,9 @@ This is a work in progress which purpose is for me to learn C++.
 Todo:
 - [ ] make entities learn to look for food
 - [ ] make entities move randomly and die after some time
-- [ ] vertex buffer object
+- [ ] create an obj parser used by the shape class
+- [ ] create a shape classes used by visibility component
+- [x] vertex buffer object
 - [x] basic entity component system
 
 ## Requirements
