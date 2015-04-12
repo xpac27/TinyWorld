@@ -4,6 +4,7 @@
 
 #include "Application.hpp"
 #include "utils/FPS.hpp"
+#include "math/Vertex.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
 
@@ -31,6 +32,8 @@ int main()
     glClearStencil(GL_ZERO);
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+
+    initVertex();
 
     // VBO
     glEnableClientState(GL_COLOR_ARRAY);
