@@ -21,20 +21,16 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             visibility = visibilityComponents->getComponent(entity);
 
-            if (visibility->active) {
+            glPushMatrix();
 
-                glPushMatrix();
-
-                if (positionComponents->hasComponent(entity)) {
-                    position = positionComponents->getComponent(entity);
-                    glTranslatef(position->x, position->y, 0.f);
-                }
-
-                // TODO use mesh manager
-                // visibility->shape.draw();
-
-                glPopMatrix();
+            if (positionComponents->hasComponent(entity)) {
+                position = positionComponents->getComponent(entity);
+                glTranslatef(position->x, position->y, 0.f);
             }
+
+            meshFactory.getMesh(visibility->meshType)->draw();
+
+            glPopMatrix();
         }
     }
 }

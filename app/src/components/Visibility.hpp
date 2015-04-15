@@ -1,8 +1,7 @@
 #pragma once
-#include "graphic/Shape.hpp"
+#include "graphic/MeshType.hpp"
 
 struct Visibility
 {
-    bool active {true};
-    unsigned int mesh {0};
+    MeshType meshType { MeshType::CUBE };
 };

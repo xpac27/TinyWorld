@@ -3,6 +3,7 @@
 #include "ecs/ComponentManager.hpp"
 #include "components/Visibility.hpp"
 #include "components/Position.hpp"
+#include "graphic/MeshFactory.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -19,10 +20,11 @@ public:
         , positionComponents(pc)
     {}
 
-    void initialize();
     void update();
 
 private:
+
+    MeshFactory meshFactory;
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Position>* positionComponents;

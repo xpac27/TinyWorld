@@ -4,7 +4,6 @@
 
 #include "Application.hpp"
 #include "utils/FPS.hpp"
-#include "math/Vertex.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
 
@@ -33,7 +32,10 @@ int main()
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    initVertex();
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*0));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
+    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
 
     // VBO
     glEnableClientState(GL_COLOR_ARRAY);

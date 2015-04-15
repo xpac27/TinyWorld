@@ -23,7 +23,6 @@ void Debug::dump(Life* c)
 void Debug::dump(Visibility* c)
 {
     printl("Visibility");
-    printl("  active:", (c->active ? "true" : "false"));
 }
 
 void Debug::nl()
