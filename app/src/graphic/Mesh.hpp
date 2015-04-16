@@ -1,19 +1,25 @@
 #pragma once
 #include <SFML/OpenGL.hpp>
-#include <string>
+#include <vector>
+#include "graphic/Vertex.hpp"
+#include "graphic/Normal.hpp"
 
 class Mesh
 {
 
 public:
 
-    Mesh(std::string objFilePath);
+    Mesh(const char *filename);
 
     void draw();
 
 private:
 
-    GLuint VBOIds[2];
+    GLuint VBOIds[2] {0, 0};
     GLsizei totalIndexes {0};
+
+    std::vector<Vertex> vertexes;
+    std::vector<Normal> normals;
+    std::vector<GLuint> indexes;
 };
 

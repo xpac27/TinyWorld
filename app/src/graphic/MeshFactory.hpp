@@ -2,6 +2,7 @@
 #include "graphic/Mesh.hpp"
 #include "graphic/MeshType.hpp"
 
+// TODO rename MeshStore
 class MeshFactory
 {
 
@@ -12,5 +13,4 @@ public:
 private:
 
     Mesh cube = Mesh("app/res/cube.obj");
-    Mesh diamond = Mesh("app/res/diamond.obj");
 };

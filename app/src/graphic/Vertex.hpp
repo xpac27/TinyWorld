@@ -1,6 +1,6 @@
 #pragma once
+#include <SFML/OpenGL.hpp>
 
-// TODO move to graphic
 struct Vertex
 {
     GLfloat pos[3] {0.f, 0.f, 0.f};
@@ -8,4 +8,8 @@ struct Vertex
     GLfloat nor[3] {0.f, 0.f, 1.f};
     GLfloat col[4] {1.f, 1.f, 1.f, 1.f};
     GLubyte pad[16];    // Pads the struct out to 64 bytes for performance increase
+
+    Vertex(GLfloat px, GLfloat py, GLfloat pz)
+        : pos {px, py, pz}
+    {}
 };

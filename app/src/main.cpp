@@ -1,13 +1,17 @@
 #include <stdlib.h>
 #include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Event.hpp>
 
 #include "Application.hpp"
 #include "utils/FPS.hpp"
+#include "graphic/Vertex.hpp"
+
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 void setupWindow(unsigned int width, unsigned int height);
 
-using namespace sf;
 using namespace std;
 
 int main()
@@ -17,7 +21,7 @@ int main()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
 
-    RenderWindow window(VideoMode(800, 600), "TinyWorld", (Style::Close | Style::Resize), settings);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "TinyWorld", (sf::Style::Close | sf::Style::Resize), settings);
     window.setVerticalSyncEnabled(false);
 
     glShadeModel(GL_SMOOTH);
@@ -32,34 +36,32 @@ int main()
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*0));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
-    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
-
     // VBO
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
+    glNormalPointer(GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(5));
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(8));
 
     setupWindow(800, 600);
 
-    Clock loopClock;
-    Clock frameClock;
+    sf::Clock loopClock;
+    sf::Clock frameClock;
     Application application;
     FPS loopRate = FPS("LPS");
     FPS frameRate = FPS("FPS");
 
-    Time drawTime;
+    sf::Time drawTime;
 
     while (window.isOpen()) {
-        if (Keyboard::isKeyPressed(Keyboard::Escape))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             window.close();
 
-        Event event;
+        sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == Event::Closed) window.close();
-            if (event.type == Event::Resized) setupWindow(event.size.width, event.size.height);
+            if (event.type == sf::Event::Closed) window.close();
+            if (event.type == sf::Event::Resized) setupWindow(event.size.width, event.size.height);
         }
 
         application.update(loopClock.getElapsedTime().asSeconds());
