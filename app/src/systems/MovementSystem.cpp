@@ -4,14 +4,11 @@
 #include "systems/MovementSystem.hpp"
 #include <math.h>
 
-void MovementSystem::update()
+void MovementSystem::update(float time)
 {
     ECS::id entity;
     Position* position;
     Physics* physics;
-
-    count += 0.02;
-    double ratio = sin(count);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -20,8 +17,8 @@ void MovementSystem::update()
             position = positionComponents->getComponent(entity);
             physics = physicsComponents->getComponent(entity);
 
-            position->x += physics->velocity_x * ratio;
-            position->y += physics->velocity_y * ratio;
+            position->x += physics->velocity_x * time * 10;
+            position->y += physics->velocity_y * time * 10;
         }
     }
 }

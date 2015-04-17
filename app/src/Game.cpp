@@ -6,9 +6,9 @@
 Game::Game()
 {
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &positionComponents));
-    visualSystems.addSystem(new MovementSystem(&positionComponents, &physicsComponents));
+    simulationSystems.addSystem(new MovementSystem(&positionComponents, &physicsComponents));
 
-    for (int i = 0; i < 1000; i ++) {
+    for (int i = 0; i < 5000; i ++) {
         addEntity();
     }
 
