@@ -10,17 +10,21 @@ Mesh::Mesh(const char *filename)
 
     totalIndexes = GLsizei(indexes.size());
 
-    Debug::printl(vertexes.size(), indexes.size(), totalIndexes);
+    for (unsigned int i = 0; i < vertexes.size(); i++)
+    {
+        vertexes[i].col[0] = 1.f;
+        vertexes[i].col[1] = 1.f;
+        vertexes[i].col[2] = 0.f;
+        vertexes[i].col[3] = 1.f;
+    }
 
     glGenBuffers(2, VBOIds);
-    Debug::printl(VBOIds[0]);
-    Debug::printl(VBOIds[1]);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
 
     // Try to put that in the init of RenderSystem
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);

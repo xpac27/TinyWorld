@@ -8,6 +8,12 @@ void RenderSystem::update()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glEnable(GL_COLOR_MATERIAL); // TODO avoid
+
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
@@ -39,4 +45,14 @@ void RenderSystem::update()
             glPopMatrix();
         }
     }
+
+    // TODO use push states
+    glDisable(GL_BLEND);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 }

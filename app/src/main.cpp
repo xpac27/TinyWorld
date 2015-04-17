@@ -34,11 +34,6 @@ int main()
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    // VBO
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-
     setupWindow(800, 600);
 
     sf::Clock loopClock;
