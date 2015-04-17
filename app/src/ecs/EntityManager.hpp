@@ -2,7 +2,6 @@
 #include "Id.hpp"
 
 namespace ECS {
-
 class EntityManager
 {
 public:

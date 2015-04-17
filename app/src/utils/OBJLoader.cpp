@@ -1,5 +1,8 @@
 #include "utils/OBJLoader.hpp"
+#include "graphic/Vertex.hpp"
+#include "graphic/Normal.hpp"
 #include "helpers/Debug.hpp"
+#include <fstream>
 
 using namespace std;
 

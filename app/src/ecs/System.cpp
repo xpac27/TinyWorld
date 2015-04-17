@@ -1,6 +1,7 @@
-#include <algorithm>
 #include "System.hpp"
+#include "ComponentManagerBase.hpp"
 #include "helpers/Debug.hpp"
+#include <algorithm>
 
 namespace ECS {
 

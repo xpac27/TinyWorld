@@ -1,12 +1,10 @@
 #pragma once
+#include "ComponentManagerBase.hpp"
+#include "Id.hpp"
 #include <vector>
 #include <assert.h>
-#include "ComponentManagerBase.hpp"
-#include "helpers/Debug.hpp"
-#include "Id.hpp"
 
 namespace ECS {
-
 template <typename T>
 class ComponentManager : public ComponentManagerBase
 {

@@ -2,6 +2,7 @@
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
 #include "helpers/Debug.hpp"
+#include <SFML/OpenGL.hpp>
 
 Game::Game()
 {

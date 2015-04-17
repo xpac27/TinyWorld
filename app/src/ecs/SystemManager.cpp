@@ -1,4 +1,5 @@
 #include "SystemManager.hpp"
+#include "System.hpp"
 
 namespace ECS {
 

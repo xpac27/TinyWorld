@@ -1,9 +1,8 @@
 #pragma once
 #include <vector>
-#include "System.hpp"
 
 namespace ECS {
-
+class System;
 class SystemManager
 {
 

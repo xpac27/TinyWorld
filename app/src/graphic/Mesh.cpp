@@ -1,13 +1,12 @@
 #include "Mesh.hpp"
-#include "helpers/Debug.hpp"
 #include "utils/OBJLoader.hpp"
+#include <SFML/OpenGL.hpp>
 
 using namespace std;
 
 Mesh::Mesh(const char *filename)
 {
     OBJLoader::loadOBJ(vertexes, normals, indexes, filename);
-
     totalIndexes = GLsizei(indexes.size());
 
     for (unsigned int i = 0; i < vertexes.size(); i++)
@@ -18,6 +17,11 @@ Mesh::Mesh(const char *filename)
         vertexes[i].col[3] = 1.f;
     }
 
+    loadVBOs();
+}
+
+void Mesh::loadVBOs()
+{
     glGenBuffers(2, VBOIds);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
@@ -25,12 +29,6 @@ Mesh::Mesh(const char *filename)
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
-
-    // Try to put that in the init of RenderSystem
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
-    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
 }
 
 void Mesh::draw()

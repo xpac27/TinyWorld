@@ -1,8 +1,6 @@
 #pragma once
-#include <vector>
 #include "Id.hpp"
 #include "utils/Signal.hpp"
-
 
 namespace ECS {
 class System;

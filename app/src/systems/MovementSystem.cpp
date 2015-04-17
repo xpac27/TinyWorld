@@ -1,8 +1,16 @@
+#include "MovementSystem.hpp"
+#include "ecs/ComponentManager.hpp"
 #include "ecs/Id.hpp"
-#include "RenderSystem.hpp"
-#include "helpers/Debug.hpp"
-#include "systems/MovementSystem.hpp"
 #include <math.h>
+
+MovementSystem::MovementSystem(
+    ECS::ComponentManager<Position>* pc,
+    ECS::ComponentManager<Physics>* ppc
+)
+    : System({pc, ppc})
+    , positionComponents(pc)
+    , physicsComponents(ppc)
+{}
 
 void MovementSystem::update(float time)
 {

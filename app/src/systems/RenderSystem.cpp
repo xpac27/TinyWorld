@@ -1,7 +1,28 @@
-#include <SFML/OpenGL.hpp>
-#include "ecs/Id.hpp"
 #include "RenderSystem.hpp"
-#include "helpers/Debug.hpp"
+#include "ecs/ComponentManager.hpp"
+#include "graphic/Vertex.hpp"
+#include "graphic/MeshFactory.hpp"
+#include "graphic/Mesh.hpp"
+#include "ecs/Id.hpp"
+
+RenderSystem::RenderSystem(
+    ECS::ComponentManager<Visibility>* vc,
+    ECS::ComponentManager<Position>* pc
+)
+    : System({vc, pc})
+    , meshFactory(new MeshFactory())
+    , visibilityComponents(vc)
+    , positionComponents(pc)
+{}
+
+void RenderSystem::initialize()
+{
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
+    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
+
+}
 
 void RenderSystem::update()
 {
@@ -40,7 +61,7 @@ void RenderSystem::update()
                 glTranslatef(position->x, position->y, 0.f);
             }
 
-            meshFactory.getMesh(visibility->meshType)->draw();
+            meshFactory->getMesh(visibility->meshType)->draw();
 
             glPopMatrix();
         }

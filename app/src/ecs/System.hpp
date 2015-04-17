@@ -1,11 +1,10 @@
 #pragma once
+#include "Id.hpp"
 #include <vector>
 #include <initializer_list>
-#include "ComponentManagerBase.hpp"
-#include "Id.hpp"
 
 namespace ECS {
-
+class ComponentManagerBase;
 class System
 {
 

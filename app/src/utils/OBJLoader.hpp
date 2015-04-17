@@ -1,9 +1,9 @@
 #pragma once
-#include "graphic/Vertex.hpp"
-#include "graphic/Normal.hpp"
 #include <SFML/OpenGL.hpp>
 #include <vector>
-#include <fstream>
+
+struct Vertex;
+struct Normal;
 
 class OBJLoader
 {

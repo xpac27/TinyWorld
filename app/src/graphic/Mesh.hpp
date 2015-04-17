@@ -1,8 +1,7 @@
 #pragma once
-#include <SFML/OpenGL.hpp>
-#include <vector>
 #include "graphic/Vertex.hpp"
 #include "graphic/Normal.hpp"
+#include <vector>
 
 class Mesh
 {
@@ -14,6 +13,8 @@ public:
     void draw();
 
 private:
+
+    void loadVBOs();
 
     GLuint VBOIds[2];
     GLsizei totalIndexes {0};

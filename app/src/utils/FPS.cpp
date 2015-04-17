@@ -1,6 +1,6 @@
+#include "FPS.hpp"
 #include <iostream>
 #include <math.h>
-#include "FPS.hpp"
 
 using namespace std;
 

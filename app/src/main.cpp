@@ -3,14 +3,10 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
-
 #include "Application.hpp"
 #include "utils/FPS.hpp"
-#include "graphic/Vertex.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
-
-using namespace std;
 
 int main()
 {
