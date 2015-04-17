@@ -2,8 +2,6 @@
 #include "helpers/Debug.hpp"
 #include "utils/OBJLoader.hpp"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 using namespace std;
 
 Mesh::Mesh(const char *filename)
@@ -29,10 +27,10 @@ Mesh::Mesh(const char *filename)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
 
     // Try to put that in the init of RenderSystem
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(3));
-    glNormalPointer(GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(5));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(8));
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
+    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
 }
 
 void Mesh::draw()

@@ -8,6 +8,10 @@ void RenderSystem::update()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT);
 
