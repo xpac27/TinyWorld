@@ -17,8 +17,8 @@ void MovementSystem::update(float time)
             position = positionComponents->getComponent(entity);
             physics = physicsComponents->getComponent(entity);
 
-            position->x += physics->velocity_x * time * 10;
-            position->y += physics->velocity_y * time * 10;
+            position->x += physics->velocity_x * time * 20;
+            position->y += physics->velocity_y * time * 20;
         }
     }
 }

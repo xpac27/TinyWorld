@@ -10,15 +10,11 @@ Mesh::Mesh(const char *filename)
 
     totalIndexes = GLsizei(indexes.size());
 
-    for (unsigned int i = 0; i < vertexes.size(); i++)
-    {
-        vertexes[i].col[0] = 1.f;
-        vertexes[i].col[1] = 1.f;
-        vertexes[i].col[2] = 0.f;
-        vertexes[i].col[3] = 0.2f;
-    }
+    Debug::printl(vertexes.size(), indexes.size(), totalIndexes);
 
     glGenBuffers(2, VBOIds);
+    Debug::printl(VBOIds[0]);
+    Debug::printl(VBOIds[1]);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);

@@ -10,7 +10,9 @@ void RenderSystem::update()
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
 
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT);

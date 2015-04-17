@@ -26,7 +26,13 @@ private:
 
     MeshFactory meshFactory;
 
-    GLfloat lightpos[4] {0.f, 0.f, 10.f, 1.f};
+    float ca = 0.5f;
+    float la = 0.004f;
+    float qa = 0.00005f;
+
+    GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
+    GLfloat lightAmb[4] {1.f, 1.f, 1.f, 0.f};
+    GLfloat lightDif[4] {1.f, 1.f, 1.f, 1.f};
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Position>* positionComponents;

@@ -2,5 +2,5 @@
 
 enum class MeshType
 {
-    CUBE, SQUARE
+    CUBE, SQUARE, PYRAMID
 };
