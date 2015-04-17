@@ -13,4 +13,5 @@ public:
 private:
 
     Mesh cube = Mesh("app/res/cube.obj");
+    Mesh square = Mesh("app/res/square.obj");
 };

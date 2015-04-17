@@ -1,6 +1,5 @@
 #include "utils/OBJLoader.hpp"
 #include "helpers/Debug.hpp"
-#include <fstream>
 
 using namespace std;
 
@@ -10,7 +9,11 @@ void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vecto
     unsigned int state = 0; // 0 new line, 1 ignoring, 2 vertex, 3 face
 
     ifstream fin(filename);
-    while (fin.good() && !fin.eof()) {
+    if (!fin.good()) {
+        Debug::printl("ERROR - could not open file:", filename);
+    }
+
+    while (!fin.eof()) {
 
         fin.read(buffer, 1);
 

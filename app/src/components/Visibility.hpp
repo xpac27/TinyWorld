@@ -3,5 +3,5 @@
 
 struct Visibility
 {
-    MeshType meshType { MeshType::CUBE };
+    MeshType meshType { MeshType::SQUARE };
 };

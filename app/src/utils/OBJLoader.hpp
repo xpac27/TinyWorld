@@ -3,6 +3,7 @@
 #include "graphic/Normal.hpp"
 #include <SFML/OpenGL.hpp>
 #include <vector>
+#include <fstream>
 
 class OBJLoader
 {
