@@ -9,6 +9,7 @@ struct Vertex
     GLfloat col[4] {1.f, 1.f, 1.f, 1.f};
     GLubyte pad[16];    // Pads the struct out to 64 bytes for performance increase
 
+    Vertex() {}
     Vertex(GLfloat px, GLfloat py, GLfloat pz)
         : pos {px, py, pz}
     {}

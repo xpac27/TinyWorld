@@ -15,11 +15,11 @@ public:
 
 private:
 
-    GLuint VBOIds[2] {0, 0};
+    GLuint VBOIds[2];
     GLsizei totalIndexes {0};
 
     std::vector<Vertex> vertexes;
     std::vector<Normal> normals;
-    std::vector<GLuint> indexes;
+    std::vector<GLubyte> indexes;
 };
 

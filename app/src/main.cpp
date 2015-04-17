@@ -8,8 +8,6 @@
 #include "utils/FPS.hpp"
 #include "graphic/Vertex.hpp"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 void setupWindow(unsigned int width, unsigned int height);
 
 using namespace std;
@@ -40,9 +38,6 @@ int main()
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
-    glNormalPointer(GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(5));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(8));
 
     setupWindow(800, 600);
 

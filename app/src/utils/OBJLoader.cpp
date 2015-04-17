@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vector<GLuint> &indexes, const char *filename)
+void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vector<GLubyte> &indexes, const char *filename)
 {
     char buffer[1];
     unsigned int state = 0; // 0 new line, 1 ignoring, 2 vertex, 3 face
@@ -61,7 +61,7 @@ void OBJLoader::parseNormal(vector<Normal> &normals, ifstream &fin)
     normals.push_back(Normal(f1, f2, f3));
 }
 
-void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<GLuint> &indexes, std::ifstream &fin)
+void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<GLubyte> &indexes, std::ifstream &fin)
 {
     unsigned int f;
     for (unsigned int v = 0; v < 3; v ++) {
@@ -72,7 +72,7 @@ void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &no
             if ((fin.rdstate() & std::ifstream::failbit) != 0) {
                 fin.clear();
             } else if (i == 0) {
-                indexes.push_back(GLuint(f));
+                indexes.push_back(GLubyte(f));
             } else if (i == 1) {
                 // Textures coords...
             } else if (i == 2) {
