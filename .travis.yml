@@ -3,11 +3,11 @@ compiler: clang
 cache: apt
 before_script:
     - sudo add-apt-repository --yes ppa:kubuntu-ppa/backports # cmake >=2.8.10
-    - sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ precise universe"
-    - sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ precise-updates universe"
+    - sudo apt-add-repository --yes ppa:sonkun/sfml-development # sfml 2.0
     - sudo apt-get update
     - cmake --version
     - sudo apt-get install -y cmake libstdc++6 libglew-dev libsfml-dev
+    - cmake --version
 
 script: make configure && make compile && make test
 
