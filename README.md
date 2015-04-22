@@ -11,36 +11,37 @@ Todo:
 
 ## Requirements
 
-* **SMFL** ([website](http://www.sfml-dev.org/tutorials/2.2/))
-* **CMake** ([website](http://www.cmake.org/))
+* **SMFL** 2.0 + ([website](http://www.sfml-dev.org/tutorials/2.2/))
+* **CMake** 2.8.12 + ([website](http://www.cmake.org/))
 * **Clang Static Analyzer** ([website](http://clang-analyzer.llvm.org/index.html)) optional
-
-##### On Mac OSX
-
-Using [homebrew](http://mxcl.github.io/homebrew/):
-
-    brew install sfml cmake llvm
-
-In order to use Clang Static Analyzer you need to extend your PATH this way:
-
-    export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
 
 ## Basic usage
 
-Type `make` and the application should configure, compile and run \o/. Optionaly, you can run `make configure` once and use the commands above.
+Type `make` and the application should configure, compile and run \o/.
 
-This will compile the application:
+Optionaly, you can run `make configure` once and use the commands above.
 
-    make compile
+- `make compile` - compile the application
+- `make test` - compile and run the tests
+- `make report` - compile the application and run the static analyzer on it
+- `make report-open` - open the latest report
 
-This will compile and run the tests:
+## Setup
 
-    make test
+### Mac OSX 
 
-This will compile the application and run the static analyzer on it (which could take some time):
+    brew install sfml cmake
 
-    make report
+Optionaly, in order to use Clang Static Analyzer:
 
-This will open the latest report:
+    brew install llvm
+    export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
 
-    make report-open
+### Ubuntu
+
+    apt-get update
+    apt-get install cmake llvm libstdc++6 libglew-dev libsfml-dev
+
+Optionaly, in order to use Clang Static Analyzer:
+
+    apt-get install llvm
