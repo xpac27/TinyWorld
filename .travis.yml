@@ -2,7 +2,9 @@ language: cpp
 
 cache: apt
 compiler: clang
-before_script: sudo apt-get install -y libstdc++6 libglew-dev libsfml-dev cmake cmake-data
+before_script:
+    - cmake --version
+    - sudo apt-get install -y libstdc++6 libglew-dev libsfml-dev cmake cmake-data
 script: make configure && make compile && make test
 
 branches:
