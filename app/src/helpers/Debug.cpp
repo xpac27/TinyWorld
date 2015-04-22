@@ -23,6 +23,11 @@ void Debug::dump(Life* c)
 void Debug::dump(Visibility* c)
 {
     printl("Visibility");
+    switch (c->meshType) {
+        case MeshType::SQUARE: printl("  meshType: SQAURE"); break;
+        case MeshType::PYRAMID: printl("  meshType: PYRAMID"); break;
+        case MeshType::CUBE: printl("  meshType: CUBE"); break;
+    }
 }
 
 void Debug::nl()
