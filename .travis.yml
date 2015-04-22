@@ -1,8 +1,8 @@
 language: cpp
 
-os: osx
+cache: apt
 compiler: clang
-before_script: brew install sfml cmake
+before_script: sudo apt-get install -y libstdc++6 libsfml-dev
 script: make configure && make compile && make test
 
 branches:
