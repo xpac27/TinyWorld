@@ -3,8 +3,7 @@ compiler: clang
 cache: apt
 before_script:
     - sudo apt-get update
-    - sudo apt-get install cmake=2.8.12.2-0ubuntu6
-    - sudo apt-get install -y libstdc++6 libglew-dev libsfml-dev
+    - sudo apt-get install -y cmake libstdc++6 libglew-dev libsfml-dev
 
 script: make configure && make compile && make test
 
