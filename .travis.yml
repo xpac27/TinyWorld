@@ -2,7 +2,9 @@ language: cpp
 compiler: clang
 cache: apt
 before_script:
+    - sudo add-apt-repository --yes ppa:kubuntu-ppa/backports # cmake >=2.8.10
     - sudo apt-get update
+    - cmake --version
     - sudo apt-get install -y cmake libstdc++6 libglew-dev libsfml-dev
 
 script: make configure && make compile && make test
