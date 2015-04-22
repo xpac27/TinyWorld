@@ -1,6 +1,7 @@
 #pragma once
-#include <SFML/OpenGL.hpp>
+#include <GL/glew.h>
 #include <vector>
+#include <fstream>
 
 struct Vertex;
 struct Normal;

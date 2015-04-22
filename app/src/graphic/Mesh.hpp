@@ -1,6 +1,7 @@
 #pragma once
 #include "graphic/Vertex.hpp"
 #include "graphic/Normal.hpp"
+#include <GL/glew.h>
 #include <vector>
 
 class Mesh

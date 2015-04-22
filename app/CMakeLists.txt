@@ -18,4 +18,4 @@ add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 add_library("TinyWorld" ${SOURCE_FILES})
 
 # link
-target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})

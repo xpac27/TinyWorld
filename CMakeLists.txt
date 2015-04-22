@@ -10,6 +10,14 @@ else()
   message(FATAL_ERROR "Cannot find OpenGL library.")
 endif()
 
+# GLEW
+find_package(GLEW REQUIRED)
+if(GLEW_FOUND)
+  include_directories(${GLEW_INCLUDE_DIR})
+else()
+  message(FATAL_ERROR "Cannot find GLEW library.")
+endif()
+
 # SFML
 find_package(SFML 2 REQUIRED graphics window system)
 if(SFML_FOUND)

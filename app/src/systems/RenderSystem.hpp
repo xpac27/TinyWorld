@@ -2,7 +2,7 @@
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Position.hpp"
-#include <SFML/OpenGL.hpp>
+#include <GL/glew.h>
 
 namespace ECS {
     template <typename T> class ComponentManager;

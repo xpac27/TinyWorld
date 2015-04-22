@@ -1,10 +1,10 @@
+#include "Application.hpp"
+#include "utils/FPS.hpp"
 #include <stdlib.h>
-#include <SFML/OpenGL.hpp>
+#include <GL/glew.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
-#include "Application.hpp"
-#include "utils/FPS.hpp"
 
 void setupWindow(unsigned int width, unsigned int height);
 

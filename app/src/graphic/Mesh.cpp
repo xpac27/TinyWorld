@@ -1,6 +1,5 @@
 #include "Mesh.hpp"
 #include "utils/OBJLoader.hpp"
-#include <SFML/OpenGL.hpp>
 
 using namespace std;
 
