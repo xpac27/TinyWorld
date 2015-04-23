@@ -17,11 +17,13 @@ RenderSystem::RenderSystem(
 
 void RenderSystem::initialize()
 {
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
-    glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
-
+    if (GLEW_ARB_vertex_buffer_object)
+    {
+        glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
+        glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*3));
+        glNormalPointer(GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*5));
+        glColorPointer(4, GL_FLOAT, sizeof(Vertex), (GLvoid*)(sizeof(float)*8));
+    }
 }
 
 void RenderSystem::update()

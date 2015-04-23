@@ -21,18 +21,24 @@ Mesh::Mesh(const char *filename)
 
 void Mesh::loadVBOs()
 {
-    glGenBuffers(2, VBOIds);
+    if (GLEW_ARB_vertex_buffer_object)
+    {
+        glGenBuffers(2, VBOIds);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+    }
 }
 
 void Mesh::draw()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-    glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_BYTE, NULL);
+    if (GLEW_ARB_vertex_buffer_object)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
+        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_BYTE, NULL);
+    }
 }

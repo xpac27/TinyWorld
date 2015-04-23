@@ -32,12 +32,20 @@ int main()
 
     setupWindow(800, 600);
 
-    sf::Clock loopClock;
-    sf::Clock frameClock;
+    GLenum err = glewInit();
+    if (GLEW_OK != err)
+    {
+        std::fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+        return int(err);
+    }
+
     Application application;
+
+    // TODO handle that in a class within the app
     FPS loopRate = FPS("LPS");
     FPS frameRate = FPS("FPS");
-
+    sf::Clock loopClock;
+    sf::Clock frameClock;
     sf::Time loopTime;
     sf::Time drawTime;
 
