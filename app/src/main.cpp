@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "utils/FPS.hpp"
+#include <cmath>
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -7,6 +8,7 @@
 #include <SFML/Window/Event.hpp>
 
 void setupWindow(unsigned int width, unsigned int height);
+void perspectiveGL(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 
 int main()
 {
@@ -79,6 +81,16 @@ int main()
     return 0;
 }
 
+void perspectiveGL(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar)
+{
+    const GLdouble pi = 3.1415926535897932384626433832795;
+    GLdouble fW, fH;
+    fH = tan( (fovY / 2) / 180 * pi ) * zNear;
+    fH = tan( fovY / 360 * pi ) * zNear;
+    fW = fH * aspect;
+    glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+}
+
 void setupWindow(unsigned int width, unsigned int height)
 {
     float sceneWidth = 4.f;
@@ -96,7 +108,7 @@ void setupWindow(unsigned int width, unsigned int height)
     glViewport(0, 0, GLsizei(width), GLsizei(height));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(sceneWidth / -2.f, sceneWidth / 2.f, sceneHeight / 2.f, sceneHeight / -2.f, -100.f, 100.f);
+    perspectiveGL(120.0f, GLfloat(width) / GLfloat(height), 0.1f, 100.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }

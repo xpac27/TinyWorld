@@ -28,27 +28,13 @@ void RenderSystem::initialize()
 
 void RenderSystem::update()
 {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_COLOR_MATERIAL); // TODO avoid
-
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
-
-    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT);
-
     ECS::id entity;
     Position* position;
     Visibility* visibility;
+
+    setGLStates();
+    glPushMatrix();
+    glTranslatef(0.f, 0.f, -30.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -69,7 +55,46 @@ void RenderSystem::update()
         }
     }
 
-    // TODO use push states
+    glPopMatrix();
+    unsetGLStates();
+}
+
+void RenderSystem::setGLStates()
+{
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    glEnable(GL_CULL_FACE);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_COLOR_MATERIAL);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.8f);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.004f);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.00005f);
+
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (GLEW_ARB_vertex_buffer_object)
+    {
+        glEnableClientState(GL_COLOR_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
+    }
+}
+
+void RenderSystem::unsetGLStates()
+{
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
     glDisable(GL_COLOR_MATERIAL);
     glDisableClientState(GL_COLOR_ARRAY);

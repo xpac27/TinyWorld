@@ -22,11 +22,14 @@ public:
 
 private:
 
+    void setGLStates();
+    void unsetGLStates();
+
     MeshFactory* meshFactory;
 
     GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
-    GLfloat lightAmb[4] {.5f, .5f, .5f, 0.f};
-    GLfloat lightDif[4] {.5f, .5f, .5f, 1.f};
+    GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};
+    GLfloat lightDif[4] {.8f, .8f, .8f, 1.f};
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Position>* positionComponents;
