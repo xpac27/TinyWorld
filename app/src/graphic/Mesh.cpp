@@ -42,3 +42,13 @@ void Mesh::draw()
         glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_BYTE, NULL);
     }
 }
+
+void Mesh::outline()
+{
+    if (GLEW_ARB_vertex_buffer_object)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
+        glDrawElements(GL_LINE_LOOP, totalIndexes, GL_UNSIGNED_BYTE, NULL);
+    }
+}

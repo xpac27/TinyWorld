@@ -7,12 +7,12 @@
 
 RenderSystem::RenderSystem(
     ECS::ComponentManager<Visibility>* vc,
-    ECS::ComponentManager<Position>* pc
+    ECS::ComponentManager<Movement>* mc
 )
-    : System({vc, pc})
+    : System({vc, mc})
     , meshFactory(new MeshFactory())
     , visibilityComponents(vc)
-    , positionComponents(pc)
+    , movementComponents(mc)
 {}
 
 void RenderSystem::initialize()
@@ -29,7 +29,7 @@ void RenderSystem::initialize()
 void RenderSystem::update()
 {
     ECS::id entity;
-    Position* position;
+    Movement* movement;
     Visibility* visibility;
 
     setGLStates();
@@ -44,9 +44,9 @@ void RenderSystem::update()
 
             glPushMatrix();
 
-            if (positionComponents->hasComponent(entity)) {
-                position = positionComponents->getComponent(entity);
-                glTranslatef(position->x, position->y, 0.f);
+            if (movementComponents->hasComponent(entity)) {
+                movement = movementComponents->getComponent(entity);
+                glTranslatef(movement->position.x, movement->position.y, 0.f);
             }
 
             meshFactory->getMesh(visibility->meshType)->draw();

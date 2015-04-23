@@ -5,9 +5,8 @@
 #include "ecs/ComponentManager.hpp"
 
 #include "components/Life.hpp"
-#include "components/Position.hpp"
+#include "components/Movement.hpp"
 #include "components/Visibility.hpp"
-#include "components/Physics.hpp"
 
 class Game
 {
@@ -28,7 +27,6 @@ private:
     ECS::SystemManager simulationSystems = {};
 
     ECS::ComponentManager<Life> lifeComponents = ECS::ComponentManager<Life>();
-    ECS::ComponentManager<Position> positionComponents = ECS::ComponentManager<Position>();
+    ECS::ComponentManager<Movement> movementComponents = ECS::ComponentManager<Movement>();
     ECS::ComponentManager<Visibility> visibilityComponents = ECS::ComponentManager<Visibility>();
-    ECS::ComponentManager<Physics> physicsComponents = ECS::ComponentManager<Physics>();
 };

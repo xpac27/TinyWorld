@@ -1,5 +1,5 @@
 #include "helpers/Debug.hpp"
-#include "components/Position.hpp"
+#include "components/Movement.hpp"
 #include "components/Life.hpp"
 #include "components/Visibility.hpp"
 
@@ -8,10 +8,10 @@ void Debug::dump(ECS::id entity)
     printl("Entity", entity);
 }
 
-void Debug::dump(Position* c)
+void Debug::dump(Movement* c)
 {
-    printl("Position");
-    printl("  y:", c->x, "x:", c->y);
+    printl("Movement");
+    // TODO implement
 }
 
 void Debug::dump(Life* c)

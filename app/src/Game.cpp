@@ -2,11 +2,12 @@
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
 #include "helpers/Debug.hpp"
+#include <cmath>
 
 Game::Game()
 {
-    visualSystems.addSystem(new RenderSystem(&visibilityComponents, &positionComponents));
-    simulationSystems.addSystem(new MovementSystem(&positionComponents, &physicsComponents));
+    visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
+    simulationSystems.addSystem(new MovementSystem(&movementComponents));
 
     for (int i = 0; i < 100; i ++) {
         addEntity();
@@ -29,11 +30,11 @@ void Game::draw()
 void Game::addEntity()
 {
     ECS::id entity = entities.addEntity();
-    positionComponents.addComponent(entity);
+    movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    physicsComponents.addComponent(entity);
-    positionComponents.getComponent(entity)->x = 0.f;
-    positionComponents.getComponent(entity)->y = 0.f;
-    physicsComponents.getComponent(entity)->velocity_x = float(rand() % 100 - 50) / 100.f;
-    physicsComponents.getComponent(entity)->velocity_y = float(rand() % 100 - 50) / 100.f;
+    movementComponents.getComponent(entity)->position.x = float(rand() % 100 - 50);
+    movementComponents.getComponent(entity)->position.y = float(rand() % 100 - 50);
+    double r = rand();
+    movementComponents.getComponent(entity)->direction.x = float(sin(r));
+    movementComponents.getComponent(entity)->direction.y = float(cos(r));
 }

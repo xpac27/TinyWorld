@@ -17,7 +17,7 @@ int main()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "TinyWorld", (sf::Style::Close | sf::Style::Resize), settings);
+    sf::RenderWindow window(sf::VideoMode(1600, 1200), "TinyWorld", (sf::Style::Close | sf::Style::Resize), settings);
     window.setVerticalSyncEnabled(false);
 
     glShadeModel(GL_SMOOTH);
@@ -32,7 +32,7 @@ int main()
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    setupWindow(800, 600);
+    setupWindow(1600, 1200);
 
     GLenum err = glewInit();
     if (GLEW_OK != err)

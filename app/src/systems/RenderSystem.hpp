@@ -1,7 +1,7 @@
 #pragma once
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
-#include "components/Position.hpp"
+#include "components/Movement.hpp"
 #include <GL/glew.h>
 
 namespace ECS {
@@ -14,7 +14,7 @@ public:
 
     RenderSystem(
         ECS::ComponentManager<Visibility>* vc,
-        ECS::ComponentManager<Position>* pc
+        ECS::ComponentManager<Movement>* mc
     );
 
     void initialize();
@@ -32,5 +32,5 @@ private:
     GLfloat lightDif[4] {.8f, .8f, .8f, 1.f};
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
-    ECS::ComponentManager<Position>* positionComponents;
+    ECS::ComponentManager<Movement>* movementComponents;
 };

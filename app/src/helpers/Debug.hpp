@@ -2,7 +2,7 @@
 #include <iostream>
 #include "ecs/Id.hpp"
 
-struct Position;
+struct Movement;
 struct Life;
 struct Visibility;
 
@@ -10,7 +10,7 @@ namespace Debug
 {
 
 void dump(ECS::id entity);
-void dump(Position* p);
+void dump(Movement* p);
 void dump(Life* p);
 void dump(Visibility* p);
 
