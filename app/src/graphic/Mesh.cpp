@@ -29,7 +29,7 @@ void Mesh::loadVBOs()
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
     }
 }
 

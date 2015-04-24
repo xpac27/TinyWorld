@@ -16,4 +16,5 @@ private:
     Mesh* cube;
     Mesh* square;
     Mesh* pyramid;
+    Mesh* pig;
 };

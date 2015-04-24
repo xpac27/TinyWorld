@@ -34,7 +34,7 @@ void RenderSystem::update()
 
     setGLStates();
     glPushMatrix();
-    glTranslatef(0.f, 0.f, -30.f);
+    glTranslatef(0.f, 0.f, -10.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -47,6 +47,7 @@ void RenderSystem::update()
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
                 glTranslatef(movement->position.x, movement->position.y, 0.f);
+                glRotatef(90, 1.0, 0.0, 0.0 );
             }
 
             meshFactory->getMesh(visibility->meshType)->draw();
@@ -65,6 +66,7 @@ void RenderSystem::setGLStates()
     glDepthFunc(GL_LEQUAL);
 
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -71,13 +71,14 @@ void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &no
     unsigned int f;
     for (unsigned int v = 0; v < 3; v ++) {
         for (unsigned int i = 0; i < 3; i ++) {
-            fin.ignore();
             fin >> f;
             f --;
             if ((fin.rdstate() & std::ifstream::failbit) != 0) {
                 fin.clear();
+                fin.ignore();
             } else if (i == 0) {
                 indexes.push_back(GLubyte(f));
+                fin.ignore();
             } else if (i == 1) {
                 // Textures coords...
             } else if (i == 2) {

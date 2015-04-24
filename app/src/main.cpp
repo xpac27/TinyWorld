@@ -21,7 +21,6 @@ int main()
     window.setVerticalSyncEnabled(false);
 
     glShadeModel(GL_SMOOTH);
-    glCullFace(GL_FRONT);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
@@ -108,7 +107,7 @@ void setupWindow(unsigned int width, unsigned int height)
     glViewport(0, 0, GLsizei(width), GLsizei(height));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    perspectiveGL(120.0f, GLfloat(width) / GLfloat(height), 0.1f, 100.0f);
+    perspectiveGL(90.0f, GLfloat(width) / GLfloat(height), 0.1f, 100.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
