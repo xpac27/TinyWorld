@@ -33,9 +33,11 @@ void Mesh::loadVBOs()
 
         glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
+        // glBufferSubData TODO
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+        // glBufferSubData TODO
     }
 }
 

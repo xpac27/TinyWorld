@@ -11,7 +11,8 @@ void Debug::dump(ECS::id entity)
 void Debug::dump(Movement* c)
 {
     printl("Movement");
-    // TODO implement
+    printl("  position: ", c->position.x, c->position.y);
+    printl("  direction: ", c->direction.x, c->direction.y);
 }
 
 void Debug::dump(Life* c)
@@ -24,9 +25,11 @@ void Debug::dump(Visibility* c)
 {
     printl("Visibility");
     switch (c->meshType) {
-        case MeshType::SQUARE: printl("  meshType: SQAURE"); break;
-        case MeshType::PYRAMID: printl("  meshType: PYRAMID"); break;
-        case MeshType::CUBE: printl("  meshType: CUBE"); break;
+        case MeshType::CUBE: printl("  meshType: cube"); break;
+        case MeshType::SQUARE: printl("  meshType: square"); break;
+        case MeshType::PYRAMID: printl("  meshType: pyramid"); break;
+        case MeshType::GOOMBA: printl("  meshType: goomba"); break;
+        case MeshType::CACODEMON: printl("  meshType: cacodemon"); break;
     }
 }
 
