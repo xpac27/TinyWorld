@@ -9,7 +9,7 @@ Game::Game()
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
     simulationSystems.addSystem(new MovementSystem(&movementComponents));
 
-    for (int i = 0; i < 100; i ++) {
+    for (int i = 0; i < 50; i ++) {
         addEntity();
     }
 

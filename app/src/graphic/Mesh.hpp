@@ -12,6 +12,7 @@ public:
     Mesh(const char *filename);
 
     void draw();
+    void debug();
     void outline();
 
 private:
@@ -23,6 +24,6 @@ private:
 
     std::vector<Vertex> vertexes;
     std::vector<Normal> normals;
-    std::vector<GLubyte> indexes;
+    std::vector<unsigned int> indexes;
 };
 

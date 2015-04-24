@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "utils/OBJLoader.hpp"
+#include "helpers/Debug.hpp"
 
 using namespace std;
 
@@ -19,6 +20,11 @@ Mesh::Mesh(const char *filename)
     loadVBOs();
 }
 
+void Mesh::debug()
+{
+    OBJLoader::debug(vertexes, normals, indexes);
+}
+
 void Mesh::loadVBOs()
 {
     if (GLEW_ARB_vertex_buffer_object)
@@ -29,7 +35,7 @@ void Mesh::loadVBOs()
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
     }
 }
 
@@ -39,7 +45,7 @@ void Mesh::draw()
     {
         glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_BYTE, NULL);
+        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, NULL);
     }
 }
 

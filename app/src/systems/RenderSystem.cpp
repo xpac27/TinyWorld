@@ -34,7 +34,7 @@ void RenderSystem::update()
 
     setGLStates();
     glPushMatrix();
-    glTranslatef(0.f, 0.f, -10.f);
+    glTranslatef(0.f, 0.f, -50.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -47,7 +47,6 @@ void RenderSystem::update()
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
                 glTranslatef(movement->position.x, movement->position.y, 0.f);
-                glRotatef(90, 1.0, 0.0, 0.0 );
             }
 
             meshFactory->getMesh(visibility->meshType)->draw();
@@ -68,9 +67,6 @@ void RenderSystem::setGLStates()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     glEnable(GL_COLOR_MATERIAL);
 
     glEnable(GL_LIGHTING);
@@ -82,22 +78,22 @@ void RenderSystem::setGLStates()
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.004f);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.00005f);
 
-    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if (GLEW_ARB_vertex_buffer_object)
     {
         glEnableClientState(GL_COLOR_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnableClientState(GL_VERTEX_ARRAY);
     }
+
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderSystem::unsetGLStates()
 {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
     glDisable(GL_COLOR_MATERIAL);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -105,4 +101,5 @@ void RenderSystem::unsetGLStates()
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glDepthMask(GL_FALSE);
 }

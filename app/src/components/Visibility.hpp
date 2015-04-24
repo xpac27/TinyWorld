@@ -3,5 +3,5 @@
 
 struct Visibility
 {
-    MeshType meshType { MeshType::PIG };
+    MeshType meshType { MeshType::GOOMBA };
 };

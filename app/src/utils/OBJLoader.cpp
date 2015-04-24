@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vector<GLubyte> &indexes, const char *filename)
+void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes, const char *filename)
 {
     char buffer[1];
     unsigned int state = 0; // 0 new line, 1 ignoring, 2 vertex, 3 face
@@ -66,26 +66,28 @@ void OBJLoader::parseNormal(vector<Normal> &normals, ifstream &fin)
     normals.push_back(Normal(f1, f2, f3));
 }
 
-void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<GLubyte> &indexes, std::ifstream &fin)
+void OBJLoader::parseFace(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
 {
-    unsigned int f;
+    unsigned int i1, i3;
     for (unsigned int v = 0; v < 3; v ++) {
-        for (unsigned int i = 0; i < 3; i ++) {
-            fin >> f;
-            f --;
-            if ((fin.rdstate() & std::ifstream::failbit) != 0) {
-                fin.clear();
-                fin.ignore();
-            } else if (i == 0) {
-                indexes.push_back(GLubyte(f));
-                fin.ignore();
-            } else if (i == 1) {
-                // Textures coords...
-            } else if (i == 2) {
-                vertexes[indexes.back()].nor[0] = GLfloat(normals[f].x);
-                vertexes[indexes.back()].nor[1] = GLfloat(normals[f].y);
-                vertexes[indexes.back()].nor[2] = GLfloat(normals[f].z);
-            }
-        }
+        fin >> i1;
+        fin.ignore();
+        // no textures
+        fin.ignore();
+        fin >> i3;
+        indexes.push_back(i1-1);
+        vertexes[i1-1].nor[0] = normals[i3-1].x;
+        vertexes[i1-1].nor[1] = normals[i3-1].y;
+        vertexes[i1-1].nor[2] = normals[i3-1].z;
+    }
+}
+
+void OBJLoader::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
+{
+    for (auto v : vertexes) {
+        Debug::printl("v", v.pos[0], v.pos[1], v.pos[2]);
+    }
+    for (unsigned int i = 0; i < indexes.size(); i += 3) {
+        Debug::printl("f", indexes[i+0], indexes[i+1], indexes[i+2]);
     }
 }
