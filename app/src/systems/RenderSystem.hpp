@@ -17,7 +17,6 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
-    void initialize();
     void update();
 
 private:

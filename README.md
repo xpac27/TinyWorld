@@ -8,7 +8,7 @@ Todo:
 - [ ] make entities learn to look for food
 - [ ] make entities move randomly and die after some time
 - [x] obj parser
-- [x] vertex buffer object
+- [x] vertex array object
 - [x] basic entity component system
 
 ## Requirements
@@ -30,7 +30,7 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 ## Setup
 
-### Mac OSX 
+### Mac OSX
 
     brew install sfml cmake
 

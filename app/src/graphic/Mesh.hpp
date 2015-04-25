@@ -4,6 +4,11 @@
 #include <GL/glew.h>
 #include <vector>
 
+#define IND_VB 0
+#define POS_VB 1
+#define NOR_VB 2
+#define COL_VB 3
+
 class Mesh
 {
 
@@ -17,9 +22,10 @@ public:
 
 private:
 
-    void loadVBOs();
+    void loadVAO();
 
-    GLuint VBOIds[2];
+    GLuint VAO;
+    GLuint VAB[4];
     GLsizei totalIndexes {0};
 
     std::vector<Vertex> vertexes;
