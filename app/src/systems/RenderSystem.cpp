@@ -1,9 +1,13 @@
 #include "RenderSystem.hpp"
+#include "helpers/Debug.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "graphic/Vertex.hpp"
 #include "graphic/MeshFactory.hpp"
 #include "graphic/Mesh.hpp"
 #include "ecs/Id.hpp"
+#include <fstream>
+
+using namespace std;
 
 RenderSystem::RenderSystem(
     ECS::ComponentManager<Visibility>* vc,
@@ -14,6 +18,28 @@ RenderSystem::RenderSystem(
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
+
+void RenderSystem::initialize()
+{
+    GLuint shaderProgram = glCreateProgram();
+
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    loadShaderFile(vertexShader, "app/res/shaders/vertex_shader.vert");
+    compileShader(vertexShader, shaderProgram);
+
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    loadShaderFile(fragmentShader, "app/res/shaders/fragment_shader.frag");
+    compileShader(fragmentShader, shaderProgram);
+
+    linkProgram(shaderProgram);
+
+    glDetachShader(shaderProgram, vertexShader);
+    glDeleteShader(vertexShader);
+    glDetachShader(shaderProgram, fragmentShader);
+    glDeleteShader(fragmentShader);
+
+    glUseProgram(shaderProgram);
+}
 
 void RenderSystem::update()
 {
@@ -91,4 +117,51 @@ void RenderSystem::unsetGLStates()
     glDisable(GL_LIGHT0);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDepthMask(GL_FALSE);
+}
+
+void RenderSystem::loadShaderFile(GLuint& shader, const char* filename)
+{
+    ifstream file(filename);
+    std::string content, line = "";
+    while(!file.eof()) {
+        std::getline(file, line);
+        content.append(line + "\n");
+    }
+
+    const GLchar* p[1] = {content.data()};
+    GLint l[1] = {GLint(content.size())};
+
+    glShaderSource(shader, 1, p, l);
+}
+
+bool RenderSystem::compileShader(GLuint& shader, GLuint& program)
+{
+    GLint success;
+    glCompileShader(shader);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (success == 0) {
+        GLchar InfoLog[1024];
+        glGetShaderInfoLog(shader, sizeof(InfoLog), NULL, InfoLog);
+        Debug::print(InfoLog);
+        return false;
+    } else {
+        glAttachShader(program, shader);
+    }
+    return true;
+}
+
+bool RenderSystem::linkProgram(GLuint& program)
+{
+    GLint success;
+    glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (success == 0) {
+        GLchar ErrorLog[1024];
+        glGetProgramInfoLog(program, sizeof(ErrorLog), NULL, ErrorLog);
+        Debug::print(ErrorLog);
+        return false;
+    } else {
+        glValidateProgram(program);
+    }
+    return true;
 }

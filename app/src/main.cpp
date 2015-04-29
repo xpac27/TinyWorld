@@ -17,6 +17,8 @@ int main()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
     settings.depthBits = 24;
+    settings.majorVersion = 3;
+    settings.minorVersion = 2;
 
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "TinyWorld", (sf::Style::Close | sf::Style::Resize), settings);
     window.setVerticalSyncEnabled(false);

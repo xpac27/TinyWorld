@@ -17,12 +17,16 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
+    void initialize();
     void update();
 
 private:
 
     void setGLStates();
     void unsetGLStates();
+    void loadShaderFile(GLuint& shader, const char* filename);
+    bool compileShader(GLuint& shader, GLuint& program);
+    bool linkProgram(GLuint& program);
 
     MeshFactory* meshFactory;
 
