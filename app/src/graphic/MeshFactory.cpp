@@ -8,7 +8,6 @@ MeshFactory::MeshFactory()
     , cacodemon(new Mesh("app/res/cacodemon.obj"))
     , goomba(new Mesh("app/res/goomba.obj"))
 {
-    goomba->debug();
 }
 
 Mesh* MeshFactory::getMesh(MeshType type)

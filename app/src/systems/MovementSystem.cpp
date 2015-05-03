@@ -19,6 +19,6 @@ void MovementSystem::update(float time)
         entity = getEntities()->at(i);
 
         movement = movementComponents->getComponent(entity);
-        movement->position += movement->direction * time;
+        // TODO
     }
 }

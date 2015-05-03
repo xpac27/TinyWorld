@@ -1,8 +1,8 @@
 #pragma once
-#include <SFML/System/Vector2.hpp>
+#include <glm/vec3.hpp>
 
 struct Movement
 {
-    sf::Vector2f position;
-    sf::Vector2f direction;
+    glm::vec3 position;
+    glm::vec3 rotation;
 };

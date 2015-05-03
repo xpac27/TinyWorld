@@ -3,6 +3,8 @@
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
 #include <GL/glew.h>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace ECS {
     template <typename T> class ComponentManager;
@@ -25,10 +27,21 @@ private:
     void setGLStates();
     void unsetGLStates();
     void loadShaderFile(GLuint& shader, const char* filename);
-    bool compileShader(GLuint& shader, GLuint& program);
-    bool linkProgram(GLuint& program);
+    void compileShader(GLuint& shader, GLuint& program);
+    void linkProgram(GLuint& program);
 
     MeshFactory* meshFactory;
+
+    glm::mat4 modelScale;
+    glm::mat4 modelRotation;
+    glm::mat4 modelTranslation;
+    glm::mat4 viewTranslation;
+    glm::mat4 viewRotation;
+    glm::mat4 projection;
+    glm::mat4 MVP;
+
+    GLuint shaderProgram = glCreateProgram();
+    GLint shaderMVPLocation = 0;
 
     GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
     GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};

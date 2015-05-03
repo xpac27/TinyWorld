@@ -6,6 +6,7 @@
 #include "graphic/Mesh.hpp"
 #include "ecs/Id.hpp"
 #include <fstream>
+#include <assert.h>
 
 using namespace std;
 
@@ -21,8 +22,6 @@ RenderSystem::RenderSystem(
 
 void RenderSystem::initialize()
 {
-    GLuint shaderProgram = glCreateProgram();
-
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     loadShaderFile(vertexShader, "app/res/shaders/vertex_shader.vert");
     compileShader(vertexShader, shaderProgram);
@@ -33,12 +32,15 @@ void RenderSystem::initialize()
 
     linkProgram(shaderProgram);
 
+    shaderMVPLocation = glGetUniformLocation(shaderProgram, "MVP");
+
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
     glDetachShader(shaderProgram, fragmentShader);
     glDeleteShader(fragmentShader);
 
-    glUseProgram(shaderProgram);
+    projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
+    viewTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -5.f));
 }
 
 void RenderSystem::update()
@@ -48,8 +50,7 @@ void RenderSystem::update()
     Visibility* visibility;
 
     setGLStates();
-    glPushMatrix();
-    glTranslatef(0.f, 0.f, -50.f);
+    glUseProgram(shaderProgram);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -57,20 +58,26 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             visibility = visibilityComponents->getComponent(entity);
 
-            glPushMatrix();
+            modelScale = glm::scale(glm::mat4(1.0f), visibility->scale);
 
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
-                glTranslatef(movement->position.x, movement->position.y, 0.f);
+
+                modelTranslation = glm::translate(glm::mat4(1.0f), movement->position);
+
+                modelRotation = glm::mat4(0.1f);
+                modelRotation = glm::rotate(modelRotation, movement->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+                modelRotation = glm::rotate(modelRotation, movement->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+                modelRotation = glm::rotate(modelRotation, movement->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
             }
 
-            meshFactory->getMesh(visibility->meshType)->draw();
+            MVP = projection * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
+            glUniformMatrix4fv(shaderMVPLocation, 1, GL_FALSE, &MVP[0][0]);
 
-            glPopMatrix();
+            meshFactory->getMesh(visibility->meshType)->outline();
         }
     }
 
-    glPopMatrix();
     unsetGLStates();
 }
 
@@ -80,25 +87,18 @@ void RenderSystem::setGLStates()
     glDepthFunc(GL_LEQUAL);
 
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glCullFace(GL_FRONT);
 
-    glEnable(GL_COLOR_MATERIAL);
+    // glEnable(GL_COLOR_MATERIAL);
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
-    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.8f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.004f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.00005f);
-
-    if (GLEW_ARB_vertex_buffer_object)
-    {
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-    }
+    // glEnable(GL_LIGHTING);
+    // glEnable(GL_LIGHT0);
+    // glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    // glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+    // glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
+    // glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.8f);
+    // glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.004f);
+    // glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.00005f);
 
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
@@ -134,7 +134,7 @@ void RenderSystem::loadShaderFile(GLuint& shader, const char* filename)
     glShaderSource(shader, 1, p, l);
 }
 
-bool RenderSystem::compileShader(GLuint& shader, GLuint& program)
+void RenderSystem::compileShader(GLuint& shader, GLuint& program)
 {
     GLint success;
     glCompileShader(shader);
@@ -143,14 +143,12 @@ bool RenderSystem::compileShader(GLuint& shader, GLuint& program)
         GLchar InfoLog[1024];
         glGetShaderInfoLog(shader, sizeof(InfoLog), NULL, InfoLog);
         Debug::print(InfoLog);
-        return false;
     } else {
         glAttachShader(program, shader);
     }
-    return true;
 }
 
-bool RenderSystem::linkProgram(GLuint& program)
+void RenderSystem::linkProgram(GLuint& program)
 {
     GLint success;
     glLinkProgram(program);
@@ -159,9 +157,7 @@ bool RenderSystem::linkProgram(GLuint& program)
         GLchar ErrorLog[1024];
         glGetProgramInfoLog(program, sizeof(ErrorLog), NULL, ErrorLog);
         Debug::print(ErrorLog);
-        return false;
     } else {
         glValidateProgram(program);
     }
-    return true;
 }

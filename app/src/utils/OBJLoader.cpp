@@ -55,7 +55,7 @@ void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vecto
     }
 
     assert(vertexes.size() == normals.size());
-    assert(vertexes.size() < indexes.size());
+    assert(vertexes.size() <= indexes.size());
 }
 
 void OBJLoader::parseVertex(vector<Vertex> &vertexes, ifstream &fin)

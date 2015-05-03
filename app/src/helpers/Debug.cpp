@@ -11,8 +11,8 @@ void Debug::dump(ECS::id entity)
 void Debug::dump(Movement* c)
 {
     printl("Movement");
-    printl("  position: ", c->position.x, c->position.y);
-    printl("  direction: ", c->direction.x, c->direction.y);
+    printl("  position: ", c->position.x, c->position.y, c->position.z);
+    printl("  rotation: ", c->rotation.x, c->rotation.y, c->rotation.z);
 }
 
 void Debug::dump(Life* c)

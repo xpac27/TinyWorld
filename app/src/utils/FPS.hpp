@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <SFML/System/Clock.hpp>
+// #include <SFML/System/Clock.hpp>
 
 class FPS
 {
@@ -18,7 +18,7 @@ private:
     void print() const;
     bool isReady() const;
 
-    sf::Clock mClock;
+    // sf::Clock mClock;
     std::string mName;
 
     unsigned int frameCount {0};
