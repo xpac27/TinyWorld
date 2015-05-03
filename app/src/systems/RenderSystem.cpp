@@ -6,7 +6,7 @@
 #include "graphic/Mesh.hpp"
 #include "ecs/Id.hpp"
 #include <fstream>
-#include <assert.h>
+#include <math.h>
 
 using namespace std;
 
@@ -40,7 +40,9 @@ void RenderSystem::initialize()
     glDeleteShader(fragmentShader);
 
     projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
-    viewTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -5.f));
+    viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -5.f, 0.f));
+    viewRotation = glm::rotate(viewRotation, float(M_PI / -2.f), glm::vec3(1.0f, 0.0f, 0.0f));
+    viewRotation = glm::rotate(viewRotation, float(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void RenderSystem::update()
@@ -74,7 +76,7 @@ void RenderSystem::update()
             MVP = projection * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
             glUniformMatrix4fv(shaderMVPLocation, 1, GL_FALSE, &MVP[0][0]);
 
-            meshFactory->getMesh(visibility->meshType)->outline();
+            meshFactory->getMesh(visibility->meshType)->draw();
         }
     }
 
@@ -87,7 +89,7 @@ void RenderSystem::setGLStates()
     glDepthFunc(GL_LEQUAL);
 
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
+    glCullFace(GL_BACK);
 
     // glEnable(GL_COLOR_MATERIAL);
 
