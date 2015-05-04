@@ -28,6 +28,7 @@ void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vecto
                 case 2: /* parseTextures */ break;
                 case 3: parseNormal(normalList, fin); break;
                 case 4: parseFace(indexes, normals, normalList, fin); break;
+                case 5: parseMTLLib(fin); break;
             }
             ignoring = true;
         }
@@ -37,9 +38,18 @@ void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vecto
     assert(vertexes.size() <= indexes.size());
 }
 
+void OBJLoader::parseMTLLib(std::ifstream &fin)
+{
+    char m[80] {' '};
+    fin >> m;
+    Debug::printl(m);
+}
+
 unsigned int OBJLoader::identifyLigne(std::ifstream &fin)
 {
-    char k[10] {' '}; fin >> k;
+    char k[10] {' '};
+    fin >> k;
+    char mtllib[] = "mtllib"; if (strncmp(k, mtllib, 6) == 0) return 5;
     char vt[] = "vt"; if (strncmp(k, vt, 2) == 0) return 2;
     char vn[] = "vn"; if (strncmp(k, vn, 2) == 0) return 3;
     char v[] = "v"; if (strncmp(k, v, 1) == 0) return 1;
@@ -63,20 +73,29 @@ void OBJLoader::parseNormal(vector<Normal> &normals, ifstream &fin)
 
 void OBJLoader::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal> &normals, std::vector<Normal> &normalList, std::ifstream &fin)
 {
-    unsigned int i1, i3;
+    char b[1] {' '};
+    unsigned int u[3] {0};
     for (unsigned int i = 0; i < 3; i ++) {
-        fin >> i1;
-        fin.ignore();
-        // no textures
-        fin.ignore();
-        fin >> i3;
-
-        // Save index
-        indexes.push_back(i1-1);
-
-        // Save normal
-        if (normals.size() < i1) normals.resize(i1, Normal(0.f, 0.f, 0.f));
-        normals[i1-1] = normalList[i3-1];
+        for (unsigned int j = 0; j < 3; j ++) {
+            fin >> u[j];
+            if ((fin.rdstate() & std::ifstream::failbit) == 0) {
+                if (j == 0) {
+                    indexes.push_back(u[0]-1);
+                    fin.read(b, 1);
+                    if (b[0] == ' ') break;
+                } else if (j == 1) {
+                    // Textures coord...
+                    fin.read(b, 1);
+                    if (b[0] == ' ') break;
+                } else if (j == 2) {
+                    if (normals.size() < u[0]) normals.resize(u[0], Normal(0.f, 0.f, 0.f));
+                    normals[u[0]-1] = normalList[u[2]-1];
+                }
+            } else {
+                fin.clear();
+                fin.ignore();
+            }
+        }
     }
 }
 

@@ -21,4 +21,5 @@ private:
     static void parseVertex(std::vector<Vertex> &vertexes, std::ifstream &fin);
     static void parseNormal(std::vector<Normal> &normals, std::ifstream &fin);
     static void parseFace(std::vector<unsigned int> &indexes, std::vector<Normal> &normals, std::vector<Normal> &normalList, std::ifstream &fin);
+    static void parseMTLLib(std::ifstream &fin);
 };

@@ -5,9 +5,10 @@ MeshFactory::MeshFactory()
     : cube(new Mesh("app/res/cube.obj"))
     , square(new Mesh("app/res/square.obj"))
     , pyramid(new Mesh("app/res/pyramid.obj"))
-    // , cacodemon(new Mesh("app/res/cacodemon.obj"))
+    , cacodemon(new Mesh("app/res/cacodemon.obj"))
     , goomba(new Mesh("app/res/goomba.obj"))
-{}
+{
+}
 
 Mesh* MeshFactory::getMesh(MeshType type)
 {
