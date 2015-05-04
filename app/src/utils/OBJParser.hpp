@@ -7,7 +7,6 @@ struct Vertex;
 struct Normal;
 struct Material;
 
-// TODO rename in OBJparser
 class OBJParser
 {
 

@@ -54,13 +54,13 @@ void OBJParser::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &n
 
 unsigned int OBJParser::identifyLigne(std::ifstream &fin)
 {
-    char k[6] {' '};
+    char k[7] {' '};
     fin >> k;
-    if (strncmp(k, MTLLIB, 6) == 0) return 5;
-    if (strncmp(k, VT, 2) == 0) return 2;
-    if (strncmp(k, VN, 2) == 0) return 3;
-    if (strncmp(k, V, 1) == 0) return 1;
-    if (strncmp(k, F, 1) == 0) return 4;
+    if (strncmp(k, MTLLIB, 7) == 0) return 5;
+    if (strncmp(k, VT, 3) == 0) return 2;
+    if (strncmp(k, VN, 3) == 0) return 3;
+    if (strncmp(k, V, 2) == 0) return 1;
+    if (strncmp(k, F, 2) == 0) return 4;
     return 0;
 }
 
@@ -111,17 +111,19 @@ void OBJParser::parseMTLLib(vector<Material> materials, std::ifstream &fin)
     char c[80] {' '};
     fin >> c;
     MTLParser().load(materials, c);
+    MTLParser().debug(materials);
 }
 
 void OBJParser::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
 {
+    Debug::printl("\n---- OBJ");
     for (auto v : vertexes) {
-        Debug::printl("v", v.x, v.y, v.z);
+        Debug::printl("  v", v.x, v.y, v.z);
     }
     for (auto n : normals) {
-        Debug::printl("vn", n.x, n.y, n.z);
+        Debug::printl("  vn", n.x, n.y, n.z);
     }
     for (unsigned int i = 0; i < indexes.size(); i += 3) {
-        Debug::printl("f", indexes[i+0], indexes[i+1], indexes[i+2]);
+        Debug::printl("  f", indexes[i+0], indexes[i+1], indexes[i+2]);
     }
 }
