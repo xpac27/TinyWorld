@@ -8,9 +8,6 @@ using namespace std;
 
 void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes, const char *filename)
 {
-    char buffer[1];
-    unsigned int state = 0; // 0 new line, 1 ignoring, 2 vertex, 3 face
-
     ifstream fin(filename);
     if (!fin.good()) {
         Debug::printl("ERROR - could not open file:", filename);
@@ -18,44 +15,36 @@ void OBJLoader::loadOBJ(vector<Vertex> &vertexes, vector<Normal> &normals, vecto
 
     vector<Normal> normalList;
 
+    char b[1];
+    bool ignoring = false;
+
     while (!fin.eof()) {
-
-        fin.read(buffer, 1);
-
-        if (state == 0) {
-            if (buffer[0] == '\n') {
-                state = 0;
-            } else if (buffer[0] == '#') {
-                state = 1;
-            } else if (buffer[0] == 'v') {
-                state = 2;
-            } else if (buffer[0] == 'f') {
-                state = 3;
-            } else {
-                state = 4;
-            }
+        if (ignoring) {
+            fin.read(b, 1);
+            if (b[0] == '\n') ignoring = false;
         } else {
-            if (state == 1) {
-                if (buffer[0] == '\n') {
-                    state = 0;
-                }
-            } else {
-                if (state == 2 && buffer[0] == ' ') {
-                    parseVertex(vertexes, fin);
-                } else if (state == 2 && buffer[0] == 't') {
-                    // Textures coords...
-                } else if (state == 2 && buffer[0] == 'n') {
-                    parseNormal(normalList, fin);
-                } else if (state == 3 && buffer[0] == ' ') {
-                    parseFace(indexes, normals, normalList, fin);
-                }
-                state = 1;
+            switch (identifyLigne(fin)) {
+                case 1: parseVertex(vertexes, fin); break;
+                case 2: /* parseTextures */ break;
+                case 3: parseNormal(normalList, fin); break;
+                case 4: parseFace(indexes, normals, normalList, fin); break;
             }
+            ignoring = true;
         }
     }
 
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
+}
+
+unsigned int OBJLoader::identifyLigne(std::ifstream &fin)
+{
+    char k[10] {' '}; fin >> k;
+    char vt[] = "vt"; if (strncmp(k, vt, 2) == 0) return 2;
+    char vn[] = "vn"; if (strncmp(k, vn, 2) == 0) return 3;
+    char v[] = "v"; if (strncmp(k, v, 1) == 0) return 1;
+    char f[] = "f"; if (strncmp(k, f, 1) == 0) return 4;
+    return 0;
 }
 
 void OBJLoader::parseVertex(vector<Vertex> &vertexes, ifstream &fin)
