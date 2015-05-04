@@ -1,11 +1,11 @@
-#include "utils/MTLLoader.hpp"
+#include "utils/MTLParser.hpp"
 #include "graphic/Material.hpp"
 #include "helpers/Debug.hpp"
 #include <cstring>
 
 using namespace std;
 
-void MTLLoader::load(std::vector<Material> &materials, const char *filename)
+void MTLParser::load(std::vector<Material> &materials, const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
@@ -13,7 +13,7 @@ void MTLLoader::load(std::vector<Material> &materials, const char *filename)
     }
 }
 
-bool MTLLoader::openFile(const char *filename, std::ifstream &fin)
+bool MTLParser::openFile(const char *filename, std::ifstream &fin)
 {
     string filepath = "app/res/";
     filepath += filename;
@@ -22,7 +22,7 @@ bool MTLLoader::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void MTLLoader::parseLines(std::vector<Material> &materials, std::ifstream &fin)
+void MTLParser::parseLines(std::vector<Material> &materials, std::ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
@@ -41,7 +41,7 @@ void MTLLoader::parseLines(std::vector<Material> &materials, std::ifstream &fin)
     }
 }
 
-unsigned int MTLLoader::identifyLigne(std::ifstream &fin)
+unsigned int MTLParser::identifyLigne(std::ifstream &fin)
 {
     char k[6] {' '};
     fin >> k;
@@ -51,28 +51,28 @@ unsigned int MTLLoader::identifyLigne(std::ifstream &fin)
     return 0;
 }
 
-void MTLLoader::parseNewmtl(std::vector<Material> &materials, std::ifstream &fin)
+void MTLParser::parseNewmtl(std::vector<Material> &materials, std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.push_back(Material(c));
 }
 
-void MTLLoader::parseMapKd(Material &material, std::ifstream &fin)
+void MTLParser::parseMapKd(Material &material, std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     material.map_Kd = c;
 }
 
-void MTLLoader::parseMapKs(Material &material, std::ifstream &fin)
+void MTLParser::parseMapKs(Material &material, std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     material.map_Ks = c;
 }
 
-void MTLLoader::debug(std::vector<Material> &materials)
+void MTLParser::debug(std::vector<Material> &materials)
 {
     for (auto m : materials) {
         Debug::printl("newmtl", m.name);

@@ -1,5 +1,5 @@
-#include "utils/OBJLoader.hpp"
-#include "utils/MTLLoader.hpp"
+#include "utils/OBJParser.hpp"
+#include "utils/MTLParser.hpp"
 #include "graphic/Vertex.hpp"
 #include "graphic/Normal.hpp"
 #include "graphic/Material.hpp"
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void OBJLoader::load(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes, const char *filename)
+void OBJParser::load(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes, const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
@@ -19,7 +19,7 @@ void OBJLoader::load(vector<Vertex> &vertexes, vector<Normal> &normals, vector<u
     assert(vertexes.size() <= indexes.size());
 }
 
-bool OBJLoader::openFile(const char *filename, std::ifstream &fin)
+bool OBJParser::openFile(const char *filename, std::ifstream &fin)
 {
     string filepath = "app/res/";
     filepath += filename;
@@ -29,7 +29,7 @@ bool OBJLoader::openFile(const char *filename, std::ifstream &fin)
 }
 
 
-void OBJLoader::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
+void OBJParser::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
@@ -52,7 +52,7 @@ void OBJLoader::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &n
     }
 }
 
-unsigned int OBJLoader::identifyLigne(std::ifstream &fin)
+unsigned int OBJParser::identifyLigne(std::ifstream &fin)
 {
     char k[6] {' '};
     fin >> k;
@@ -64,21 +64,21 @@ unsigned int OBJLoader::identifyLigne(std::ifstream &fin)
     return 0;
 }
 
-void OBJLoader::parseVertex(vector<Vertex> &vertexes, ifstream &fin)
+void OBJParser::parseVertex(vector<Vertex> &vertexes, ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     vertexes.push_back(Vertex(f1, f2, f3));
 }
 
-void OBJLoader::parseNormal(vector<Normal> &normals, ifstream &fin)
+void OBJParser::parseNormal(vector<Normal> &normals, ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     normals.push_back(Normal(f1, f2, f3));
 }
 
-void OBJLoader::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal> &normals, std::vector<Normal> &normalList, std::ifstream &fin)
+void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal> &normals, std::vector<Normal> &normalList, std::ifstream &fin)
 {
     char b[1] {' '};
     unsigned int u[3] {0};
@@ -106,14 +106,14 @@ void OBJLoader::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal
     }
 }
 
-void OBJLoader::parseMTLLib(vector<Material> materials, std::ifstream &fin)
+void OBJParser::parseMTLLib(vector<Material> materials, std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    MTLLoader().load(materials, c);
+    MTLParser().load(materials, c);
 }
 
-void OBJLoader::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
+void OBJParser::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
 {
     for (auto v : vertexes) {
         Debug::printl("v", v.x, v.y, v.z);

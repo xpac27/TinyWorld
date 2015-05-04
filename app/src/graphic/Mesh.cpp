@@ -1,12 +1,12 @@
 #include "Mesh.hpp"
-#include "utils/OBJLoader.hpp"
+#include "utils/OBJParser.hpp"
 #include "helpers/Debug.hpp"
 
 using namespace std;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJLoader().load(vertexes, normals, indexes, filename);
+    OBJParser().load(vertexes, normals, indexes, filename);
     totalIndexes = GLsizei(indexes.size());
 
     loadVAO();
@@ -14,7 +14,7 @@ Mesh::Mesh(const char *filename)
 
 void Mesh::debug()
 {
-    OBJLoader().debug(vertexes, normals, indexes);
+    OBJParser().debug(vertexes, normals, indexes);
 }
 
 void Mesh::loadVAO()

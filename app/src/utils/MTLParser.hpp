@@ -5,7 +5,7 @@
 struct Material;
 
 // TODO rename in MTLparser
-class MTLLoader
+class MTLParser
 {
 
 public:

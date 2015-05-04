@@ -8,7 +8,7 @@ struct Normal;
 struct Material;
 
 // TODO rename in OBJparser
-class OBJLoader
+class OBJParser
 {
 
 public:
