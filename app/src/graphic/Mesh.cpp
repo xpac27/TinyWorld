@@ -6,7 +6,7 @@ using namespace std;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJLoader::load(vertexes, normals, indexes, filename);
+    OBJLoader().load(vertexes, normals, indexes, filename);
     totalIndexes = GLsizei(indexes.size());
 
     loadVAO();
@@ -14,7 +14,7 @@ Mesh::Mesh(const char *filename)
 
 void Mesh::debug()
 {
-    OBJLoader::debug(vertexes, normals, indexes);
+    OBJLoader().debug(vertexes, normals, indexes);
 }
 
 void Mesh::loadVAO()

@@ -56,12 +56,11 @@ unsigned int OBJLoader::identifyLigne(std::ifstream &fin)
 {
     char k[6] {' '};
     fin >> k;
-    // TODO use constants (class must not be static then)
-    char mtllib[] = "mtllib"; if (strncmp(k, mtllib, 6) == 0) return 5;
-    char vt[] = "vt"; if (strncmp(k, vt, 2) == 0) return 2;
-    char vn[] = "vn"; if (strncmp(k, vn, 2) == 0) return 3;
-    char v[] = "v"; if (strncmp(k, v, 1) == 0) return 1;
-    char f[] = "f"; if (strncmp(k, f, 1) == 0) return 4;
+    if (strncmp(k, MTLLIB, 6) == 0) return 5;
+    if (strncmp(k, VT, 2) == 0) return 2;
+    if (strncmp(k, VN, 2) == 0) return 3;
+    if (strncmp(k, V, 1) == 0) return 1;
+    if (strncmp(k, F, 1) == 0) return 4;
     return 0;
 }
 
@@ -111,7 +110,7 @@ void OBJLoader::parseMTLLib(vector<Material> materials, std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    MTLLoader::load(materials, c);
+    MTLLoader().load(materials, c);
 }
 
 void OBJLoader::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)

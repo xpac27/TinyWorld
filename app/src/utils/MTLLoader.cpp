@@ -45,9 +45,9 @@ unsigned int MTLLoader::identifyLigne(std::ifstream &fin)
 {
     char k[6] {' '};
     fin >> k;
-    char newmtl[] = "newmtl"; if (strncmp(k, newmtl, 6) == 0) return 1;
-    char mapKd[] = "map_Kd"; if (strncmp(k, mapKd, 5) == 0) return 3;
-    char mapKs[] = "map_Ks"; if (strncmp(k, mapKs, 5) == 0) return 4;
+    if (strncmp(k, NEWMTL, 6) == 0) return 1;
+    if (strncmp(k, MAP_KD, 5) == 0) return 3;
+    if (strncmp(k, MAP_KS, 5) == 0) return 4;
     return 0;
 }
 
