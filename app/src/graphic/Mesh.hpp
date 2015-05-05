@@ -1,5 +1,6 @@
 #pragma once
 #include <GL/glew.h>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
 
@@ -27,7 +28,7 @@ private:
     GLsizei totalIndexes {0};
 
     std::vector<glm::vec3> vertexes;
-    std::vector<glm::vec3> uvs;
+    std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indexes;
 };

@@ -1,6 +1,7 @@
 #include "utils/OBJParser.hpp"
 #include "utils/MTLParser.hpp"
 #include "helpers/Debug.hpp"
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <cstring>
 #include <assert.h>
@@ -41,7 +42,7 @@ void OBJParser::parseLines(std::ifstream &fin)
             if (strncmp(k, MTLLIB, 7) == 0) {
                 parseMTLLib(fin);
             } else if (strncmp(k, VT, 3) == 0) {
-                /* parseTextures */
+                parseUVs(fin);
             } else if (strncmp(k, VN, 3) == 0) {
                 parseNormal(fin);
             } else if (strncmp(k, V, 2) == 0) {
@@ -59,6 +60,13 @@ void OBJParser::parseVertex(ifstream &fin)
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     vertexes.push_back(vec3(f1, f2, f3));
+}
+
+void OBJParser::parseUVs(std::ifstream &fin)
+{
+    GLfloat f1, f2;
+    fin >> f1 >> f2;
+    uvList.push_back(vec2(f1, f2));
 }
 
 void OBJParser::parseNormal(ifstream &fin)
@@ -81,7 +89,10 @@ void OBJParser::parseFace(std::ifstream &fin)
                     fin.read(b, 1);
                     if (b[0] == ' ') break;
                 } else if (j == 1) {
-                    // Textures coord...
+                    if (uvs.size() < u[0]) {
+                        uvs.resize(u[0], vec2());
+                    }
+                    uvs[u[0]-1] = uvList[u[1]-1];
                     fin.read(b, 1);
                     if (b[0] == ' ') break;
                 } else if (j == 2) {
