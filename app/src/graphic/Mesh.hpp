@@ -9,6 +9,8 @@
 #define NOR_VB 2
 #define COL_VB 3
 
+struct Material;
+
 class Mesh
 {
 
@@ -31,5 +33,6 @@ private:
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indexes;
+    std::vector<Material> materials;
 };
 

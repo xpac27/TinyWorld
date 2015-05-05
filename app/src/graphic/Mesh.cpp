@@ -1,4 +1,5 @@
 #include "Mesh.hpp"
+#include "graphic/Material.hpp"
 #include "utils/OBJParser.hpp"
 #include "helpers/Debug.hpp"
 
@@ -6,7 +7,7 @@ using namespace std;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJParser(vertexes, uvs, normals, indexes).load(filename);
+    OBJParser(vertexes, uvs, normals, indexes, materials).load(filename);
     totalIndexes = GLsizei(indexes.size());
 
     loadVAO();

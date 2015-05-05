@@ -1,5 +1,6 @@
 #include "utils/OBJParser.hpp"
 #include "utils/MTLParser.hpp"
+#include "graphic/Material.hpp"
 #include "helpers/Debug.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
