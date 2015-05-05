@@ -1,6 +1,5 @@
 #include "utils/OBJParser.hpp"
 #include "utils/MTLParser.hpp"
-#include "graphic/Material.hpp"
 #include "helpers/Debug.hpp"
 #include <glm/vec3.hpp>
 #include <cstring>
@@ -9,11 +8,11 @@
 using namespace std;
 using namespace glm;
 
-void OBJParser::load(vector<vec3> &vertexes, vector<vec3> &normals, vector<unsigned int> &indexes, const char *filename)
+void OBJParser::load(const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
-        parseLines(vertexes, normals, indexes, fin);
+        parseLines(fin);
     }
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
@@ -28,56 +27,48 @@ bool OBJParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void OBJParser::parseLines(std::vector<vec3> &vertexes, std::vector<vec3> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
+void OBJParser::parseLines(std::ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
-    vector<vec3> normalList;
-    vector<Material> materials;
     while (!fin.eof()) {
         if (ignoring) {
             fin.read(b, 1);
             if (b[0] == '\n') ignoring = false;
         } else {
-            switch (identifyLigne(fin)) {
-                case 1: parseVertex(vertexes, fin); break;
-                case 2: /* parseTextures */ break;
-                case 3: parseNormal(normalList, fin); break;
-                case 4: parseFace(indexes, normals, normalList, fin); break;
-                case 5: parseMTLLib(materials, fin); break;
+            char k[7] {' '};
+            fin >> k;
+            if (strncmp(k, MTLLIB, 7) == 0) {
+                parseMTLLib(fin);
+            } else if (strncmp(k, VT, 3) == 0) {
+                /* parseTextures */
+            } else if (strncmp(k, VN, 3) == 0) {
+                parseNormal(fin);
+            } else if (strncmp(k, V, 2) == 0) {
+                parseVertex(fin);
+            } else if (strncmp(k, F, 2) == 0) {
+                parseFace(fin);
             }
             ignoring = true;
         }
     }
 }
 
-unsigned int OBJParser::identifyLigne(std::ifstream &fin)
-{
-    char k[7] {' '};
-    fin >> k;
-    if (strncmp(k, MTLLIB, 7) == 0) return 5;
-    if (strncmp(k, VT, 3) == 0) return 2;
-    if (strncmp(k, VN, 3) == 0) return 3;
-    if (strncmp(k, V, 2) == 0) return 1;
-    if (strncmp(k, F, 2) == 0) return 4;
-    return 0;
-}
-
-void OBJParser::parseVertex(vector<vec3> &vertexes, ifstream &fin)
+void OBJParser::parseVertex(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     vertexes.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseNormal(vector<vec3> &normals, ifstream &fin)
+void OBJParser::parseNormal(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    normals.push_back(vec3(f1, f2, f3));
+    normalList.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<vec3> &normals, std::vector<vec3> &normalList, std::ifstream &fin)
+void OBJParser::parseFace(std::ifstream &fin)
 {
     char b[1] {' '};
     unsigned int u[3] {0};
@@ -107,14 +98,14 @@ void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<vec3> 
     }
 }
 
-void OBJParser::parseMTLLib(vector<Material> materials, std::ifstream &fin)
+void OBJParser::parseMTLLib(std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    MTLParser().load(materials, c);
+    MTLParser(materials).load(c);
 }
 
-void OBJParser::debug(vector<vec3> &vertexes, vector<vec3> &normals, vector<unsigned int> &indexes)
+void OBJParser::debug()
 {
     Debug::printl("\n---- OBJ");
     for (auto v : vertexes) {

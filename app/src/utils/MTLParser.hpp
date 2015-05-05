@@ -9,23 +9,28 @@ class MTLParser
 
 public:
 
-    void load(std::vector<Material> &materials, const char *filename);
-    void debug(std::vector<Material> &materials);
+    MTLParser(std::vector<Material> &_materials)
+        : materials(_materials)
+    {}
+
+    void load(const char *filename);
+    void debug();
 
 private:
 
     bool openFile(const char *filename, std::ifstream &fin);
-    void parseLines(std::vector<Material> &materials, std::ifstream &fin);
-    unsigned int identifyLigne(std::ifstream &fin);
-    void parseNewmtl(std::vector<Material> &materials, std::ifstream &fin);
-    void parseMapBump(Material &material, std::ifstream &fin);
-    void parseMapKd(Material &material, std::ifstream &fin);
-    void parseMapKs(Material &material, std::ifstream &fin);
-    void parseNs(Material &material, std::ifstream &fin);
-    void parseKa(Material &material, std::ifstream &fin);
-    void parseKd(Material &material, std::ifstream &fin);
-    void parseKs(Material &material, std::ifstream &fin);
-    void parseD(Material &material, std::ifstream &fin);
+    void parseLines(std::ifstream &fin);
+    void parseNewmtl(std::ifstream &fin);
+    void parseMapBump(std::ifstream &fin);
+    void parseMapKd(std::ifstream &fin);
+    void parseMapKs(std::ifstream &fin);
+    void parseNs(std::ifstream &fin);
+    void parseKa(std::ifstream &fin);
+    void parseKd(std::ifstream &fin);
+    void parseKs(std::ifstream &fin);
+    void parseD(std::ifstream &fin);
+
+    std::vector<Material> &materials;
 
     const char * MAP_BUMP = "map_Bump";
     const char * MAP_KD = "map_Kd";

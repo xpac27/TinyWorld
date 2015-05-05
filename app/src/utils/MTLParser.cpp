@@ -5,11 +5,11 @@
 
 using namespace std;
 
-void MTLParser::load(std::vector<Material> &materials, const char *filename)
+void MTLParser::load(const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
-        parseLines(materials, fin);
+        parseLines(fin);
     }
 }
 
@@ -22,7 +22,7 @@ bool MTLParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void MTLParser::parseLines(std::vector<Material> &materials, std::ifstream &fin)
+void MTLParser::parseLines(std::ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
@@ -31,108 +31,102 @@ void MTLParser::parseLines(std::vector<Material> &materials, std::ifstream &fin)
             fin.read(b, 1);
             if (b[0] == '\n') ignoring = false;
         } else {
-            switch (identifyLigne(fin)) {
-                case 1: parseMapBump(materials.back(), fin); break;
-                case 2: parseMapKd(materials.back(), fin); break;
-                case 3: parseMapKs(materials.back(), fin); break;
-                case 4: parseNewmtl(materials, fin); break;
-                case 5: parseNs(materials.back(), fin); break;
-                case 6: parseKa(materials.back(), fin); break;
-                case 7: parseKd(materials.back(), fin); break;
-                case 8: parseKs(materials.back(), fin); break;
-                case 9: parseD(materials.back(), fin); break;
+            char k[9] {' '};
+            fin >> k;
+            if (strncmp(k, MAP_BUMP, 9) == 0) {
+                parseMapBump(fin);
+            } else if (strncmp(k, MAP_KD, 6) == 0) {
+                parseMapKd(fin);
+            } else if (strncmp(k, MAP_KS, 6) == 0) {
+                parseMapKs(fin);
+            } else if (strncmp(k, NEWMTL, 7) == 0) {
+                parseNewmtl(fin);
+            } else if (strncmp(k, NS, 3) == 0) {
+                parseNs(fin);
+            } else if (strncmp(k, KA, 3) == 0) {
+                parseKa(fin);
+            } else if (strncmp(k, KD, 3) == 0) {
+                parseKd(fin);
+            } else if (strncmp(k, KS, 3) == 0) {
+                parseKs(fin);
+            } else if (strncmp(k, D, 2) == 0) {
+                parseD(fin);
             }
             ignoring = true;
         }
     }
 }
 
-unsigned int MTLParser::identifyLigne(std::ifstream &fin)
-{
-    char k[9] {' '};
-    fin >> k;
-    if (strncmp(k, MAP_BUMP, 9) == 0) return 1;
-    if (strncmp(k, MAP_KD, 6) == 0) return 2;
-    if (strncmp(k, MAP_KS, 6) == 0) return 3;
-    if (strncmp(k, NEWMTL, 7) == 0) return 4;
-    if (strncmp(k, NS, 3) == 0) return 5;
-    if (strncmp(k, KA, 3) == 0) return 6;
-    if (strncmp(k, KD, 3) == 0) return 7;
-    if (strncmp(k, KS, 3) == 0) return 8;
-    if (strncmp(k, D, 2) == 0) return 9;
-    return 0;
-}
-
-void MTLParser::parseNewmtl(std::vector<Material> &materials, std::ifstream &fin)
+void MTLParser::parseNewmtl(std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.push_back(Material(c));
 }
 
-void MTLParser::parseMapBump(Material &material, std::ifstream &fin)
+void MTLParser::parseMapBump(std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    material.map_Bump = c;
+    materials.back().map_Bump = c;
 }
 
-void MTLParser::parseMapKd(Material &material, std::ifstream &fin)
+void MTLParser::parseMapKd(std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    material.map_Kd = c;
+    materials.back().map_Kd = c;
 }
 
-void MTLParser::parseMapKs(Material &material, std::ifstream &fin)
+void MTLParser::parseMapKs(std::ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    material.map_Ks = c;
+    materials.back().map_Ks = c;
 }
 
-void MTLParser::parseNs(Material &material, std::ifstream &fin)
+void MTLParser::parseNs(std::ifstream &fin)
 {
     GLfloat f1;
     fin >> f1;
-    material.Ns = f1;
+    materials.back().Ns = f1;
 }
 
-void MTLParser::parseKa(Material &material, std::ifstream &fin)
+void MTLParser::parseKa(std::ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    material.Ka[0] = f1;
-    material.Ka[1] = f2;
-    material.Ka[2] = f3;
+    materials.back().Ka[0] = f1;
+    materials.back().Ka[1] = f2;
+    materials.back().Ka[2] = f3;
 }
 
-void MTLParser::parseKd(Material &material, std::ifstream &fin)
+void MTLParser::parseKd(std::ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    material.Kd[0] = f1;
-    material.Kd[1] = f2;
-    material.Kd[2] = f3;
+    materials.back().Kd[0] = f1;
+    materials.back().Kd[1] = f2;
+    materials.back().Kd[2] = f3;
 }
 
-void MTLParser::parseKs(Material &material, std::ifstream &fin)
+void MTLParser::parseKs(std::ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    material.Ks[0] = f1;
-    material.Ks[1] = f2;
-    material.Ks[2] = f3;
+    materials.back().Ks[0] = f1;
+    materials.back().Ks[1] = f2;
+    materials.back().Ks[2] = f3;
 }
 
-void MTLParser::parseD(Material &material, std::ifstream &fin)
+void MTLParser::parseD(std::ifstream &fin)
 {
     GLfloat f1;
     fin >> f1;
-    material.d = f1;
+    materials.back().d = f1;
 }
 
-void MTLParser::debug(std::vector<Material> &materials)
+void MTLParser::debug()
 {
     for (auto m : materials) {
         Debug::printl("\n---- MTL");
@@ -147,4 +141,3 @@ void MTLParser::debug(std::vector<Material> &materials)
         Debug::printl("  map_Bump", m.map_Bump);
     }
 }
-

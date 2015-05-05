@@ -16,7 +16,6 @@ public:
     Mesh(const char *filename);
 
     void draw();
-    void debug();
     void outline();
 
 private:
@@ -28,6 +27,7 @@ private:
     GLsizei totalIndexes {0};
 
     std::vector<glm::vec3> vertexes;
+    std::vector<glm::vec3> uvs;
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indexes;
 };

@@ -6,15 +6,10 @@ using namespace std;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJParser().load(vertexes, normals, indexes, filename);
+    OBJParser(vertexes, uvs, normals, indexes).load(filename);
     totalIndexes = GLsizei(indexes.size());
 
     loadVAO();
-}
-
-void Mesh::debug()
-{
-    OBJParser().debug(vertexes, normals, indexes);
 }
 
 void Mesh::loadVAO()
