@@ -1,15 +1,15 @@
 #include "utils/OBJParser.hpp"
 #include "utils/MTLParser.hpp"
-#include "graphic/Vertex.hpp"
-#include "graphic/Normal.hpp"
 #include "graphic/Material.hpp"
 #include "helpers/Debug.hpp"
+#include <glm/vec3.hpp>
 #include <cstring>
 #include <assert.h>
 
 using namespace std;
+using namespace glm;
 
-void OBJParser::load(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes, const char *filename)
+void OBJParser::load(vector<vec3> &vertexes, vector<vec3> &normals, vector<unsigned int> &indexes, const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
@@ -28,11 +28,11 @@ bool OBJParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void OBJParser::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
+void OBJParser::parseLines(std::vector<vec3> &vertexes, std::vector<vec3> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
-    vector<Normal> normalList;
+    vector<vec3> normalList;
     vector<Material> materials;
     while (!fin.eof()) {
         if (ignoring) {
@@ -63,21 +63,21 @@ unsigned int OBJParser::identifyLigne(std::ifstream &fin)
     return 0;
 }
 
-void OBJParser::parseVertex(vector<Vertex> &vertexes, ifstream &fin)
+void OBJParser::parseVertex(vector<vec3> &vertexes, ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    vertexes.push_back(Vertex(f1, f2, f3));
+    vertexes.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseNormal(vector<Normal> &normals, ifstream &fin)
+void OBJParser::parseNormal(vector<vec3> &normals, ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    normals.push_back(Normal(f1, f2, f3));
+    normals.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal> &normals, std::vector<Normal> &normalList, std::ifstream &fin)
+void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<vec3> &normals, std::vector<vec3> &normalList, std::ifstream &fin)
 {
     char b[1] {' '};
     unsigned int u[3] {0};
@@ -95,7 +95,7 @@ void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal
                     if (b[0] == ' ') break;
                 } else if (j == 2) {
                     if (normals.size() < u[0]) {
-                        normals.resize(u[0], Normal(0.f, 0.f, 0.f));
+                        normals.resize(u[0], vec3());
                     }
                     normals[u[0]-1] = normalList[u[2]-1];
                 }
@@ -114,7 +114,7 @@ void OBJParser::parseMTLLib(vector<Material> materials, std::ifstream &fin)
     MTLParser().load(materials, c);
 }
 
-void OBJParser::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
+void OBJParser::debug(vector<vec3> &vertexes, vector<vec3> &normals, vector<unsigned int> &indexes)
 {
     Debug::printl("\n---- OBJ");
     for (auto v : vertexes) {

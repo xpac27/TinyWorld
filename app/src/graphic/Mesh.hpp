@@ -1,7 +1,6 @@
 #pragma once
-#include "graphic/Vertex.hpp"
-#include "graphic/Normal.hpp"
 #include <GL/glew.h>
+#include <glm/vec3.hpp>
 #include <vector>
 
 #define IND_VB 0
@@ -28,8 +27,8 @@ private:
     GLuint VAB[4];
     GLsizei totalIndexes {0};
 
-    std::vector<Vertex> vertexes;
-    std::vector<Normal> normals;
+    std::vector<glm::vec3> vertexes;
+    std::vector<glm::vec3> normals;
     std::vector<unsigned int> indexes;
 };
 

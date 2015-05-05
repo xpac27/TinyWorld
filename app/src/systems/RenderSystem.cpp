@@ -1,7 +1,6 @@
 #include "RenderSystem.hpp"
 #include "helpers/Debug.hpp"
 #include "ecs/ComponentManager.hpp"
-#include "graphic/Vertex.hpp"
 #include "graphic/MeshFactory.hpp"
 #include "graphic/Mesh.hpp"
 #include "ecs/Id.hpp"
@@ -40,7 +39,7 @@ void RenderSystem::initialize()
     glDeleteShader(fragmentShader);
 
     projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
-    viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -5.f, 0.f));
+    viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -1.5f, -1.f));
     viewRotation = glm::rotate(viewRotation, float(M_PI / -2.f), glm::vec3(1.0f, 0.0f, 0.0f));
     viewRotation = glm::rotate(viewRotation, float(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
 }
