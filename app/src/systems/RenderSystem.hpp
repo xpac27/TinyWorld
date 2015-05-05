@@ -37,12 +37,12 @@ private:
     glm::mat4 modelTranslation;
     glm::mat4 viewTranslation;
     glm::mat4 viewRotation;
+    glm::mat4 perspective;
     glm::mat4 projection;
-    glm::mat4 MVP;
 
     GLuint shaderProgram = glCreateProgram();
-    GLint shaderMVPLocation = 0;
-    GLint shaderSamplerLocation = 0;
+    GLint shaderProjectionLocation = 0;
+    GLint shaderTextureUnitLocation = 0;
 
     // GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
     // GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};

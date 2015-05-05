@@ -31,15 +31,17 @@ void RenderSystem::initialize()
 
     linkProgram(shaderProgram);
 
-    shaderMVPLocation = glGetUniformLocation(shaderProgram, "MVP");
-    shaderSamplerLocation = glGetUniformLocation(shaderProgram, "sampler");
+    shaderProjectionLocation = glGetUniformLocation(shaderProgram, "projection");
+    shaderTextureUnitLocation = glGetUniformLocation(shaderProgram, "textureUnit");
 
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
     glDetachShader(shaderProgram, fragmentShader);
     glDeleteShader(fragmentShader);
 
-    projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
+    glUniform1i(shaderTextureUnitLocation, 0);
+
+    perspective = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
     viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -1.5f, -1.f));
     viewRotation = glm::rotate(viewRotation, float(M_PI / -2.f), glm::vec3(1.0f, 0.0f, 0.0f));
     viewRotation = glm::rotate(viewRotation, float(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -73,11 +75,8 @@ void RenderSystem::update()
                 modelRotation = glm::rotate(modelRotation, movement->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
             }
 
-            MVP = projection * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
-            glUniformMatrix4fv(shaderMVPLocation, 1, GL_FALSE, &MVP[0][0]);
-
-            glActiveTexture(GL_TEXTURE0);
-            glUniform1i(shaderSamplerLocation, 0);
+            projection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
+            glUniformMatrix4fv(shaderProjectionLocation, 1, GL_FALSE, &projection[0][0]);
 
             meshFactory->getMesh(visibility->meshType)->draw();
         }
