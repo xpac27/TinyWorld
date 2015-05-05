@@ -32,6 +32,7 @@ void RenderSystem::initialize()
     linkProgram(shaderProgram);
 
     shaderMVPLocation = glGetUniformLocation(shaderProgram, "MVP");
+    shaderSamplerLocation = glGetUniformLocation(shaderProgram, "sampler");
 
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
@@ -75,6 +76,9 @@ void RenderSystem::update()
             MVP = projection * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
             glUniformMatrix4fv(shaderMVPLocation, 1, GL_FALSE, &MVP[0][0]);
 
+            glActiveTexture(GL_TEXTURE0);
+            glUniform1i(shaderSamplerLocation, 0);
+
             meshFactory->getMesh(visibility->meshType)->draw();
         }
     }
@@ -88,6 +92,7 @@ void RenderSystem::setGLStates()
     glDepthFunc(GL_LEQUAL);
 
     glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CW);
     glCullFace(GL_BACK);
 
     // glEnable(GL_COLOR_MATERIAL);

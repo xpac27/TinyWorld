@@ -3,6 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
+#include <string>
 
 #define IND_VB 0
 #define POS_VB 1
@@ -24,6 +25,8 @@ public:
 private:
 
     void loadVAO();
+    void loadTextures();
+    GLuint loadTexture(const char *filename);
 
     GLuint VAO;
     GLuint VAB[4];
@@ -34,5 +37,6 @@ private:
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indexes;
     std::vector<Material> materials;
+    std::vector<GLuint> diffuses;
 };
 

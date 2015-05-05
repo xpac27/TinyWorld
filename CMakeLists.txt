@@ -30,6 +30,13 @@ else()
   message(FATAL_ERROR "Cannot find GLM library.")
 endif()
 
+find_package(PNG REQUIRED)
+if(PNG_FOUND)
+  include_directories(${PNG_INCLUDE_DIR})
+else()
+  message(FATAL_ERROR "Cannot find PNG library.")
+endif()
+
 # compiler flags
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors")

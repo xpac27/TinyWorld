@@ -16,4 +16,4 @@ file(GLOB_RECURSE source_files "../app/src/*.cpp")
 add_executable(${EXECUTABLE_NAME} ${source_files})
 
 # link
-target_link_libraries(${EXECUTABLE_NAME} ${GLM_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} ${PNG_LIBRARIES} ${GLM_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})

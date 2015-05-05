@@ -42,6 +42,7 @@ private:
 
     GLuint shaderProgram = glCreateProgram();
     GLint shaderMVPLocation = 0;
+    GLint shaderSamplerLocation = 0;
 
     // GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
     // GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};
