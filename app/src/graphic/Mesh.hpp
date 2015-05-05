@@ -7,7 +7,7 @@
 #define IND_VB 0
 #define POS_VB 1
 #define NOR_VB 2
-#define COL_VB 3
+#define TEX_VB 3
 
 struct Material;
 
