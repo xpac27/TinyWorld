@@ -28,7 +28,6 @@ bool OBJParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-
 void OBJParser::parseLines(std::vector<Vertex> &vertexes, std::vector<Normal> &normals, std::vector<unsigned int> &indexes, std::ifstream &fin)
 {
     char b[1];
@@ -95,7 +94,9 @@ void OBJParser::parseFace(std::vector<unsigned int> &indexes, std::vector<Normal
                     fin.read(b, 1);
                     if (b[0] == ' ') break;
                 } else if (j == 2) {
-                    if (normals.size() < u[0]) normals.resize(u[0], Normal(0.f, 0.f, 0.f));
+                    if (normals.size() < u[0]) {
+                        normals.resize(u[0], Normal(0.f, 0.f, 0.f));
+                    }
                     normals[u[0]-1] = normalList[u[2]-1];
                 }
             } else {
@@ -111,7 +112,6 @@ void OBJParser::parseMTLLib(vector<Material> materials, std::ifstream &fin)
     char c[80] {' '};
     fin >> c;
     MTLParser().load(materials, c);
-    MTLParser().debug(materials);
 }
 
 void OBJParser::debug(vector<Vertex> &vertexes, vector<Normal> &normals, vector<unsigned int> &indexes)
