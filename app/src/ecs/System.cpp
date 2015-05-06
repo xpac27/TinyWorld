@@ -1,7 +1,9 @@
 #include "System.hpp"
 #include "ComponentManagerBase.hpp"
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include <algorithm>
+
+using namespace Log;
 
 namespace ECS {
 
@@ -27,7 +29,7 @@ void System::onEntityRemoved(id entity)
 
 void System::update(float /*time*/)
 {
-    Debug::printl("Warning: update(time) function called but not implemented by System");
+    printl("Warning: update(time) function called but not implemented by System");
 }
 
 void System::initialize()
@@ -37,7 +39,7 @@ void System::initialize()
 
 void System::update()
 {
-    Debug::printl("Warning: update() function called but not implemented by System");
+    printl("Warning: update() function called but not implemented by System");
 }
 
 std::vector<id>* System::getEntities()

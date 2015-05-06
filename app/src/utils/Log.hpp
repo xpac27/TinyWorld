@@ -6,7 +6,8 @@ struct Movement;
 struct Life;
 struct Visibility;
 
-namespace Debug
+// TODO handle colors (red, green and orange)
+namespace Log
 {
 
 void dump(ECS::id entity);

@@ -1,7 +1,7 @@
 #include "utils/OBJParser.hpp"
 #include "utils/MTLParser.hpp"
 #include "graphic/Material.hpp"
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <cstring>
@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace glm;
+using namespace Log;
 
 void OBJParser::load(const char *filename)
 {
@@ -25,7 +26,7 @@ bool OBJParser::openFile(const char *filename, std::ifstream &fin)
     string filepath = "app/res/";
     filepath += filename;
     fin.open(filepath);
-    if (!fin.good()) Debug::printl("ERROR - could not open file:", filepath);
+    if (!fin.good()) printl("ERROR - could not open file:", filepath);
     return fin.good();
 }
 
@@ -119,14 +120,14 @@ void OBJParser::parseMTLLib(std::ifstream &fin)
 
 void OBJParser::debug()
 {
-    Debug::printl("\n---- OBJ");
+    printl("\n---- OBJ");
     for (auto v : vertexes) {
-        Debug::printl("  v", v.x, v.y, v.z);
+        printl("  v", v.x, v.y, v.z);
     }
     for (auto n : normals) {
-        Debug::printl("  vn", n.x, n.y, n.z);
+        printl("  vn", n.x, n.y, n.z);
     }
     for (unsigned int i = 0; i < indexes.size(); i += 3) {
-        Debug::printl("  f", indexes[i+0], indexes[i+1], indexes[i+2]);
+        printl("  f", indexes[i+0], indexes[i+1], indexes[i+2]);
     }
 }

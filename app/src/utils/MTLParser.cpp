@@ -1,9 +1,10 @@
 #include "utils/MTLParser.hpp"
 #include "graphic/Material.hpp"
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include <cstring>
 
 using namespace std;
+using namespace Log;
 
 void MTLParser::load(const char *filename)
 {
@@ -18,7 +19,7 @@ bool MTLParser::openFile(const char *filename, std::ifstream &fin)
     string filepath = "app/res/";
     filepath += filename;
     fin.open(filepath);
-    if (!fin.good()) Debug::printl("ERROR - could not open file:", filepath);
+    if (!fin.good()) printl("ERROR - could not open file:", filepath);
     return fin.good();
 }
 
@@ -129,15 +130,15 @@ void MTLParser::parseD(std::ifstream &fin)
 void MTLParser::debug()
 {
     for (auto m : materials) {
-        Debug::printl("\n---- MTL");
-        Debug::printl("  newmtl", m.name);
-        Debug::printl("  Ns", m.Ns);
-        Debug::printl("  Ka", m.Ka[0], m.Ka[1], m.Ka[2]);
-        Debug::printl("  Kd", m.Kd[0], m.Kd[1], m.Kd[2]);
-        Debug::printl("  Ks", m.Ks[0], m.Ks[1], m.Ks[2]);
-        Debug::printl("  d", m.d);
-        Debug::printl("  map_Kd", m.map_Kd);
-        Debug::printl("  map_Ks", m.map_Ks);
-        Debug::printl("  map_Bump", m.map_Bump);
+        printl("\n---- MTL");
+        printl("  newmtl", m.name);
+        printl("  Ns", m.Ns);
+        printl("  Ka", m.Ka[0], m.Ka[1], m.Ka[2]);
+        printl("  Kd", m.Kd[0], m.Kd[1], m.Kd[2]);
+        printl("  Ks", m.Ks[0], m.Ks[1], m.Ks[2]);
+        printl("  d", m.d);
+        printl("  map_Kd", m.map_Kd);
+        printl("  map_Ks", m.map_Ks);
+        printl("  map_Bump", m.map_Bump);
     }
 }

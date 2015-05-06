@@ -2,7 +2,6 @@
 #include "graphic/Material.hpp"
 #include "utils/OBJParser.hpp"
 #include "utils/PNG.hpp"
-#include "helpers/Debug.hpp"
 #include <string>
 
 using namespace std;

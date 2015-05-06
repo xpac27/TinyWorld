@@ -1,5 +1,5 @@
 #include "RenderSystem.hpp"
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "graphic/MeshFactory.hpp"
 #include "graphic/Mesh.hpp"
@@ -8,6 +8,7 @@
 #include <math.h>
 
 using namespace std;
+using namespace Log;
 
 RenderSystem::RenderSystem(
     ECS::ComponentManager<Visibility>* vc,
@@ -149,7 +150,7 @@ void RenderSystem::compileShader(GLuint& shader, GLuint& program)
     if (success == 0) {
         GLchar InfoLog[1024];
         glGetShaderInfoLog(shader, sizeof(InfoLog), NULL, InfoLog);
-        Debug::print(InfoLog);
+        printl(InfoLog);
     } else {
         glAttachShader(program, shader);
     }
@@ -163,7 +164,7 @@ void RenderSystem::linkProgram(GLuint& program)
     if (success == 0) {
         GLchar ErrorLog[1024];
         glGetProgramInfoLog(program, sizeof(ErrorLog), NULL, ErrorLog);
-        Debug::print(ErrorLog);
+        printl(ErrorLog);
     } else {
         glValidateProgram(program);
     }

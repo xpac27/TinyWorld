@@ -1,7 +1,6 @@
 #include "Game.hpp"
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
-#include "helpers/Debug.hpp"
 #include <cmath>
 
 Game::Game()

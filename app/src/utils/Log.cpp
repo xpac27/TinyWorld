@@ -1,27 +1,27 @@
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include "components/Movement.hpp"
 #include "components/Life.hpp"
 #include "components/Visibility.hpp"
 
-void Debug::dump(ECS::id entity)
+void Log::dump(ECS::id entity)
 {
     printl("Entity", entity);
 }
 
-void Debug::dump(Movement* c)
+void Log::dump(Movement* c)
 {
     printl("Movement");
     printl("  position: ", c->position.x, c->position.y, c->position.z);
     printl("  rotation: ", c->rotation.x, c->rotation.y, c->rotation.z);
 }
 
-void Debug::dump(Life* c)
+void Log::dump(Life* c)
 {
     printl("Life");
     printl("  amount:", c->amount);
 }
 
-void Debug::dump(Visibility* c)
+void Log::dump(Visibility* c)
 {
     printl("Visibility");
     switch (c->meshType) {
@@ -33,7 +33,7 @@ void Debug::dump(Visibility* c)
     }
 }
 
-void Debug::nl()
+void Log::nl()
 {
     std::cout << std::endl;
 }

@@ -1,9 +1,10 @@
 #include "Application.hpp"
 #include <cmath>
+#include <ctime>
+#include <cstdio>
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "helpers/Debug.hpp"
 
 void setupGLFW(GLFWwindow* window);
 void setupGlew();
