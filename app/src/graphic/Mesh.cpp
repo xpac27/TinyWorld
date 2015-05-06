@@ -14,7 +14,10 @@ Mesh::Mesh(const char *filename)
     totalIndexes = GLsizei(indexes.size());
 
     if (uvs.size() < vertexes.size()) {
-        uvs.resize(vertexes.size(), vec2(0.1f));
+        uvs.resize(vertexes.size());
+        for (unsigned int i = 0; i < vertexes.size(); i ++) {
+            uvs[i] = vec2(float(i%2), float((i+1)%2));
+        }
     }
 
     if (materials.size() == 0) {
