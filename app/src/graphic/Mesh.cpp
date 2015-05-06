@@ -6,11 +6,20 @@
 #include <string>
 
 using namespace std;
+using namespace glm;
 
 Mesh::Mesh(const char *filename)
 {
     OBJParser(vertexes, uvs, normals, indexes, materials).load(filename);
     totalIndexes = GLsizei(indexes.size());
+
+    if (uvs.size() < vertexes.size()) {
+        uvs.resize(vertexes.size(), vec2(0.1f));
+    }
+
+    if (materials.size() == 0) {
+        materials.push_back(Material("default"));
+    }
 
     loadVAO();
     loadTextures();
@@ -18,10 +27,8 @@ Mesh::Mesh(const char *filename)
 
 void Mesh::draw()
 {
-    if (diffuses.size() > 0) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuses[0]);
-    }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

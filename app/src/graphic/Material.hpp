@@ -11,7 +11,7 @@ struct Material
     GLfloat Ks[3] {0.f, 0.f, 0.f};
 
     std::string name {""};
-    std::string map_Kd {""};
+    std::string map_Kd {"textures/default.png"};
     std::string map_Ks {""};
     std::string map_Bump {""};
 

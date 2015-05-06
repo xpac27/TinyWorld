@@ -4,6 +4,6 @@
 
 struct Visibility
 {
-    MeshType meshType { MeshType::CACODEMON };
+    MeshType meshType { MeshType::GOOMBA };
     glm::vec3 scale {1.f, 1.f, 1.f};
 };

@@ -32,7 +32,7 @@ void System::update(float /*time*/)
 
 void System::initialize()
 {
-    Debug::printl("Warning: initialize() function called but not implemented by System");
+    // Nothing to do...
 }
 
 void System::update()
