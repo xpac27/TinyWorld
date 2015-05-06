@@ -56,6 +56,8 @@ void RenderSystem::update()
     setGLStates();
     glUseProgram(shaderProgram);
 
+    c += 0.01;
+
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
 
@@ -72,7 +74,7 @@ void RenderSystem::update()
                 modelRotation = glm::mat4(0.1f);
                 modelRotation = glm::rotate(modelRotation, movement->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
                 modelRotation = glm::rotate(modelRotation, movement->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-                modelRotation = glm::rotate(modelRotation, movement->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+                modelRotation = glm::rotate(modelRotation, movement->rotation.z - c, glm::vec3(0.0f, 0.0f, 1.0f));
             }
 
             projection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
@@ -92,7 +94,7 @@ void RenderSystem::setGLStates()
 
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
+    glCullFace(GL_FRONT);
 
     // glEnable(GL_COLOR_MATERIAL);
 

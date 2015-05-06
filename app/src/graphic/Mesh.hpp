@@ -3,7 +3,6 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
-#include <string>
 
 #define IND_VB 0
 #define POS_VB 1
