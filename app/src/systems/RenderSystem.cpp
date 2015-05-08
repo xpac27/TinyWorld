@@ -39,6 +39,9 @@ void RenderSystem::initialize()
     shaderLightAmbientIntensity = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
     shaderLightDiffuseIntensity = glGetUniformLocation(shaderProgram, "light.diffuseIntensity");
     shaderLightDirection = glGetUniformLocation(shaderProgram, "light.direction");
+    shaderSpecularIntensity = glGetUniformLocation(shaderProgram, "specularIntensity");
+    shaderSpecularPower = glGetUniformLocation(shaderProgram, "specularPower");
+    shaderEyeWorldPosition = glGetUniformLocation(shaderProgram, "eyeWorldPosition");
 
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
@@ -64,6 +67,10 @@ void RenderSystem::update()
     glUniform3f(shaderLightDirection, 0.0, -1.0, 1.0);
     glUniform1f(shaderLightAmbientIntensity, 0.2);
     glUniform1f(shaderLightDiffuseIntensity, 1.0);
+
+    glUniform1f(shaderSpecularIntensity, 1.0);
+    glUniform1f(shaderSpecularPower, 32.0);
+    glUniform3f(shaderEyeWorldPosition, 0.0, 1.5, 1.0);
 
 
     c += 0.01;

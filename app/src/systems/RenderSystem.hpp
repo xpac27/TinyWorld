@@ -48,7 +48,10 @@ private:
     GLint shaderLightColor = 0;
     GLint shaderLightAmbientIntensity = 0;
     GLint shaderLightDiffuseIntensity = 0;
+    GLint shaderSpecularIntensity = 0;
+    GLint shaderSpecularPower = 0;
     GLint shaderLightDirection = 0;
+    GLint shaderEyeWorldPosition = 0;
 
     float c {0.f};
 
