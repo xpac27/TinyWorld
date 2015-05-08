@@ -32,17 +32,18 @@ void RenderSystem::initialize()
 
     linkProgram(shaderProgram);
 
-    shaderProjectionLocation = glGetUniformLocation(shaderProgram, "projection");
-    shaderTextureUnitLocation = glGetUniformLocation(shaderProgram, "textureUnit");
-    shaderLightColorLocation = glGetUniformLocation(shaderProgram, "light.color");
+    shaderW = glGetUniformLocation(shaderProgram, "W");
+    shaderWVP = glGetUniformLocation(shaderProgram, "WVP");
+    shaderTextureUnit = glGetUniformLocation(shaderProgram, "textureUnit");
+    shaderLightColor = glGetUniformLocation(shaderProgram, "light.color");
     shaderLightAmbientIntensity = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
+    shaderLightDiffuseIntensity = glGetUniformLocation(shaderProgram, "light.diffuseIntensity");
+    shaderLightDirection = glGetUniformLocation(shaderProgram, "light.direction");
 
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
     glDetachShader(shaderProgram, fragmentShader);
     glDeleteShader(fragmentShader);
-
-    glUniform1i(shaderTextureUnitLocation, 0);
 
     perspective = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
     viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -1.5f, -1.f));
@@ -58,8 +59,12 @@ void RenderSystem::update()
 
     setGLStates();
     glUseProgram(shaderProgram);
-    glUniform3f(shaderLightColorLocation, 1.0, 0.9, 0.7);
-    glUniform1f(shaderLightAmbientIntensity, 0.8);
+    glUniform1i(shaderTextureUnit, 0);
+    glUniform3f(shaderLightColor, 1.0, 0.9, 0.7);
+    glUniform3f(shaderLightDirection, 0.0, -1.0, 1.0);
+    glUniform1f(shaderLightAmbientIntensity, 0.2);
+    glUniform1f(shaderLightDiffuseIntensity, 1.0);
+
 
     c += 0.01;
 
@@ -82,8 +87,11 @@ void RenderSystem::update()
                 modelRotation = glm::rotate(modelRotation, movement->rotation.z - c, glm::vec3(0.0f, 0.0f, 1.0f));
             }
 
-            projection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
-            glUniformMatrix4fv(shaderProjectionLocation, 1, GL_FALSE, &projection[0][0]);
+            Wprojection = modelRotation * modelScale;
+            WVPprojection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
+
+            glUniformMatrix4fv(shaderW, 1, GL_FALSE, &Wprojection[0][0]);
+            glUniformMatrix4fv(shaderWVP, 1, GL_FALSE, &WVPprojection[0][0]);
 
             meshFactory->getMesh(visibility->meshType)->draw();
         }
@@ -100,17 +108,6 @@ void RenderSystem::setGLStates()
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
-
-    // glEnable(GL_COLOR_MATERIAL);
-
-    // glEnable(GL_LIGHTING);
-    // glEnable(GL_LIGHT0);
-    // glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-    // glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-    // glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDif);
-    // glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.8f);
-    // glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.004f);
-    // glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.00005f);
 
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);

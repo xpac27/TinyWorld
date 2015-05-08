@@ -38,20 +38,19 @@ private:
     glm::mat4 viewTranslation;
     glm::mat4 viewRotation;
     glm::mat4 perspective;
-    glm::mat4 projection;
+    glm::mat4 Wprojection;
+    glm::mat4 WVPprojection;
 
     GLuint shaderProgram = glCreateProgram();
-    GLint shaderProjectionLocation = 0;
-    GLint shaderTextureUnitLocation = 0;
-    GLint shaderLightColorLocation = 0;
+    GLint shaderW = 0;
+    GLint shaderWVP = 0;
+    GLint shaderTextureUnit = 0;
+    GLint shaderLightColor = 0;
     GLint shaderLightAmbientIntensity = 0;
+    GLint shaderLightDiffuseIntensity = 0;
+    GLint shaderLightDirection = 0;
 
     float c {0.f};
-
-
-    // GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
-    // GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};
-    // GLfloat lightDif[4] {.8f, .8f, .8f, 1.f};
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;
