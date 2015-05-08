@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 #include "graphic/Material.hpp"
-#include "utils/OBJParser.hpp"
+#include "utils/OBJ.hpp"
 #include "utils/PNG.hpp"
 #include <string>
 
@@ -9,7 +9,7 @@ using namespace glm;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJParser(vertexes, uvs, normals, indexes, materials).load(filename);
+    OBJ(vertexes, uvs, normals, indexes, materials).load(filename);
     totalIndexes = GLsizei(indexes.size());
 
     if (uvs.size() < vertexes.size()) {

@@ -1,5 +1,5 @@
-#include "utils/OBJParser.hpp"
-#include "utils/MTLParser.hpp"
+#include "utils/OBJ.hpp"
+#include "utils/MTL.hpp"
 #include "graphic/Material.hpp"
 #include "utils/Log.hpp"
 #include <glm/vec2.hpp>
@@ -11,7 +11,7 @@ using namespace std;
 using namespace glm;
 using namespace Log;
 
-void OBJParser::load(const char *filename)
+void OBJ::load(const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
@@ -21,7 +21,7 @@ void OBJParser::load(const char *filename)
     assert(vertexes.size() <= indexes.size());
 }
 
-bool OBJParser::openFile(const char *filename, std::ifstream &fin)
+bool OBJ::openFile(const char *filename, ifstream &fin)
 {
     string filepath = "app/res/";
     filepath += filename;
@@ -30,7 +30,7 @@ bool OBJParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void OBJParser::parseLines(std::ifstream &fin)
+void OBJ::parseLines(ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
@@ -57,35 +57,35 @@ void OBJParser::parseLines(std::ifstream &fin)
     }
 }
 
-void OBJParser::parseVertex(ifstream &fin)
+void OBJ::parseVertex(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     vertexes.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseUVs(std::ifstream &fin)
+void OBJ::parseUVs(ifstream &fin)
 {
     GLfloat f1, f2;
     fin >> f1 >> f2;
     uvList.push_back(vec2(f1, f2));
 }
 
-void OBJParser::parseNormal(ifstream &fin)
+void OBJ::parseNormal(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
     normalList.push_back(vec3(f1, f2, f3));
 }
 
-void OBJParser::parseFace(std::ifstream &fin)
+void OBJ::parseFace(ifstream &fin)
 {
     char b[1] {' '};
     unsigned int u[3] {0};
     for (unsigned int i = 0; i < 3; i ++) {
         for (unsigned int j = 0; j < 3; j ++) {
             fin >> u[j];
-            if ((fin.rdstate() & std::ifstream::failbit) == 0) {
+            if ((fin.rdstate() & ifstream::failbit) == 0) {
                 if (j == 0) {
                     indexes.push_back(u[0]-1);
                     fin.read(b, 1);
@@ -111,14 +111,14 @@ void OBJParser::parseFace(std::ifstream &fin)
     }
 }
 
-void OBJParser::parseMTLLib(std::ifstream &fin)
+void OBJ::parseMTLLib(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    MTLParser(materials).load(c);
+    MTL(materials).load(c);
 }
 
-void OBJParser::debug()
+void OBJ::debug()
 {
     printl("\n---- OBJ");
     for (auto v : vertexes) {

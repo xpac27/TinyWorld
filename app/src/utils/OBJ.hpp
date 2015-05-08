@@ -7,12 +7,12 @@
 struct Material;
 
 // TODO rename to OBJ
-class OBJParser
+class OBJ
 {
 
 public:
 
-    OBJParser(std::vector<glm::vec3> &_vertexes, std::vector<glm::vec2> &_uvs, std::vector<glm::vec3> &_normals, std::vector<unsigned int> &_indexes, std::vector<Material> &_materials)
+    OBJ(std::vector<glm::vec3> &_vertexes, std::vector<glm::vec2> &_uvs, std::vector<glm::vec3> &_normals, std::vector<unsigned int> &_indexes, std::vector<Material> &_materials)
         : vertexes(_vertexes)
         , uvs(_uvs)
         , normals(_normals)

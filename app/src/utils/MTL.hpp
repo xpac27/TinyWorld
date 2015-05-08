@@ -5,12 +5,12 @@
 struct Material;
 
 // TODO rename to MTL
-class MTLParser
+class MTL
 {
 
 public:
 
-    MTLParser(std::vector<Material> &_materials)
+    MTL(std::vector<Material> &_materials)
         : materials(_materials)
     {}
 

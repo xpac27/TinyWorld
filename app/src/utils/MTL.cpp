@@ -1,4 +1,4 @@
-#include "utils/MTLParser.hpp"
+#include "utils/MTL.hpp"
 #include "graphic/Material.hpp"
 #include "utils/Log.hpp"
 #include <cstring>
@@ -6,7 +6,7 @@
 using namespace std;
 using namespace Log;
 
-void MTLParser::load(const char *filename)
+void MTL::load(const char *filename)
 {
     ifstream fin;
     if (openFile(filename, fin)) {
@@ -14,7 +14,7 @@ void MTLParser::load(const char *filename)
     }
 }
 
-bool MTLParser::openFile(const char *filename, std::ifstream &fin)
+bool MTL::openFile(const char *filename, ifstream &fin)
 {
     string filepath = "app/res/";
     filepath += filename;
@@ -23,7 +23,7 @@ bool MTLParser::openFile(const char *filename, std::ifstream &fin)
     return fin.good();
 }
 
-void MTLParser::parseLines(std::ifstream &fin)
+void MTL::parseLines(ifstream &fin)
 {
     char b[1];
     bool ignoring = false;
@@ -58,42 +58,42 @@ void MTLParser::parseLines(std::ifstream &fin)
     }
 }
 
-void MTLParser::parseNewmtl(std::ifstream &fin)
+void MTL::parseNewmtl(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.push_back(Material(c));
 }
 
-void MTLParser::parseMapBump(std::ifstream &fin)
+void MTL::parseMapBump(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.back().map_Bump = c;
 }
 
-void MTLParser::parseMapKd(std::ifstream &fin)
+void MTL::parseMapKd(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.back().map_Kd = c;
 }
 
-void MTLParser::parseMapKs(std::ifstream &fin)
+void MTL::parseMapKs(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
     materials.back().map_Ks = c;
 }
 
-void MTLParser::parseNs(std::ifstream &fin)
+void MTL::parseNs(ifstream &fin)
 {
     GLfloat f1;
     fin >> f1;
     materials.back().Ns = f1;
 }
 
-void MTLParser::parseKa(std::ifstream &fin)
+void MTL::parseKa(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
@@ -102,7 +102,7 @@ void MTLParser::parseKa(std::ifstream &fin)
     materials.back().Ka[2] = f3;
 }
 
-void MTLParser::parseKd(std::ifstream &fin)
+void MTL::parseKd(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
@@ -111,7 +111,7 @@ void MTLParser::parseKd(std::ifstream &fin)
     materials.back().Kd[2] = f3;
 }
 
-void MTLParser::parseKs(std::ifstream &fin)
+void MTL::parseKs(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
@@ -120,14 +120,14 @@ void MTLParser::parseKs(std::ifstream &fin)
     materials.back().Ks[2] = f3;
 }
 
-void MTLParser::parseD(std::ifstream &fin)
+void MTL::parseD(ifstream &fin)
 {
     GLfloat f1;
     fin >> f1;
     materials.back().d = f1;
 }
 
-void MTLParser::debug()
+void MTL::debug()
 {
     for (auto m : materials) {
         printl("\n---- MTL");
