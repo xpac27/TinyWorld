@@ -3,7 +3,7 @@
 #include "utils/Shader.hpp"
 #include "utils/Program.hpp"
 #include "ecs/ComponentManager.hpp"
-#include "graphic/MeshFactory.hpp"
+#include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
 #include "graphic/DirectionalLight.hpp"
 #include "ecs/Id.hpp"
@@ -19,7 +19,7 @@ RenderSystem::RenderSystem(
     ECS::ComponentManager<Movement>* mc
 )
     : System({vc, mc})
-    , meshFactory(new MeshFactory())
+    , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), vec3(0.0, -1.0, 1.0), 0.2f, 1.f))
     , program(new Program())
     , eyePosition(0, 1.5f, 1.f)
@@ -105,7 +105,7 @@ void RenderSystem::update()
             glUniformMatrix4fv(shaderW, 1, GL_FALSE, &Wprojection[0][0]);
             glUniformMatrix4fv(shaderWVP, 1, GL_FALSE, &WVPprojection[0][0]);
 
-            meshFactory->getMesh(visibility->meshType)->draw();
+            meshStore->getMesh(visibility->meshType)->draw();
         }
     }
 

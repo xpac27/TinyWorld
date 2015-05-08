@@ -1,7 +1,7 @@
-#include "graphic/MeshFactory.hpp"
+#include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
 
-MeshFactory::MeshFactory()
+MeshStore::MeshStore()
     : cube(new Mesh("cube.obj"))
     , square(new Mesh("square.obj"))
     , pyramid(new Mesh("pyramid.obj"))
@@ -10,7 +10,7 @@ MeshFactory::MeshFactory()
 {
 }
 
-Mesh* MeshFactory::getMesh(MeshType type)
+Mesh* MeshStore::getMesh(MeshType type)
 {
     switch (type) {
         case MeshType::CUBE: return cube;

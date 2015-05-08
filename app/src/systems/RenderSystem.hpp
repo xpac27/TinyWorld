@@ -9,7 +9,7 @@
 namespace ECS {
     template <typename T> class ComponentManager;
 }
-class MeshFactory;
+class MeshStore;
 class Program;
 struct DirectionalLight;
 
@@ -31,7 +31,7 @@ private:
     void setGLStates();
     void unsetGLStates();
 
-    MeshFactory* meshFactory;
+    MeshStore* meshStore;
     DirectionalLight* light;
     Program* program;
 

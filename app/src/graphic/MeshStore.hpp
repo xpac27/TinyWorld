@@ -2,12 +2,12 @@
 #include "graphic/MeshType.hpp"
 
 class Mesh;
-class MeshFactory // TODO rename MeshStore
+class MeshStore
 {
 
 public:
 
-    MeshFactory();
+    MeshStore();
 
     Mesh* getMesh(MeshType type);
 
