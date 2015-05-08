@@ -10,7 +10,11 @@ namespace ECS {
     template <typename T> class ComponentManager;
 }
 class MeshFactory;
-class RenderSystem : public ECS::System {
+class Program;
+struct DirectionalLight;
+
+class RenderSystem : public ECS::System
+{
 
 public:
 
@@ -26,12 +30,13 @@ private:
 
     void setGLStates();
     void unsetGLStates();
-    void loadShaderFile(GLuint& shader, const char* filename);
-    void compileShader(GLuint& shader, GLuint& program);
-    void linkProgram(GLuint& program);
 
     MeshFactory* meshFactory;
+    DirectionalLight* light;
+    Program* program;
 
+    glm::vec3 eyePosition;
+    glm::vec3 eyeRotation;
     glm::mat4 modelScale;
     glm::mat4 modelRotation;
     glm::mat4 modelTranslation;
@@ -41,7 +46,6 @@ private:
     glm::mat4 Wprojection;
     glm::mat4 WVPprojection;
 
-    GLuint shaderProgram = glCreateProgram();
     GLint shaderW = 0;
     GLint shaderWVP = 0;
     GLint shaderTextureUnit = 0;

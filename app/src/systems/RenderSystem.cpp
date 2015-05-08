@@ -1,13 +1,17 @@
 #include "RenderSystem.hpp"
 #include "utils/Log.hpp"
+#include "utils/Shader.hpp"
+#include "utils/Program.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "graphic/MeshFactory.hpp"
 #include "graphic/Mesh.hpp"
+#include "graphic/DirectionalLight.hpp"
 #include "ecs/Id.hpp"
-#include <fstream>
 #include <math.h>
+#include <glm/vec3.hpp>
 
 using namespace std;
+using namespace glm;
 using namespace Log;
 
 RenderSystem::RenderSystem(
@@ -16,42 +20,38 @@ RenderSystem::RenderSystem(
 )
     : System({vc, mc})
     , meshFactory(new MeshFactory())
+    , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), vec3(0.0, -1.0, 1.0), 0.2f, 1.f))
+    , program(new Program())
+    , eyePosition(0, 1.5f, 1.f)
+    , eyeRotation(float(M_PI / -2.f), 0.f, float(M_PI))
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
 
 void RenderSystem::initialize()
 {
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    loadShaderFile(vertexShader, "app/res/shaders/vertex_shader.vert");
-    compileShader(vertexShader, shaderProgram);
+    Shader vertexShader(GL_VERTEX_SHADER, program);
+    vertexShader.read("app/res/shaders/vertex_shader.vert");
+    vertexShader.compile();
 
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    loadShaderFile(fragmentShader, "app/res/shaders/fragment_shader.frag");
-    compileShader(fragmentShader, shaderProgram);
+    Shader fragmentShader(GL_FRAGMENT_SHADER, program);
+    fragmentShader.read("app/res/shaders/fragment_shader.frag");
+    fragmentShader.compile();
 
-    linkProgram(shaderProgram);
+    program->link();
 
-    shaderW = glGetUniformLocation(shaderProgram, "W");
-    shaderWVP = glGetUniformLocation(shaderProgram, "WVP");
-    shaderTextureUnit = glGetUniformLocation(shaderProgram, "textureUnit");
-    shaderLightColor = glGetUniformLocation(shaderProgram, "light.color");
-    shaderLightAmbientIntensity = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
-    shaderLightDiffuseIntensity = glGetUniformLocation(shaderProgram, "light.diffuseIntensity");
-    shaderLightDirection = glGetUniformLocation(shaderProgram, "light.direction");
-    shaderSpecularIntensity = glGetUniformLocation(shaderProgram, "specularIntensity");
-    shaderSpecularPower = glGetUniformLocation(shaderProgram, "specularPower");
-    shaderEyeWorldPosition = glGetUniformLocation(shaderProgram, "eyeWorldPosition");
-
-    glDetachShader(shaderProgram, vertexShader);
-    glDeleteShader(vertexShader);
-    glDetachShader(shaderProgram, fragmentShader);
-    glDeleteShader(fragmentShader);
+    shaderW = program->getLocation("W");
+    shaderWVP = program->getLocation("WVP");
+    shaderTextureUnit = program->getLocation("textureUnit");
+    shaderLightColor = program->getLocation("light.color");
+    shaderLightAmbientIntensity = program->getLocation("light.ambientIntensity");
+    shaderLightDiffuseIntensity = program->getLocation("light.diffuseIntensity");
+    shaderLightDirection = program->getLocation("light.direction");
+    shaderSpecularIntensity = program->getLocation("specularIntensity");
+    shaderSpecularPower = program->getLocation("specularPower");
+    shaderEyeWorldPosition = program->getLocation("eyeWorldPosition");
 
     perspective = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
-    viewTranslation = glm::translate(viewTranslation, glm::vec3(0.f, -1.5f, -1.f));
-    viewRotation = glm::rotate(viewRotation, float(M_PI / -2.f), glm::vec3(1.0f, 0.0f, 0.0f));
-    viewRotation = glm::rotate(viewRotation, float(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void RenderSystem::update()
@@ -61,17 +61,22 @@ void RenderSystem::update()
     Visibility* visibility;
 
     setGLStates();
-    glUseProgram(shaderProgram);
+    program->use();
     glUniform1i(shaderTextureUnit, 0);
-    glUniform3f(shaderLightColor, 1.0, 0.9, 0.7);
-    glUniform3f(shaderLightDirection, 0.0, -1.0, 1.0);
-    glUniform1f(shaderLightAmbientIntensity, 0.2);
-    glUniform1f(shaderLightDiffuseIntensity, 1.0);
-
+    glUniform3f(shaderLightColor, light->color.x, light->color.y, light->color.z);
+    glUniform3f(shaderLightDirection, light->direction.x, light->direction.y, light->direction.z);
+    glUniform1f(shaderLightAmbientIntensity, light->ambientIntensity);
+    glUniform1f(shaderLightDiffuseIntensity, light->diffuseIntensity);
     glUniform1f(shaderSpecularIntensity, 1.0);
     glUniform1f(shaderSpecularPower, 32.0);
-    glUniform3f(shaderEyeWorldPosition, 0.0, 1.5, 1.0);
+    glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
+    viewTranslation = translate(mat4(1.0f), eyePosition * -1.f);
+
+    viewRotation = mat4(0.1f);
+    viewRotation = rotate(viewRotation, eyeRotation.x, vec3(1.0f, 0.0f, 0.0f));
+    viewRotation = rotate(viewRotation, eyeRotation.y, vec3(0.0f, 0.0f, 1.0f));
+    viewRotation = rotate(viewRotation, eyeRotation.z, vec3(0.0f, 0.0f, 1.0f));
 
     c += 0.01;
 
@@ -81,17 +86,17 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             visibility = visibilityComponents->getComponent(entity);
 
-            modelScale = glm::scale(glm::mat4(1.0f), visibility->scale);
+            modelScale = scale(mat4(1.0f), visibility->scale);
 
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
 
-                modelTranslation = glm::translate(glm::mat4(1.0f), movement->position);
+                modelTranslation = translate(mat4(1.0f), movement->position);
 
-                modelRotation = glm::mat4(0.1f);
-                modelRotation = glm::rotate(modelRotation, movement->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-                modelRotation = glm::rotate(modelRotation, movement->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-                modelRotation = glm::rotate(modelRotation, movement->rotation.z - c, glm::vec3(0.0f, 0.0f, 1.0f));
+                modelRotation = mat4(0.1f);
+                modelRotation = rotate(modelRotation, movement->rotation.x, vec3(1.0f, 0.0f, 0.0f));
+                modelRotation = rotate(modelRotation, movement->rotation.y, vec3(0.0f, 1.0f, 0.0f));
+                modelRotation = rotate(modelRotation, movement->rotation.z - c, vec3(0.0f, 0.0f, 1.0f));
             }
 
             Wprojection = modelRotation * modelScale;
@@ -133,47 +138,4 @@ void RenderSystem::unsetGLStates()
     glDisable(GL_LIGHT0);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDepthMask(GL_FALSE);
-}
-
-void RenderSystem::loadShaderFile(GLuint& shader, const char* filename)
-{
-    ifstream file(filename);
-    std::string content, line = "";
-    while(!file.eof()) {
-        std::getline(file, line);
-        content.append(line + "\n");
-    }
-
-    const GLchar* p[1] = {content.data()};
-    GLint l[1] = {GLint(content.size())};
-
-    glShaderSource(shader, 1, p, l);
-}
-
-void RenderSystem::compileShader(GLuint& shader, GLuint& program)
-{
-    GLint success;
-    glCompileShader(shader);
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (success == 0) {
-        GLchar InfoLog[1024];
-        glGetShaderInfoLog(shader, sizeof(InfoLog), NULL, InfoLog);
-        printl(InfoLog);
-    } else {
-        glAttachShader(program, shader);
-    }
-}
-
-void RenderSystem::linkProgram(GLuint& program)
-{
-    GLint success;
-    glLinkProgram(program);
-    glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if (success == 0) {
-        GLchar ErrorLog[1024];
-        glGetProgramInfoLog(program, sizeof(ErrorLog), NULL, ErrorLog);
-        printl(ErrorLog);
-    } else {
-        glValidateProgram(program);
-    }
 }
