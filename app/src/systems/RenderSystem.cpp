@@ -34,6 +34,8 @@ void RenderSystem::initialize()
 
     shaderProjectionLocation = glGetUniformLocation(shaderProgram, "projection");
     shaderTextureUnitLocation = glGetUniformLocation(shaderProgram, "textureUnit");
+    shaderLightColorLocation = glGetUniformLocation(shaderProgram, "light.color");
+    shaderLightAmbientIntensity = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
 
     glDetachShader(shaderProgram, vertexShader);
     glDeleteShader(vertexShader);
@@ -56,6 +58,8 @@ void RenderSystem::update()
 
     setGLStates();
     glUseProgram(shaderProgram);
+    glUniform3f(shaderLightColorLocation, 1.0, 0.9, 0.7);
+    glUniform1f(shaderLightAmbientIntensity, 0.8);
 
     c += 0.01;
 

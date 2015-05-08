@@ -6,6 +6,7 @@
 
 struct Material;
 
+// TODO rename to OBJ
 class OBJParser
 {
 

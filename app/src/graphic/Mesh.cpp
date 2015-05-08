@@ -13,10 +13,7 @@ Mesh::Mesh(const char *filename)
     totalIndexes = GLsizei(indexes.size());
 
     if (uvs.size() < vertexes.size()) {
-        uvs.resize(vertexes.size());
-        for (unsigned int i = 0; i < vertexes.size(); i ++) {
-            uvs[i] = vec2(float(i%2), float((i+1)%2));
-        }
+        uvs.resize(vertexes.size(), vec2(0.f));
     }
 
     if (materials.size() == 0) {
@@ -33,13 +30,6 @@ void Mesh::draw()
     glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
-void Mesh::outline()
-{
-    glBindVertexArray(VAO);
-    glDrawElements(GL_LINE_LOOP, totalIndexes, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 

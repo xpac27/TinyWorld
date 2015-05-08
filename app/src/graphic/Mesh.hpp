@@ -19,7 +19,6 @@ public:
     Mesh(const char *filename);
 
     void draw();
-    void outline();
 
 private:
 

@@ -43,8 +43,11 @@ private:
     GLuint shaderProgram = glCreateProgram();
     GLint shaderProjectionLocation = 0;
     GLint shaderTextureUnitLocation = 0;
+    GLint shaderLightColorLocation = 0;
+    GLint shaderLightAmbientIntensity = 0;
 
     float c {0.f};
+
 
     // GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
     // GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};
