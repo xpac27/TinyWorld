@@ -7,7 +7,9 @@ This is a work in progress which purpose is for me to learn C++.
 Todo:
 - [ ] make entities learn to look for food
 - [ ] make entities move randomly and die after some time
-- [x] obj parser
+- [x] ambiant, diffuse, specular lighting
+- [x] png textures
+- [x] obj, mtl parser
 - [x] vertex array object
 - [x] basic entity component system
 

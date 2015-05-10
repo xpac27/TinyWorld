@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "utils/Log.hpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -63,8 +62,8 @@ int main()
     application = new Application();
 
     // Create a draw and update thread
-    thread t1(draw, application, window);
-    thread t2(update, application);
+    thread t1(update, application);
+    thread t2(draw, application, window);
 
     // Run the app
     while (application->isRunning()) glfwPollEvents();

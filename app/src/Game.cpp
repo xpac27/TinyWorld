@@ -7,6 +7,7 @@ Game::Game()
 {
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
     simulationSystems.addSystem(new MovementSystem(&movementComponents));
+    simulationSystems.setLatency(1000 / 20);
 
     for (int i = 0; i < 1; i ++) {
         addEntity();
@@ -19,6 +20,12 @@ Game::Game()
 void Game::draw()
 {
     visualSystems.update();
+}
+
+void Game::printStats()
+{
+    visualSystems.printStats();
+    simulationSystems.printStats();
 }
 
 void Game::update(long milliseconds)
