@@ -16,14 +16,14 @@ Game::Game()
     visualSystems.initialize();
 }
 
-void Game::update(float time)
-{
-    simulationSystems.update(time);
-}
-
 void Game::draw()
 {
     visualSystems.update();
+}
+
+void Game::update(long milliseconds)
+{
+    simulationSystems.update(milliseconds);
 }
 
 void Game::addEntity()

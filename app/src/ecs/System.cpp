@@ -27,19 +27,19 @@ void System::onEntityRemoved(id entity)
     entities.erase(std::find(entities.begin(), entities.end(), entity));
 }
 
-void System::update(float /*time*/)
+void System::update()
 {
-    printl("Warning: update(time) function called but not implemented by System");
+    // Nothing to do...
+}
+
+void System::update(long /*milliseconds*/)
+{
+    // Nothing to do...
 }
 
 void System::initialize()
 {
     // Nothing to do...
-}
-
-void System::update()
-{
-    printl("Warning: update() function called but not implemented by System");
 }
 
 std::vector<id>* System::getEntities()

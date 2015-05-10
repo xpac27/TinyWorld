@@ -16,6 +16,10 @@ run:
 	@echo "$(S) Running the app $(E)"
 	./build/app/app
 
+debug:
+	@echo "$(S) Debugging the app $(E)"
+	lldb -f build/app/app
+
 test:
 	@echo "$(S) Compiling tests $(E)"
 	make tests -C build

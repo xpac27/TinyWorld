@@ -8,12 +8,16 @@ class SystemManager
 
 public:
 
+    void setLatency(long milliseconds);
     void addSystem(System* system);
     void initialize();
-    void update(float time);
     void update();
+    void update(long milliseconds);
 
 private:
+
+    long latency = 0;
+    long previousUpdateCall = 0;
 
     std::vector<System*> systems = {};
 };

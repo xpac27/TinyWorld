@@ -17,6 +17,11 @@ GLuint Program::getReference()
     return reference;
 }
 
+GLint Program::getLocation(const char* variable)
+{
+    return glGetUniformLocation(reference, variable);
+}
+
 void Program::link()
 {
     GLint success;
@@ -34,9 +39,4 @@ void Program::link()
 void Program::use()
 {
     glUseProgram(reference);
-}
-
-GLint Program::getLocation(const char* variable)
-{
-    return glGetUniformLocation(reference, variable);
 }

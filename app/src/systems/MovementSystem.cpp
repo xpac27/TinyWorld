@@ -10,7 +10,7 @@ MovementSystem::MovementSystem(
     , movementComponents(mc)
 {}
 
-void MovementSystem::update(float time)
+void MovementSystem::update(long milliseconds)
 {
     ECS::id entity;
     Movement* movement;

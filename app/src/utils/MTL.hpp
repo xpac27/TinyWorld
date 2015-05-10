@@ -4,7 +4,6 @@
 
 struct Material;
 
-// TODO rename to MTL
 class MTL
 {
 

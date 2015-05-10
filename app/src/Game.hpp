@@ -14,8 +14,8 @@ public:
 
     Game();
 
-    void update(float time);
     void draw();
+    void update(long milliseconds);
 
 private:
 

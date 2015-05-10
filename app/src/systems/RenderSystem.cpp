@@ -30,6 +30,9 @@ RenderSystem::RenderSystem(
 
 void RenderSystem::initialize()
 {
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
     Shader vertexShader(GL_VERTEX_SHADER, program);
     vertexShader.read("app/res/shaders/vertex_shader.vert");
     vertexShader.compile();

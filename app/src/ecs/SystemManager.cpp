@@ -1,7 +1,13 @@
 #include "SystemManager.hpp"
 #include "System.hpp"
+#include "utils/Log.hpp"
 
 namespace ECS {
+
+void SystemManager::setLatency(long milliseconds)
+{
+    latency = milliseconds;
+}
 
 void SystemManager::addSystem(System* system)
 {
@@ -15,17 +21,20 @@ void SystemManager::initialize()
     }
 }
 
-void SystemManager::update(float time)
-{
-    for (auto system : systems) {
-       system->update(time);
-    }
-}
-
 void SystemManager::update()
 {
     for (auto system : systems) {
-       system->update();
+        system->update();
+    }
+}
+
+void SystemManager::update(long milliseconds)
+{
+    if (milliseconds - previousUpdateCall > latency) {
+        previousUpdateCall = milliseconds;
+        for (auto system : systems) {
+            system->update(milliseconds);
+        }
     }
 }
 }
