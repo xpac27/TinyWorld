@@ -96,9 +96,9 @@ void RenderSystem::update()
                 modelTranslation = translate(mat4(1.0f), movement->position);
 
                 modelRotation = mat4(1.0f);
-                modelRotation = rotate(modelRotation, movement->rotation.x, vec3(1.0f, 0.0f, 0.0f));
-                modelRotation = rotate(modelRotation, movement->rotation.y, vec3(0.0f, 1.0f, 0.0f));
-                modelRotation = rotate(modelRotation, movement->rotation.z, vec3(0.0f, 0.0f, 1.0f));
+                // modelRotation = rotate(modelRotation, movement->rotation.x, vec3(1.0f, 0.0f, 0.0f));
+                // modelRotation = rotate(modelRotation, movement->rotation.y, vec3(0.0f, 1.0f, 0.0f));
+                // modelRotation = rotate(modelRotation, movement->rotation.z, vec3(0.0f, 0.0f, 1.0f));
             }
 
             Wprojection = modelRotation * modelScale;

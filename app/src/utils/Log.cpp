@@ -12,7 +12,7 @@ void Log::dump(Movement* c)
 {
     printl("Movement");
     printl("  position: ", c->position.x, c->position.y, c->position.z);
-    printl("  rotation: ", c->rotation.x, c->rotation.y, c->rotation.z);
+    // printl("  rotation: ", c->rotation.x, c->rotation.y, c->rotation.z);
 }
 
 void Log::dump(Life* c)

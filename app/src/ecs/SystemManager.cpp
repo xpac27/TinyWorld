@@ -47,10 +47,11 @@ void SystemManager::update()
 void SystemManager::update(long milliseconds)
 {
     if (milliseconds - previousUpdateCall > latency) {
+        long delta = milliseconds - previousUpdateCall;
         statistics->updating();
         previousUpdateCall = milliseconds;
         for (auto system : systems) {
-            system->update(milliseconds);
+            system->update(milliseconds, delta);
         }
         statistics->updated();
     }

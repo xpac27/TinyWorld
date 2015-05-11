@@ -16,7 +16,7 @@ public:
 
     virtual void initialize();
     virtual void update();
-    virtual void update(long milliseconds);
+    virtual void update(long milliseconds, long delta);
 
     std::vector<id>* getEntities();
 
