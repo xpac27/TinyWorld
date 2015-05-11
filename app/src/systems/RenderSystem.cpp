@@ -7,8 +7,8 @@
 #include "graphic/Mesh.hpp"
 #include "graphic/DirectionalLight.hpp"
 #include "ecs/Id.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 #include <math.h>
-#include <glm/vec3.hpp>
 
 using namespace std;
 using namespace glm;
@@ -20,10 +20,10 @@ RenderSystem::RenderSystem(
 )
     : System({vc, mc})
     , meshStore(new MeshStore())
-    , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), vec3(0.0, -1.0, 1.0), 0.2f, 1.f))
+    , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
-    , eyePosition(0, 1.5f, 1.f)
-    , eyeRotation(float(M_PI / -2.f), 0.f, float(M_PI))
+    , eyePosition(-14.0f, -14.0f, 30.f)
+    , eyeRotation(float(M_PI) / -6.f, 0.f, float(M_PI) / 4.f)
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
@@ -53,8 +53,6 @@ void RenderSystem::initialize()
     shaderSpecularIntensity = program->getLocation("specularIntensity");
     shaderSpecularPower = program->getLocation("specularPower");
     shaderEyeWorldPosition = program->getLocation("eyeWorldPosition");
-
-    perspective = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 
 void RenderSystem::update()
@@ -70,18 +68,19 @@ void RenderSystem::update()
     glUniform3f(shaderLightDirection, light->direction.x, light->direction.y, light->direction.z);
     glUniform1f(shaderLightAmbientIntensity, light->ambientIntensity);
     glUniform1f(shaderLightDiffuseIntensity, light->diffuseIntensity);
-    glUniform1f(shaderSpecularIntensity, 1.0);
+    glUniform1f(shaderSpecularIntensity, 4.0);
     glUniform1f(shaderSpecularPower, 32.0);
     glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     viewTranslation = translate(mat4(1.0f), eyePosition * -1.f);
 
-    viewRotation = mat4(0.1f);
+    viewRotation = mat4(1.0f);
     viewRotation = rotate(viewRotation, eyeRotation.x, vec3(1.0f, 0.0f, 0.0f));
     viewRotation = rotate(viewRotation, eyeRotation.y, vec3(0.0f, 0.0f, 1.0f));
     viewRotation = rotate(viewRotation, eyeRotation.z, vec3(0.0f, 0.0f, 1.0f));
 
-    c += 0.01;
+    // TODO use constants for screen size
+    perspective = glm::perspective(float(M_PI) / 6.f, 4.f / 3.f, 0.1f, 100.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -96,10 +95,10 @@ void RenderSystem::update()
 
                 modelTranslation = translate(mat4(1.0f), movement->position);
 
-                modelRotation = mat4(0.1f);
+                modelRotation = mat4(1.0f);
                 modelRotation = rotate(modelRotation, movement->rotation.x, vec3(1.0f, 0.0f, 0.0f));
                 modelRotation = rotate(modelRotation, movement->rotation.y, vec3(0.0f, 1.0f, 0.0f));
-                modelRotation = rotate(modelRotation, movement->rotation.z - c, vec3(0.0f, 0.0f, 1.0f));
+                modelRotation = rotate(modelRotation, movement->rotation.z, vec3(0.0f, 0.0f, 1.0f));
             }
 
             Wprojection = modelRotation * modelScale;

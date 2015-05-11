@@ -3,6 +3,6 @@
 
 struct Movement
 {
-    glm::vec3 position;
-    glm::vec3 rotation;
+    glm::vec3 position {0.f, 0.f, 0.f};
+    glm::vec3 rotation {0.f, 0.f, 0.f};
 };

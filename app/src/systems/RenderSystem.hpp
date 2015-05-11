@@ -3,8 +3,7 @@
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
 #include <GL/glew.h>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 namespace ECS {
     template <typename T> class ComponentManager;
@@ -56,8 +55,6 @@ private:
     GLint shaderSpecularPower = 0;
     GLint shaderLightDirection = 0;
     GLint shaderEyeWorldPosition = 0;
-
-    float c {0.f};
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;

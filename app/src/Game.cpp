@@ -9,7 +9,7 @@ Game::Game()
     simulationSystems.addSystem(new MovementSystem(&movementComponents));
     simulationSystems.setLatency(1000 / 20);
 
-    for (int i = 0; i < 1; i ++) {
+    for (int i = 0; i < 100; i ++) {
         addEntity();
     }
 
@@ -38,8 +38,8 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    // movementComponents.getComponent(entity)->position.x = float(rand() % 100 - 50);
-    // movementComponents.getComponent(entity)->position.y = float(rand() % 100 - 50);
+    movementComponents.getComponent(entity)->position.x = float(rand() % 30 - 15);
+    movementComponents.getComponent(entity)->position.y = float(rand() % 30 - 15);
     // double r = rand();
     // movementComponents.getComponent(entity)->direction.x = float(sin(r));
     // movementComponents.getComponent(entity)->direction.y = float(cos(r));
