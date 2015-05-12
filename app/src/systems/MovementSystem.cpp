@@ -21,6 +21,5 @@ void MovementSystem::update(double /*milliseconds*/, float delta)
 
         movement = movementComponents->getComponent(entity);
         movement->position += movement->direction * delta * movement->velocity;
-        // TODO implement movement...
     }
 }
