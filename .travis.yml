@@ -5,8 +5,7 @@ language: cpp
 compiler: clang
 before_script:
     - sudo add-apt-repository --yes ppa:kubuntu-ppa/backports   # cmake >=2.8.12.2
-    - sudo apt-add-repository --yes ppa:sonkun/sfml-development # sfml 2.0.1
     - sudo apt-get update
-    - sudo apt-get install -y cmake libstdc++6 libglew-dev libsfml-dev
+    - sudo apt-get install -y cmake libstdc++6 libglew-dev libglfw-dev libpng12-dev
 
 script: make configure && make compile && make test

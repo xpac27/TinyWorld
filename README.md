@@ -48,7 +48,7 @@ Optionaly, in order to use Clang Static Analyzer:
 ### Ubuntu
 
     apt-get update
-    apt-get install cmake libgl1-mesa-dev libglew-dev libglfw-dev libpng12-dev libstdc++6
+    apt-get install cmake libstdc++6 libglew-dev libglfw-dev libpng12-dev
 
 Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to `/usr/include`.
 
