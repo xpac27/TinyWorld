@@ -32,7 +32,7 @@ void System::update()
     // Nothing to do...
 }
 
-void System::update(double /*milliseconds*/, float /*delta*/)
+void System::update(float /*milliseconds*/, float /*delta*/)
 {
     // Nothing to do...
 }
