@@ -40,6 +40,7 @@ void Game::addEntity()
     visibilityComponents.addComponent(entity);
     movementComponents.getComponent(entity)->velocity = float(rand() % 1000) / 1000.f * 10.f;
     movementComponents.getComponent(entity)->direction = {float(rand() % 2000 - 1000) / 1000.f, float(rand() % 2000 - 1000) / 1000.f, 0.f};
+    movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);
     movementComponents.getComponent(entity)->position.x = float(rand() % 30 - 15);
     movementComponents.getComponent(entity)->position.y = float(rand() % 30 - 15);
 }

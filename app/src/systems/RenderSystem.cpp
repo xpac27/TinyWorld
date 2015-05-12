@@ -95,7 +95,7 @@ void RenderSystem::update()
                 movement = movementComponents->getComponent(entity);
 
                 modelTranslation = translate(mat4(1.0f), movement->position);
-                modelRotation = orientation(movement->direction, vec3(0.0f, 0.0f, 1.0f));
+                modelRotation = orientation(movement->direction, vec3(-1.0f, 0.0f, 0.0f));
             }
 
             Wprojection = modelRotation * modelScale;
