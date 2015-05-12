@@ -16,7 +16,7 @@ void Application::draw()
     game->draw();
 }
 
-void Application::update(long milliseconds)
+void Application::update(double milliseconds)
 {
     game->update(milliseconds);
 }

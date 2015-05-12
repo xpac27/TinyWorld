@@ -34,7 +34,7 @@ find_package(PNG REQUIRED)
 if(GLM_FOUND)
     include_directories(${PNG_INCLUDE_DIRS})
 else()
-    message(FATAL_ERROR "Cannot find GLM library.")
+    message(FATAL_ERROR "Cannot find PNG library.")
 endif()
 
 # compiler flags

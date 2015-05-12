@@ -11,17 +11,17 @@ public:
 
     SystemManager(const char* _name);
 
-    void setLatency(long milliseconds);
+    void setLatency(double milliseconds);
     void addSystem(System* system);
     void printStats();
     void initialize();
     void update();
-    void update(long milliseconds);
+    void update(double milliseconds);
 
 private:
 
-    long latency = 0;
-    long previousUpdateCall = 0;
+    double latency = 0;
+    double previousUpdateCall = 0;
 
     const char* name;
 

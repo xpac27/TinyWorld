@@ -94,9 +94,11 @@ void draw(Application *app, GLFWwindow *window)
 
 void update(Application *app)
 {
+    time_point<system_clock> startTime = system_clock::now();
+
     while (app->isRunning())
     {
-        app->update(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+        app->update(duration_cast<milliseconds>(system_clock::now() - startTime).count());
     }
 }
 

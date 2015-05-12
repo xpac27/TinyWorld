@@ -11,20 +11,16 @@ MovementSystem::MovementSystem(
     , movementComponents(mc)
 {}
 
-void MovementSystem::update(long /*milliseconds*/, long delta)
+void MovementSystem::update(double /*milliseconds*/, float delta)
 {
     ECS::id entity;
     Movement* movement;
-
-    Log::printl((float(delta) / 1000.f));
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
 
         movement = movementComponents->getComponent(entity);
-        movement->position += movement->direction * 0.051f;
+        movement->position += movement->direction * delta * movement->velocity;
         // TODO implement movement...
-
-        Log::printl(movement->position.x, movement->position.y, movement->position.z);
     }
 }

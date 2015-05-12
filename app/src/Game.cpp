@@ -28,7 +28,7 @@ void Game::printStats()
     simulationSystems.printStats();
 }
 
-void Game::update(long milliseconds)
+void Game::update(double milliseconds)
 {
     simulationSystems.update(milliseconds);
 }

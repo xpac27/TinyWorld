@@ -11,7 +11,7 @@ public:
 
     bool isRunning();
     void draw();
-    void update(long milliseconds);
+    void update(double milliseconds);
     void keyCallback(int key, int scancode, int action, int mods);
 
 private:

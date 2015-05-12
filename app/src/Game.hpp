@@ -16,7 +16,7 @@ public:
 
     void draw();
     void printStats();
-    void update(long milliseconds);
+    void update(double milliseconds);
 
 private:
 
