@@ -15,7 +15,11 @@ Todo:
 
 ## Requirements
 
-* **SMFL** 2.0 + ([website](http://www.sfml-dev.org/tutorials/2.2/))
+* **OpenGL** ([website](https://www.opengl.org/))
+* **GLEW** 1.12.0 + ([website](http://glew.sourceforge.net/))
+* **GLFW** 3.1.1 + ([website](glfw.org/index.html))
+* **GLM** 0.9.6 + ([website](glm.g-truc.net))
+* **LibPNG** ([website](http://www.libpng.org/pub/png/libpng.html))
 * **CMake** 2.8.12 + ([website](http://www.cmake.org/))
 * **Clang Static Analyzer** ([website](http://clang-analyzer.llvm.org/index.html)) optional
 
@@ -34,7 +38,7 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 ### Mac OSX
 
-    brew install sfml cmake
+    brew install glew glfw3 glm libpng cmake
 
 Optionaly, in order to use Clang Static Analyzer:
 
@@ -44,7 +48,9 @@ Optionaly, in order to use Clang Static Analyzer:
 ### Ubuntu
 
     apt-get update
-    apt-get install cmake llvm libstdc++6 libglew-dev libsfml-dev
+    apt-get install cmake libgl1-mesa-dev libglew-dev libglfw-dev libpng12-dev libstdc++6
+
+Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to `/usr/include`.
 
 Optionaly, in order to use Clang Static Analyzer:
 
