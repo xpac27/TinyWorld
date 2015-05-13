@@ -48,9 +48,11 @@ Optionaly, in order to use Clang Static Analyzer:
 ### Ubuntu
 
     apt-get update
-    apt-get install cmake libstdc++6 libglew-dev libglfw-dev libpng12-dev
+    apt-get install cmake libstdc++6 libxrandr-dev libxcursor-dev libglew-dev libpng12-dev
 
 Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to `/usr/include`.
+
+Follow ([this guide](http://www.glfw.org/docs/latest/compile.html)) to install GLFW3 from sources.
 
 Optionaly, in order to use Clang Static Analyzer:
 
