@@ -28,11 +28,7 @@ test:
 
 report:
 	@echo "$(S) Compiling static analysis report $(E)"
-	scan-build -o reports make report -C build
-
-report-open:
-	@echo "$(S) Open the latest report $(E)"
-	open reports/`ls reports | grep -v txt | tail -1`/index.html
+	scan-build make -C build
 
 clean:
 	@echo "$(S) Compiling sources $(E)"

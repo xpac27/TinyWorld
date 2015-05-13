@@ -1,24 +1,12 @@
-# SHOULD NOT BE RUN DIRECTLY
+cmake_minimum_required(VERSION 2.8.10)
 
 project(tests)
-
 enable_testing()
-
-# configurations
-set(EXECUTABLE_NAME "tests")
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
-# lest options
 add_definitions(-Dlest_FEATURE_AUTO_REGISTER=1)
 add_definitions(-Dlest_FEATURE_COLOURISE=1)
 
-# libs
-include_directories("lib")
-include_directories("../app/src")
-
-# get all *.cpp files recursively
 file(GLOB_RECURSE source_files "src/*.cpp")
-add_executable(${EXECUTABLE_NAME} ${source_files})
 
-# link
-target_link_libraries(${EXECUTABLE_NAME} "TinyWorld")
+add_executable(tests ${source_files})
+target_include_directories(tests PUBLIC "lib")
+target_link_libraries(tests applib)

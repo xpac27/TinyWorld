@@ -32,7 +32,6 @@ Optionaly, you can run `make configure` once and use the commands above.
 - `make compile` - compile the application
 - `make test` - compile and run the tests
 - `make report` - compile the application and run the static analyzer on it
-- `make report-open` - open the latest report
 
 ## Setup
 
