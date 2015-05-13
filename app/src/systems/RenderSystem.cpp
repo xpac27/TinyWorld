@@ -23,8 +23,8 @@ RenderSystem::RenderSystem(
     , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
-    , eyePosition(-14.0f, -14.0f, 30.f)
-    , eyeRotation(float(M_PI) / -6.f, 0.f, float(M_PI) / 4.f)
+    , eyePosition(0.f, -6.f, 10.f)
+    , eyeRotation(float(M_PI) / -6.f, 0.f, 0.f)
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
@@ -81,7 +81,7 @@ void RenderSystem::update()
     viewRotation = rotate(viewRotation, eyeRotation.z, vec3(0.0f, 0.0f, 1.0f));
 
     // TODO use constants for screen size
-    perspective = glm::perspective(float(M_PI) / 6.f, 4.f / 3.f, 0.1f, 100.f);
+    perspective = glm::perspective(float(M_PI) / 2.f, 4.f / 3.f, 0.1f, 100.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
