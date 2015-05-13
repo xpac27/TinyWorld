@@ -16,9 +16,9 @@ void Application::draw()
     game->draw();
 }
 
-void Application::update(float milliseconds)
+void Application::update(float seconds)
 {
-    game->update(milliseconds);
+    game->update(seconds);
 }
 
 void Application::keyCallback(int key, int /*scancode*/, int action, int /*mods*/)

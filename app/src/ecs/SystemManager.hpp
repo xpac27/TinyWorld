@@ -11,12 +11,12 @@ public:
 
     SystemManager(const char* _name);
 
-    void setLatency(float milliseconds);
+    void setLatency(float seconds);
     void addSystem(System* system);
     void printStats();
     void initialize();
     void update();
-    void update(float milliseconds);
+    void update(float seconds);
 
 private:
 

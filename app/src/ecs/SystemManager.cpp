@@ -13,9 +13,9 @@ SystemManager::SystemManager(const char* _name)
     , statistics(new SystemStatistics())
 {}
 
-void SystemManager::setLatency(float milliseconds)
+void SystemManager::setLatency(float seconds)
 {
-    latency = milliseconds;
+    latency = seconds;
 }
 
 void SystemManager::addSystem(System* system)
@@ -44,14 +44,14 @@ void SystemManager::update()
     statistics->updated();
 }
 
-void SystemManager::update(float milliseconds)
+void SystemManager::update(float seconds)
 {
-    if (milliseconds - previousUpdateCall > latency) {
-        float delta = float(milliseconds - previousUpdateCall) / 1000.f;
+    if (seconds - previousUpdateCall > latency) {
+        float delta = seconds - previousUpdateCall;
         statistics->updating();
-        previousUpdateCall = milliseconds;
+        previousUpdateCall = seconds;
         for (auto system : systems) {
-            system->update(milliseconds, delta);
+            system->update(seconds, delta);
         }
         statistics->updated();
     }

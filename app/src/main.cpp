@@ -1,7 +1,6 @@
 #include "Application.hpp"
 #include <cmath>
 #include <ctime>
-#include <chrono>
 #include <thread>
 #include <cstdio>
 #include <stdlib.h>
@@ -9,7 +8,6 @@
 #include <GLFW/glfw3.h>
 
 using namespace std;
-using namespace std::chrono;
 
 void glfwErrorCallback(int error, const char* description);
 void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -85,8 +83,7 @@ void draw(Application *app, GLFWwindow *window)
 {
     glfwMakeContextCurrent(window);
 
-    while (app->isRunning())
-    {
+    while (app->isRunning()) {
         app->draw();
         glfwSwapBuffers(window);
     }
@@ -94,11 +91,8 @@ void draw(Application *app, GLFWwindow *window)
 
 void update(Application *app)
 {
-    time_point<system_clock> startTime = system_clock::now();
-
-    while (app->isRunning())
-    {
-        app->update(duration_cast<milliseconds>(system_clock::now() - startTime).count());
+    while (app->isRunning()) {
+        app->update(float(glfwGetTime()));
     }
 }
 

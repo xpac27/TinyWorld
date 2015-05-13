@@ -1,22 +1,22 @@
 #include "SystemStatistics.hpp"
 #include "utils/Log.hpp"
 #include <math.h>
+#include <GLFW/glfw3.h>
 
 using namespace std;
-using namespace std::chrono;
 using namespace Log;
 
 namespace ECS {
 
 void SystemStatistics::print(const char* name)
 {
-	printl("--", name, "-", round(averageUpdateFrequency), "-", averageUpdateDuration.count());
+	printl("--", name, "-", round(averageUpdateFrequency), "-", averageUpdateDuration);
 }
 
 void SystemStatistics::updating()
 {
 	averageUpdateFrequency *= 9;
-   	averageUpdateFrequency += 1000.f / float((getTime() - updateTime).count());
+   	averageUpdateFrequency += 1.f / (getTime() - updateTime);
 	averageUpdateFrequency /= 10;
 	updateTime = getTime();
 }
@@ -28,8 +28,8 @@ void SystemStatistics::updated()
 	averageUpdateDuration /= 10;
 }
 
-milliseconds SystemStatistics::getTime()
+float SystemStatistics::getTime()
 {
-	return duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    return float(glfwGetTime());
 }
 }

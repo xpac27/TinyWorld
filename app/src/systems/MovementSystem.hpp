@@ -13,7 +13,7 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
-    void update(float milliseconds, float delta);
+    void update(float seconds, float delta);
 
 private:
 

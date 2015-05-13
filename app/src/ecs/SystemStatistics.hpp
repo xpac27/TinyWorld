@@ -1,9 +1,6 @@
 #pragma once
-#include <chrono>
 
 namespace ECS {
-
-typedef std::chrono::milliseconds milliseconds;
 
 class SystemStatistics
 {
@@ -18,9 +15,9 @@ private:
 
 	float averageUpdateFrequency;
 
-	milliseconds getTime();
-    milliseconds averageUpdateDuration {0};
-	milliseconds updateTime {0};
+	float getTime();
+    float averageUpdateDuration {0};
+	float updateTime {0};
 
 };
 }
