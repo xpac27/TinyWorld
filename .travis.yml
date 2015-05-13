@@ -5,7 +5,7 @@ language: cpp
 compiler: clang
 before_script:
     - sudo add-apt-repository --yes ppa:kubuntu-ppa/backports   # cmake >=2.8.12.2
-    - sudo apt-get-repository --yes ppa:pyglfw/pyglfw           # glfw >=3.0.4.1
+    - sudo add-apt-repository --yes ppa:pyglfw/pyglfw           # glfw >=3.0.4.1
     - sudo apt-get update
     - sudo apt-get install -y cmake libstdc++6 libxrandr-dev libxcursor-dev libglew-dev libglfw3-dev libpng12-dev
     - curl -LO http://downloads.sourceforge.net/project/ogl-math/glm-0.9.6.3/glm-0.9.6.3.zip && unzip glm-0.9.6.3.zip && cp -r glm/glm /usr/include/ && rm -rf glm*
