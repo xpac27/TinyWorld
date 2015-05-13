@@ -2,7 +2,7 @@ branches:
     only: master
 
 language: cpp
-compiler: clang
+compiler: gcc
 before_script:
     - sudo add-apt-repository --yes ppa:kubuntu-ppa/backports   # cmake >=2.8.12.2
     - sudo add-apt-repository --yes ppa:pyglfw/pyglfw           # glfw >=3.0.4.1
