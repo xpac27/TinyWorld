@@ -3,12 +3,17 @@
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 namespace ECS {
     template <typename T> class ComponentManager;
 }
-class MeshFactory;
-class RenderSystem : public ECS::System {
+class MeshStore;
+class Program;
+struct DirectionalLight;
+
+class RenderSystem : public ECS::System
+{
 
 public:
 
@@ -25,11 +30,31 @@ private:
     void setGLStates();
     void unsetGLStates();
 
-    MeshFactory* meshFactory;
+    MeshStore* meshStore;
+    DirectionalLight* light;
+    Program* program;
 
-    GLfloat lightPos[4] {0.f, 0.f, 10.f, 1.f};
-    GLfloat lightAmb[4] {.1f, .1f, .1f, 1.f};
-    GLfloat lightDif[4] {.8f, .8f, .8f, 1.f};
+    glm::vec3 eyePosition;
+    glm::vec3 eyeRotation;
+    glm::mat4 modelScale;
+    glm::mat4 modelRotation;
+    glm::mat4 modelTranslation;
+    glm::mat4 viewTranslation;
+    glm::mat4 viewRotation;
+    glm::mat4 perspective;
+    glm::mat4 Wprojection;
+    glm::mat4 WVPprojection;
+
+    GLint shaderW = 0;
+    GLint shaderWVP = 0;
+    GLint shaderTextureUnit = 0;
+    GLint shaderLightColor = 0;
+    GLint shaderLightAmbientIntensity = 0;
+    GLint shaderLightDiffuseIntensity = 0;
+    GLint shaderSpecularIntensity = 0;
+    GLint shaderSpecularPower = 0;
+    GLint shaderLightDirection = 0;
+    GLint shaderEyeWorldPosition = 0;
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;

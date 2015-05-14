@@ -1,62 +1,87 @@
 #include "Mesh.hpp"
-#include "utils/OBJLoader.hpp"
-#include "helpers/Debug.hpp"
+#include "graphic/Material.hpp"
+#include "utils/OBJ.hpp"
+#include "utils/PNG.hpp"
+#include <string>
 
 using namespace std;
+using namespace glm;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJLoader::loadOBJ(vertexes, normals, indexes, filename);
+    OBJ(vertexes, uvs, normals, indexes, materials).load(filename);
     totalIndexes = GLsizei(indexes.size());
 
-    for (unsigned int i = 0; i < vertexes.size(); i++)
-    {
-        vertexes[i].col[0] = 1.f;
-        vertexes[i].col[1] = 1.f;
-        vertexes[i].col[2] = 0.f;
-        vertexes[i].col[3] = 1.f;
+    if (uvs.size() < vertexes.size()) {
+        uvs.resize(vertexes.size(), vec2(0.f));
     }
 
-    loadVBOs();
-}
-
-void Mesh::debug()
-{
-    OBJLoader::debug(vertexes, normals, indexes);
-}
-
-void Mesh::loadVBOs()
-{
-    if (GLEW_ARB_vertex_buffer_object)
-    {
-        glGenBuffers(2, VBOIds);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * unsigned(vertexes.size()), vertexes.data(), GL_STATIC_DRAW);
-        // glBufferSubData TODO
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * unsigned(indexes.size()), indexes.data(), GL_STATIC_DRAW);
-        // glBufferSubData TODO
+    if (materials.size() == 0) {
+        materials.push_back(Material("default"));
     }
+
+    loadVAO();
+    loadTextures();
 }
 
 void Mesh::draw()
 {
-    if (GLEW_ARB_vertex_buffer_object)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, NULL);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuses[0]);
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void Mesh::loadVAO()
+{
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(4, VAB);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[POS_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[TEX_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * uvs.size(), uvs.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[NOR_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * normals.size(), normals.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[IND_VB]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+}
+
+void Mesh::loadTextures()
+{
+    for (auto m : materials) {
+        diffuses.push_back(loadTexture(m.map_Kd.data()));
     }
 }
 
-void Mesh::outline()
+GLuint Mesh::loadTexture(const char *filename)
 {
-    if (GLEW_ARB_vertex_buffer_object)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, VBOIds[0]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOIds[1]);
-        glDrawElements(GL_LINE_LOOP, totalIndexes, GL_UNSIGNED_BYTE, NULL);
-    }
+    string filepath = "app/res/";
+    filepath += filename;
+    PNG png(filepath.data());
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, GLint(png.width()), GLint(png.height()), 0, GL_RGBA, GL_UNSIGNED_BYTE, png.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    return texture;
 }

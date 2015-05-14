@@ -12,11 +12,11 @@ public:
 
     System(std::initializer_list<ComponentManagerBase*> c);
 
-    virtual ~System() = default;
+   virtual ~System() = default;
 
     virtual void initialize();
     virtual void update();
-    virtual void update(float time);
+    virtual void update(float seconds, float delta);
 
     std::vector<id>* getEntities();
 

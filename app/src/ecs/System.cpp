@@ -1,7 +1,9 @@
 #include "System.hpp"
 #include "ComponentManagerBase.hpp"
-#include "helpers/Debug.hpp"
+#include "utils/Log.hpp"
 #include <algorithm>
+
+using namespace Log;
 
 namespace ECS {
 
@@ -25,19 +27,19 @@ void System::onEntityRemoved(id entity)
     entities.erase(std::find(entities.begin(), entities.end(), entity));
 }
 
-void System::update(float /*time*/)
+void System::update()
 {
-    Debug::printl("Warning: update(time) function called but not implemented by System");
+    // Nothing to do...
+}
+
+void System::update(float /*seconds*/, float /*delta*/)
+{
+    // Nothing to do...
 }
 
 void System::initialize()
 {
-    Debug::printl("Warning: initialize() function called but not implemented by System");
-}
-
-void System::update()
-{
-    Debug::printl("Warning: update() function called but not implemented by System");
+    // Nothing to do...
 }
 
 std::vector<id>* System::getEntities()

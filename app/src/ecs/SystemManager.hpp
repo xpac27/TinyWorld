@@ -3,17 +3,29 @@
 
 namespace ECS {
 class System;
+class SystemStatistics;
 class SystemManager
 {
 
 public:
 
+    SystemManager(const char* _name);
+
+    void setLatency(float seconds);
     void addSystem(System* system);
+    void printStats();
     void initialize();
-    void update(float time);
     void update();
+    void update(float seconds);
 
 private:
+
+    float latency = 0.f;
+    float previousUpdateCall = 0.f;
+
+    const char* name;
+
+    SystemStatistics* statistics;
 
     std::vector<System*> systems = {};
 };

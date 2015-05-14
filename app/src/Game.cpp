@@ -1,15 +1,15 @@
 #include "Game.hpp"
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
-#include "helpers/Debug.hpp"
-#include <cmath>
+#include "utils/Random.hpp"
 
 Game::Game()
 {
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
     simulationSystems.addSystem(new MovementSystem(&movementComponents));
+    simulationSystems.setLatency(1.f / 200.f);
 
-    for (int i = 0; i < 50; i ++) {
+    for (int i = 0; i < 100; i ++) {
         addEntity();
     }
 
@@ -17,14 +17,20 @@ Game::Game()
     visualSystems.initialize();
 }
 
-void Game::update(float time)
-{
-    simulationSystems.update(time);
-}
-
 void Game::draw()
 {
     visualSystems.update();
+}
+
+void Game::printStats()
+{
+    visualSystems.printStats();
+    simulationSystems.printStats();
+}
+
+void Game::update(float seconds)
+{
+    simulationSystems.update(seconds);
 }
 
 void Game::addEntity()
@@ -32,9 +38,9 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    movementComponents.getComponent(entity)->position.x = float(rand() % 100 - 50);
-    movementComponents.getComponent(entity)->position.y = float(rand() % 100 - 50);
-    double r = rand();
-    movementComponents.getComponent(entity)->direction.x = float(sin(r));
-    movementComponents.getComponent(entity)->direction.y = float(cos(r));
+    movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
+    movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};
+    movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);
+    movementComponents.getComponent(entity)->position.x = Random::get(-20.f, 20.f);
+    movementComponents.getComponent(entity)->position.y = Random::get(-20.f, 20.f);
 }

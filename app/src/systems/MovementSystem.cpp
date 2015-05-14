@@ -1,6 +1,7 @@
 #include "MovementSystem.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "ecs/Id.hpp"
+#include "utils/Log.hpp"
 #include <math.h>
 
 MovementSystem::MovementSystem(
@@ -10,7 +11,7 @@ MovementSystem::MovementSystem(
     , movementComponents(mc)
 {}
 
-void MovementSystem::update(float time)
+void MovementSystem::update(float /*seconds*/, float delta)
 {
     ECS::id entity;
     Movement* movement;
@@ -19,6 +20,6 @@ void MovementSystem::update(float time)
         entity = getEntities()->at(i);
 
         movement = movementComponents->getComponent(entity);
-        movement->position += movement->direction * time;
+        movement->position += movement->direction * delta * movement->velocity;
     }
 }
