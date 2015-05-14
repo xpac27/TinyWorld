@@ -7,6 +7,10 @@ This is a work in progress which purpose is for me to learn C++.
 Todo:
 - [ ] make entities learn to look for food
 - [ ] make entities move randomly and die after some time
+- [ ] continus formated statistics
+- [ ] terrain height
+- [ ] batched rendering
+- [ ] controled camera
 - [x] ambiant, diffuse, specular lighting
 - [x] png textures
 - [x] obj, mtl parser
@@ -49,7 +53,7 @@ Optionaly, in order to use Clang Static Analyzer:
     apt-get update
     apt-get install cmake libc++-dev libxrandr-dev libxxf86vm-dev libxi-dev libxcursor-dev libglew-dev libpng12-dev
 
-Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to `/usr/include`.
+Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to your `/usr/include` folder.
 
 Follow ([this guide](http://www.glfw.org/docs/latest/compile.html)) to install GLFW3 from sources.
 

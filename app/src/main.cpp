@@ -33,7 +33,7 @@ int main()
     }
 
     // GLFW create context window
-    GLFWwindow* window = glfwCreateWindow(640, 480, "TinyWorld", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "TinyWorld", NULL, NULL);
     if (window) {
         glfwMakeContextCurrent(window);
         glfwSetKeyCallback(window, glfwKeyCallback);

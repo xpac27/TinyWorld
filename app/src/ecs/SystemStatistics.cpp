@@ -10,7 +10,7 @@ namespace ECS {
 
 void SystemStatistics::print(const char* name)
 {
-	printl("--", name, "-", round(averageUpdateFrequency), "-", averageUpdateDuration);
+	printl(" ", name, "  ", round(averageUpdateFrequency), "fps", (averageUpdateDuration * 1000.f), "ms");
 }
 
 void SystemStatistics::updating()
@@ -23,9 +23,9 @@ void SystemStatistics::updating()
 
 void SystemStatistics::updated()
 {
-	averageUpdateDuration *= 9;
+	averageUpdateDuration *= 9.f;
 	averageUpdateDuration += getTime() - updateTime;
-	averageUpdateDuration /= 10;
+	averageUpdateDuration /= 10.f;
 }
 
 float SystemStatistics::getTime()

@@ -7,7 +7,7 @@ Game::Game()
 {
     visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
     simulationSystems.addSystem(new MovementSystem(&movementComponents));
-    simulationSystems.setLatency(1.f / 200.f);
+    simulationSystems.setLatency(1.f / 100.f);
 
     for (int i = 0; i < 100; i ++) {
         addEntity();

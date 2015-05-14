@@ -23,8 +23,8 @@ RenderSystem::RenderSystem(
     , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
-    , eyePosition(0.f, -6.f, 10.f)
-    , eyeRotation(float(M_PI) / -6.f, 0.f, 0.f)
+    , eyePosition(0.f, -3.f, 6.f)
+    , eyeRotation(float(M_PI) / -5.f, 0.f, 0.f)
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
