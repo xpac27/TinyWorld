@@ -24,6 +24,11 @@ Mesh::Mesh(const char *filename)
     loadTextures();
 }
 
+void Mesh::debug()
+{
+    OBJ::debug(vertexes, normals, indexes);
+}
+
 void Mesh::draw()
 {
     glActiveTexture(GL_TEXTURE0);

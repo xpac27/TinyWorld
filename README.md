@@ -19,7 +19,7 @@ Todo:
 
 ## Requirements
 
-* **OpenGL** ([website](https://www.opengl.org/))
+* **OpenGL** 4.1 + ([website](https://www.opengl.org/))
 * **GLEW** 1.12.0 + ([website](http://glew.sourceforge.net/))
 * **GLFW** 3.1.1 + ([website](glfw.org/index.html))
 * **GLM** 0.9.6 + ([website](glm.g-truc.net))

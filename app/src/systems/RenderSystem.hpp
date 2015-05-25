@@ -56,6 +56,8 @@ private:
     GLint shaderLightDirection = 0;
     GLint shaderEyeWorldPosition = 0;
 
+    float count = 0.f;
+
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;
 };

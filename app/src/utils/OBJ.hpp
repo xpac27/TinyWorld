@@ -22,6 +22,8 @@ public:
     void load(const char *filename);
     void debug();
 
+    static void debug(std::vector<glm::vec3> &vertexes, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes);
+
 private:
 
     bool openFile(const char *filename, std::ifstream &fin);
@@ -38,8 +40,9 @@ private:
     std::vector<unsigned int> &indexes;
     std::vector<Material> &materials;
 
-    std::vector<glm::vec3> normalList {};
-    std::vector<glm::vec2> uvList {};
+    std::vector<glm::vec3> vertexList;
+    std::vector<glm::vec3> normalList;
+    std::vector<glm::vec2> uvList;
 
     const char * MTLLIB = "mtllib";
     const char * VT = "vt";

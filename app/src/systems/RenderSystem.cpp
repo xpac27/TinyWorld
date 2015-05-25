@@ -83,6 +83,8 @@ void RenderSystem::update()
     // TODO use constants for screen size
     perspective = glm::perspective(float(M_PI) / 2.f, 4.f / 3.f, 0.1f, 100.f);
 
+    count += 0.03;
+
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
 
@@ -96,6 +98,7 @@ void RenderSystem::update()
 
                 modelTranslation = translate(mat4(1.0f), movement->position);
                 modelRotation = orientation(movement->direction, vec3(-1.0f, 0.0f, 0.0f));
+                modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
             Wprojection = modelRotation * modelScale;

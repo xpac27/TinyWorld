@@ -1,4 +1,4 @@
-#version 410
+#version 330
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoords;
@@ -13,8 +13,9 @@ uniform mat4 W;
 
 void main(void)
 {
+    gl_Position = WVP * vec4(position, 1.0f);
+
     uv0 = textureCoords;
     normal0 = (W * vec4(normals, 0.0f)).xyz;
     worldPosition0 = (W * vec4(position, 1.0f)).xyz;
-    gl_Position = WVP * vec4(position, 1.0f);
 }

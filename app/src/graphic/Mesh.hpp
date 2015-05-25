@@ -19,6 +19,7 @@ public:
     Mesh(const char *filename);
 
     void draw();
+    void debug();
 
 private:
 

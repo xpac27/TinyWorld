@@ -1,4 +1,4 @@
-#version 410
+#version 330
 
 in vec2 uv0;
 in vec3 normal0;
@@ -29,11 +29,10 @@ void main()
     vec4 ambientColor = vec4(light.color, 1.0f) * light.ambientIntensity;
     vec3 lightDirection = -light.direction;
     vec3 normal = normalize(normal0);
-    float diffuseFactor = dot(normal, -light.direction);
+    float diffuseFactor = dot(normal, lightDirection);
 
     if (diffuseFactor > 0) {
         diffuseColor = vec4(light.color, 1.0f) * light.diffuseIntensity * diffuseFactor;
-
 
         vec3 vertexToEye = normalize(eyeWorldPositon - worldPosition0);
         vec3 lightReflect = normalize(reflect(light.direction, normal));
@@ -42,7 +41,8 @@ void main()
         if (specularFactor > 0) {
             specularColor = vec4(light.color, 1.0f) * specularIntensity * specularFactor;
         }
+
     }
 
-	frag_colour = texture(textureUnit, uv0) * (ambientColor + diffuseColor + specularColor);
+    frag_colour = texture(textureUnit, uv0) * (ambientColor + diffuseColor + specularColor);
 }

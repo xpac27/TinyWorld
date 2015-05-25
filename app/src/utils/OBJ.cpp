@@ -17,6 +17,9 @@ void OBJ::load(const char *filename)
     if (openFile(filename, fin)) {
         parseLines(fin);
     }
+    // for (glm::vec3 n : normals) {
+    //     printl("  vn", n.x, n.y, n.z);
+    // }
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
 }
@@ -61,7 +64,7 @@ void OBJ::parseVertex(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    vertexes.push_back(vec3(f1, f2, f3));
+    vertexList.push_back(vec3(f1, f2, f3));
 }
 
 void OBJ::parseUVs(ifstream &fin)
@@ -87,21 +90,16 @@ void OBJ::parseFace(ifstream &fin)
             fin >> u[j];
             if ((fin.rdstate() & ifstream::failbit) == 0) {
                 if (j == 0) {
-                    indexes.push_back(u[0]-1);
+                    vertexes.push_back(vertexList[u[0]-1]);
+                    indexes.push_back(unsigned(vertexes.size()-1));
                     fin.read(b, 1);
                     if (b[0] == ' ') break;
                 } else if (j == 1) {
-                    if (uvs.size() < u[0]) {
-                        uvs.resize(u[0], vec2());
-                    }
-                    uvs[u[0]-1] = uvList[u[1]-1];
+                    uvs.push_back(uvList[u[1]-1]);
                     fin.read(b, 1);
                     if (b[0] == ' ') break;
                 } else if (j == 2) {
-                    if (normals.size() < u[0]) {
-                        normals.resize(u[0], vec3());
-                    }
-                    normals[u[0]-1] = normalList[u[2]-1];
+                    normals.push_back(normalList[u[2]-1]);
                 }
             } else {
                 fin.clear();
@@ -120,14 +118,19 @@ void OBJ::parseMTLLib(ifstream &fin)
 
 void OBJ::debug()
 {
+    debug(vertexes, normals, indexes);
+}
+
+void OBJ::debug(vector<glm::vec3> &_vertexes, vector<glm::vec3> &_normals, vector<unsigned int> &_indexes)
+{
     printl("\n---- OBJ");
-    for (auto v : vertexes) {
+    for (auto v : _vertexes) {
         printl("  v", v.x, v.y, v.z);
     }
-    for (auto n : normals) {
+    for (auto n : _normals) {
         printl("  vn", n.x, n.y, n.z);
     }
-    for (unsigned int i = 0; i < indexes.size(); i += 3) {
-        printl("  f", indexes[i+0], indexes[i+1], indexes[i+2]);
+    for (unsigned int i = 0; i < _indexes.size(); i += 3) {
+        printl("  f", _indexes[i+0], _indexes[i+1], _indexes[i+2]);
     }
 }

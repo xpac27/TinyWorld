@@ -17,7 +17,6 @@ namespace
                     CHECK(lifeComponents.hasComponent(e) == false);
                 }
 
-
                 GIVEN("A Life component added to an Entity") {
                     lifeComponents.addComponent(e);
 
