@@ -18,7 +18,7 @@ uniform sampler2D textureUnit;
 
 uniform directionalLight light;
 
-uniform vec3 eyeWorldPositon;
+uniform vec3 eyeWorldPosition;
 uniform float specularIntensity;
 uniform float specularPower;
 
@@ -29,20 +29,25 @@ void main()
     vec4 ambientColor = vec4(light.color, 1.0f) * light.ambientIntensity;
     vec3 lightDirection = -light.direction;
     vec3 normal = normalize(normal0);
+    vec3 vertexToEye = normalize(eyeWorldPosition - worldPosition0);
     float diffuseFactor = dot(normal, lightDirection);
+    float edgeFactor = dot(vertexToEye, normal);
+
+    if (edgeFactor < 0.3) {
+        diffuseFactor = 5;
+    }
 
     if (diffuseFactor > 0) {
         diffuseColor = vec4(light.color, 1.0f) * light.diffuseIntensity * diffuseFactor;
 
-        vec3 vertexToEye = normalize(eyeWorldPositon - worldPosition0);
         vec3 lightReflect = normalize(reflect(light.direction, normal));
         float specularFactor = dot(vertexToEye, lightReflect);
         specularFactor = pow(specularFactor, specularPower);
         if (specularFactor > 0) {
             specularColor = vec4(light.color, 1.0f) * specularIntensity * specularFactor;
         }
-
     }
 
     frag_colour = texture(textureUnit, uv0) * (ambientColor + diffuseColor + specularColor);
+
 }

@@ -70,7 +70,7 @@ void RenderSystem::update()
     glUniform1f(shaderLightAmbientIntensity, light->ambientIntensity);
     glUniform1f(shaderLightDiffuseIntensity, light->diffuseIntensity);
     glUniform1f(shaderSpecularIntensity, 4.0);
-    glUniform1f(shaderSpecularPower, 32.0);
+    glUniform1f(shaderSpecularPower, 16.0);
     glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     viewTranslation = translate(mat4(1.0f), eyePosition * -1.f);
@@ -101,7 +101,7 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            Wprojection = modelRotation * modelScale;
+            Wprojection = modelTranslation * modelRotation * modelScale;
             WVPprojection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
 
             glUniformMatrix4fv(shaderW, 1, GL_FALSE, &Wprojection[0][0]);
