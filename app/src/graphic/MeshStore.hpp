@@ -18,4 +18,5 @@ private:
     Mesh* pyramid;
     Mesh* cacodemon;
     Mesh* goomba;
+    Mesh* flan;
 };
