@@ -70,7 +70,7 @@ void RenderSystem::update()
     glUniform1f(shaderLightAmbientIntensity, light->ambientIntensity);
     glUniform1f(shaderLightDiffuseIntensity, light->diffuseIntensity);
     glUniform1f(shaderSpecularIntensity, 4.0);
-    glUniform1f(shaderSpecularPower, 16.0);
+    glUniform1f(shaderSpecularPower, 32.0);
     glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     viewTranslation = translate(mat4(1.0f), eyePosition * -1.f);

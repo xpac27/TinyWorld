@@ -17,9 +17,8 @@ void OBJ::load(const char *filename)
     if (openFile(filename, fin)) {
         parseLines(fin);
     }
-    // for (glm::vec3 n : normals) {
-    //     printl("  vn", n.x, n.y, n.z);
-    // }
+    printl("obj loaded with ", vertexes.size(), "vertexes ", indexes.size(), "indexes");
+    assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
 }
@@ -35,28 +34,31 @@ bool OBJ::openFile(const char *filename, ifstream &fin)
 
 void OBJ::parseLines(ifstream &fin)
 {
-    char b[1];
-    bool ignoring = false;
+    // TODO add asserts to notify of unsuported file format
     while (!fin.eof()) {
-        if (ignoring) {
-            fin.read(b, 1);
-            if (b[0] == '\n') ignoring = false;
+        char k[7] {' '};
+        fin >> k;
+        if (strncmp(k, MTLLIB, 7) == 0) {
+            parseMTLLib(fin);
+        } else if (strncmp(k, VT, 3) == 0) {
+            parseUVs(fin);
+        } else if (strncmp(k, VN, 3) == 0) {
+            parseNormal(fin);
+        } else if (strncmp(k, V, 2) == 0) {
+            parseVertex(fin);
+        } else if (strncmp(k, F, 2) == 0) {
+            parseFace(fin);
         } else {
-            char k[7] {' '};
-            fin >> k;
-            if (strncmp(k, MTLLIB, 7) == 0) {
-                parseMTLLib(fin);
-            } else if (strncmp(k, VT, 3) == 0) {
-                parseUVs(fin);
-            } else if (strncmp(k, VN, 3) == 0) {
-                parseNormal(fin);
-            } else if (strncmp(k, V, 2) == 0) {
-                parseVertex(fin);
-            } else if (strncmp(k, F, 2) == 0) {
-                parseFace(fin);
-            }
-            ignoring = true;
+            skipLine(fin);
         }
+    }
+}
+
+void OBJ::skipLine(ifstream &fin)
+{
+    char b[1] = {' '};
+    while (!fin.eof() && b[0] != '\n') {
+        fin.read(b, 1);
     }
 }
 
@@ -64,7 +66,7 @@ void OBJ::parseVertex(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    vertexList.push_back(vec3(f1, f2, f3));
+    vertexes.push_back(vec3(f1, f2, f3));
 }
 
 void OBJ::parseUVs(ifstream &fin)
@@ -83,30 +85,31 @@ void OBJ::parseNormal(ifstream &fin)
 
 void OBJ::parseFace(ifstream &fin)
 {
-    char b[1] {' '};
-    unsigned int u[3] {0};
-    for (unsigned int i = 0; i < 3; i ++) {
-        for (unsigned int j = 0; j < 3; j ++) {
-            fin >> u[j];
-            if ((fin.rdstate() & ifstream::failbit) == 0) {
-                if (j == 0) {
-                    vertexes.push_back(vertexList[u[0]-1]);
-                    indexes.push_back(unsigned(vertexes.size()-1));
-                    fin.read(b, 1);
-                    if (b[0] == ' ') break;
-                } else if (j == 1) {
-                    uvs.push_back(uvList[u[1]-1]);
-                    fin.read(b, 1);
-                    if (b[0] == ' ') break;
-                } else if (j == 2) {
-                    normals.push_back(normalList[u[2]-1]);
-                }
-            } else {
-                fin.clear();
-                fin.ignore();
-            }
+    unsigned int values[3] {0};
+    for (unsigned int point = 0; point < 3; point ++) {
+        for (unsigned int type = 0; type < 3; type ++) {
+            fin >> values[type];
+            skipNextChar(fin);
         }
+        addPoint(values);
     }
+}
+
+void OBJ::addPoint(unsigned int values[3])
+{
+    indexes.push_back(values[0] - 1);
+
+    uvs.resize(vertexes.size());
+    uvs[values[0] - 1] = uvList[values[1] - 1];
+
+    normals.resize(vertexes.size());
+    normals[values[0] - 1] = normalList[values[2] - 1];
+}
+
+void OBJ::skipNextChar(std::ifstream &fin)
+{
+    fin.clear();
+    fin.ignore();
 }
 
 void OBJ::parseMTLLib(ifstream &fin)
@@ -123,15 +126,20 @@ void OBJ::debug()
 
 void OBJ::debug(vector<glm::vec3> &_vertexes, vector<glm::vec3> &_normals, vector<unsigned int> &_indexes)
 {
-    printl("\n----<<< OBJ");
+    unsigned int index = 0;
     for (auto v : _vertexes) {
-        printl("  v", v.x, v.y, v.z);
+        printl(index++, "v", v.x, v.y, v.z);
     }
+    print("\n");
+
+    index = 0;
     for (auto n : _normals) {
-        printl("  vn", n.x, n.y, n.z);
+        printl(index++, "vn", n.x, n.y, n.z);
     }
+    print("\n");
+
     for (unsigned int i = 0; i < _indexes.size(); i += 3) {
-        printl("  f", _indexes[i+0], _indexes[i+1], _indexes[i+2]);
+        printl("-", _indexes[i+0], _indexes[i+1], _indexes[i+2]);
     }
     printl("\n---->>> ", _vertexes.size(), "v -", _normals.size(), "n -", _indexes.size(), "i");
 }

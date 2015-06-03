@@ -33,6 +33,9 @@ private:
     void parseNormal(std::ifstream &fin);
     void parseFace(std::ifstream &fin);
     void parseMTLLib(std::ifstream &fin);
+    void skipNextChar(std::ifstream &fin);
+    void skipLine(std::ifstream &fin);
+    void addPoint(unsigned int values[3]);
 
     std::vector<glm::vec3> &vertexes;
     std::vector<glm::vec2> &uvs;
@@ -40,7 +43,6 @@ private:
     std::vector<unsigned int> &indexes;
     std::vector<Material> &materials;
 
-    std::vector<glm::vec3> vertexList;
     std::vector<glm::vec3> normalList;
     std::vector<glm::vec2> uvList;
 

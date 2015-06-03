@@ -26,10 +26,8 @@ void Log::dump(Visibility* c)
     printl("Visibility");
     switch (c->meshType) {
         case MeshType::CUBE: printl("  meshType: cube"); break;
-        case MeshType::SQUARE: printl("  meshType: square"); break;
-        case MeshType::PYRAMID: printl("  meshType: pyramid"); break;
-        case MeshType::GOOMBA: printl("  meshType: goomba"); break;
         case MeshType::CACODEMON: printl("  meshType: cacodemon"); break;
+        case MeshType::FLAN: printl("  meshType: flan"); break;
     }
 }
 

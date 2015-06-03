@@ -14,9 +14,6 @@ public:
 private:
 
     Mesh* cube;
-    Mesh* square;
-    Mesh* pyramid;
     Mesh* cacodemon;
-    Mesh* goomba;
     Mesh* flan;
 };
