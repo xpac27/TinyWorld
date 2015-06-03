@@ -6,5 +6,5 @@ struct Visibility
 {
     MeshType meshType { MeshType::FLAN };
 
-    glm::vec3 scale {1.f, 1.f, 1.f};
+    glm::vec3 scale {30.f, 30.f, 30.f};
 };

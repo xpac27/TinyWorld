@@ -123,7 +123,7 @@ void OBJ::debug()
 
 void OBJ::debug(vector<glm::vec3> &_vertexes, vector<glm::vec3> &_normals, vector<unsigned int> &_indexes)
 {
-    printl("\n---- OBJ");
+    printl("\n----<<< OBJ");
     for (auto v : _vertexes) {
         printl("  v", v.x, v.y, v.z);
     }
@@ -133,4 +133,5 @@ void OBJ::debug(vector<glm::vec3> &_vertexes, vector<glm::vec3> &_normals, vecto
     for (unsigned int i = 0; i < _indexes.size(); i += 3) {
         printl("  f", _indexes[i+0], _indexes[i+1], _indexes[i+2]);
     }
+    printl("\n---->>> ", _vertexes.size(), "v -", _normals.size(), "n -", _indexes.size(), "i");
 }

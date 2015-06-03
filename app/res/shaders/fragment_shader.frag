@@ -31,11 +31,6 @@ void main()
     vec3 normal = normalize(normal0);
     vec3 vertexToEye = normalize(eyeWorldPosition - worldPosition0);
     float diffuseFactor = dot(normal, lightDirection);
-    float edgeFactor = dot(vertexToEye, normal);
-
-    if (edgeFactor < 0.3) {
-        diffuseFactor = 5;
-    }
 
     if (diffuseFactor > 0) {
         diffuseColor = vec4(light.color, 1.0f) * light.diffuseIntensity * diffuseFactor;

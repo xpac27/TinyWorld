@@ -2,13 +2,14 @@
 #include "graphic/Mesh.hpp"
 
 MeshStore::MeshStore()
-    : cube(new Mesh("cube.obj"))
-    , square(new Mesh("square.obj"))
-    , pyramid(new Mesh("pyramid.obj"))
-    , cacodemon(new Mesh("cacodemon.obj"))
-    , goomba(new Mesh("goomba.obj"))
-    , flan(new Mesh("flan.obj"))
+    // : cube(new Mesh("cube.obj"))
+    // , square(new Mesh("square.obj"))
+    // , pyramid(new Mesh("pyramid.obj"))
+    // , cacodemon(new Mesh("cacodemon.obj"))
+    // , goomba(new Mesh("goomba.obj"))
+    : flan(new Mesh("flan.obj"))
 {
+    flan->debug();
 }
 
 Mesh* MeshStore::getMesh(MeshType type)
