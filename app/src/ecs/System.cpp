@@ -19,12 +19,16 @@ void System::onEntityAdded(id entity)
 {
     if (std::find(entities.begin(), entities.end(), entity) == entities.end()) {
         entities.push_back(entity);
+        entityAdded(entity);
     }
 }
 
 void System::onEntityRemoved(id entity)
 {
-    entities.erase(std::find(entities.begin(), entities.end(), entity));
+    if (std::find(entities.begin(), entities.end(), entity) != entities.end()) {
+        entities.erase(std::find(entities.begin(), entities.end(), entity));
+        entityRemoved(entity);
+    }
 }
 
 void System::update()
@@ -38,6 +42,16 @@ void System::update(float /*seconds*/, float /*delta*/)
 }
 
 void System::initialize()
+{
+    // Nothing to do...
+}
+
+void System::entityAdded(id entity)
+{
+    // Nothing to do...
+}
+
+void System::entityRemoved(id entity)
 {
     // Nothing to do...
 }

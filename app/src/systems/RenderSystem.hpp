@@ -1,4 +1,5 @@
 #pragma once
+#include "ecs/Id.hpp"
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
@@ -22,8 +23,13 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
-    void initialize();
-    void update();
+    void initialize() override;
+    void update() override;
+
+protected:
+
+    void entityAdded(ECS::id entity) override;
+    void entityRemoved(ECS::id entity) override;
 
 private:
 
@@ -34,19 +40,6 @@ private:
     DirectionalLight* light;
     Program* program;
 
-    glm::vec3 eyePosition;
-    glm::vec3 eyeRotation;
-    glm::mat4 modelScale;
-    glm::mat4 modelRotation;
-    glm::mat4 modelTranslation;
-    glm::mat4 viewTranslation;
-    glm::mat4 viewRotation;
-    glm::mat4 perspective;
-    glm::mat4 Wprojection;
-    glm::mat4 WVPprojection;
-
-    GLint shaderW = 0;
-    GLint shaderWVP = 0;
     GLint shaderTextureUnit = 0;
     GLint shaderLightColor = 0;
     GLint shaderLightAmbientIntensity = 0;
@@ -55,6 +48,9 @@ private:
     GLint shaderSpecularPower = 0;
     GLint shaderLightDirection = 0;
     GLint shaderEyeWorldPosition = 0;
+
+    std::vector<glm::mat4> Wprojections[3];
+    std::vector<glm::mat4> WVPprojections[3];
 
     float count = 0.f;
 

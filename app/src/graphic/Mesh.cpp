@@ -29,12 +29,28 @@ void Mesh::debug()
     OBJ::debug(vertexes, normals, indexes);
 }
 
-void Mesh::draw()
+void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, WVPs, GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
+
+    draw(instances);
+}
+
+void Mesh::draw(unsigned int instances)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
+
+    if (instances > 0) {
+        glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);
+    } else {
+        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
+    }
     glBindVertexArray(0);
 }
 
@@ -62,6 +78,20 @@ void Mesh::loadVAO()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[IND_VB]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
+    for (unsigned int i = 0; i < 4 ; i++) {
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+        glVertexAttribDivisor(3 + i, 1);
+        glEnableVertexAttribArray(3 + i);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
+    for (unsigned int i = 0; i < 4 ; i++) {
+        glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+        glVertexAttribDivisor(7 + i, 1);
+        glEnableVertexAttribArray(7 + i);
+    }
 
     glBindVertexArray(0);
 }

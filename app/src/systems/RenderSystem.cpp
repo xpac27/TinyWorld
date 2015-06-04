@@ -14,17 +14,16 @@
 using namespace std;
 using namespace glm;
 using namespace Log;
+using namespace ECS;
 
 RenderSystem::RenderSystem(
-    ECS::ComponentManager<Visibility>* vc,
-    ECS::ComponentManager<Movement>* mc
+    ComponentManager<Visibility>* vc,
+    ComponentManager<Movement>* mc
 )
     : System({vc, mc})
     , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
-    , eyePosition(0.f, -3.f, 6.f)
-    , eyeRotation(float(M_PI) / -5.f, 0.f, 0.f)
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
@@ -44,8 +43,6 @@ void RenderSystem::initialize()
 
     program->link();
 
-    shaderW = program->getLocation("W");
-    shaderWVP = program->getLocation("WVP");
     shaderTextureUnit = program->getLocation("textureUnit");
     shaderLightColor = program->getLocation("light.color");
     shaderLightAmbientIntensity = program->getLocation("light.ambientIntensity");
@@ -58,9 +55,18 @@ void RenderSystem::initialize()
 
 void RenderSystem::update()
 {
-    ECS::id entity;
+    id entity;
     Movement* movement;
     Visibility* visibility;
+
+    glm::vec3 eyePosition(0.f, -3.f, 6.f);
+    glm::vec3 eyeRotation(float(M_PI) / -5.f, 0.f, 0.f);
+    glm::mat4 modelScale;
+    glm::mat4 modelRotation;
+    glm::mat4 modelTranslation;
+    glm::mat4 viewTranslation;
+    glm::mat4 viewRotation;
+    glm::mat4 perspective;
 
     setGLStates();
     program->use();
@@ -85,6 +91,9 @@ void RenderSystem::update()
 
     count += 0.03;
 
+    unsigned int type = 0;
+    unsigned int totals[3] = {0};
+
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
 
@@ -101,17 +110,35 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            Wprojection = modelTranslation * modelRotation * modelScale;
-            WVPprojection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
-
-            glUniformMatrix4fv(shaderW, 1, GL_FALSE, &Wprojection[0][0]);
-            glUniformMatrix4fv(shaderWVP, 1, GL_FALSE, &WVPprojection[0][0]);
-
-            meshStore->getMesh(visibility->meshType)->draw();
+            // TODO create a class MeshBatch(type) with inc, dec and a draw functions
+            // and have a vector of MeshBatch in a class MeshBatchManager
+            // with drawBatches, inc(type), dec(type) (onEntityAdded / Removed) functions
+            type = unsigned(visibility->meshType);
+            Wprojections[type][totals[type]] = modelTranslation * modelRotation * modelScale;
+            WVPprojections[type][totals[type]] = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
+            totals[type] ++;
         }
     }
 
+    for (unsigned int t = 0; t < 3; t ++) {
+        meshStore->getMesh(MeshType(t))->draw(totals[t], Wprojections[t].data(), WVPprojections[t].data());
+    }
+
     unsetGLStates();
+}
+
+void RenderSystem::entityAdded(id entity)
+{
+    if (visibilityComponents->hasComponent(entity)) {
+        Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].push_back(mat4());
+    }
+}
+
+void RenderSystem::entityRemoved(id entity)
+{
+    if (visibilityComponents->hasComponent(entity)) {
+        Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].pop_back();
+    }
 }
 
 void RenderSystem::setGLStates()

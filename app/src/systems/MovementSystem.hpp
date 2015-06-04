@@ -5,7 +5,9 @@
 namespace ECS {
     template <typename T> class ComponentManager;
 }
-class MovementSystem : public ECS::System {
+
+class MovementSystem : public ECS::System
+{
 
 public:
 
@@ -13,7 +15,7 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
-    void update(float seconds, float delta);
+    void update(float seconds, float delta) override;
 
 private:
 
