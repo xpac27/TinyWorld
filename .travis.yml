@@ -6,7 +6,7 @@ branches:
 
 install:
     - brew update
-    - brew install glew glfw3 glm libpng cmake
+    - brew install glew glfw3 glm
 
 script:
     - make configure
