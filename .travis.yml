@@ -6,9 +6,10 @@ branches:
 
 install:
     - brew update
-    - brew install glew glfw3 glm
+    - brew install glew
+    - brew install glfw3
+    - brew install glm
 
 script:
     - make configure
-    - make compile
     - make test
