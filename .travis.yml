@@ -1,0 +1,14 @@
+os: osx
+language: cpp
+compiler: clang
+branches:
+    only: master
+
+install:
+    - brew update
+    - brew install glew glfw3 glm libpng cmake
+
+script:
+    - make configure
+    - make compile
+    - make test
