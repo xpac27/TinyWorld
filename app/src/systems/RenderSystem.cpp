@@ -2,6 +2,7 @@
 #include "utils/Log.hpp"
 #include "utils/Shader.hpp"
 #include "utils/Program.hpp"
+#include "utils/Aggregator.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
@@ -14,17 +15,18 @@
 using namespace std;
 using namespace glm;
 using namespace Log;
+using namespace ECS;
 
 RenderSystem::RenderSystem(
-    ECS::ComponentManager<Visibility>* vc,
-    ECS::ComponentManager<Movement>* mc
+    ComponentManager<Visibility>* vc,
+    ComponentManager<Movement>* mc
 )
     : System({vc, mc})
     , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
-    , eyePosition(0.f, -3.f, 6.f)
-    , eyeRotation(float(M_PI) / -5.f, 0.f, 0.f)
+    , WVPprojections(new Aggregator<mat4>())
+    , Wprojections(new Aggregator<mat4>())
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
@@ -44,8 +46,6 @@ void RenderSystem::initialize()
 
     program->link();
 
-    shaderW = program->getLocation("W");
-    shaderWVP = program->getLocation("WVP");
     shaderTextureUnit = program->getLocation("textureUnit");
     shaderLightColor = program->getLocation("light.color");
     shaderLightAmbientIntensity = program->getLocation("light.ambientIntensity");
@@ -58,9 +58,18 @@ void RenderSystem::initialize()
 
 void RenderSystem::update()
 {
-    ECS::id entity;
+    id entity;
     Movement* movement;
     Visibility* visibility;
+
+    glm::vec3 eyePosition(0.f, -3.f, 6.f);
+    glm::vec3 eyeRotation(float(M_PI) / -5.f, 0.f, 0.f);
+    glm::mat4 modelScale;
+    glm::mat4 modelRotation;
+    glm::mat4 modelTranslation;
+    glm::mat4 viewTranslation;
+    glm::mat4 viewRotation;
+    glm::mat4 perspective;
 
     setGLStates();
     program->use();
@@ -91,8 +100,6 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             visibility = visibilityComponents->getComponent(entity);
 
-            modelScale = scale(mat4(1.0f), visibility->scale);
-
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
 
@@ -101,15 +108,19 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            Wprojection = modelTranslation * modelRotation * modelScale;
-            WVPprojection = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
+            modelScale = scale(mat4(1.0f), visibility->scale);
 
-            glUniformMatrix4fv(shaderW, 1, GL_FALSE, &Wprojection[0][0]);
-            glUniformMatrix4fv(shaderWVP, 1, GL_FALSE, &WVPprojection[0][0]);
-
-            meshStore->getMesh(visibility->meshType)->draw();
+            WVPprojections->add(visibility->meshType, perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
+            Wprojections->add(visibility->meshType, modelTranslation * modelRotation * modelScale);
         }
     }
+
+    for (unsigned int t = 0; t < WVPprojections->size(); t ++) {
+        meshStore->getMesh(MeshType(t))->draw(WVPprojections->size(t), WVPprojections->get(t)->data(), Wprojections->get(t)->data());
+    }
+
+    WVPprojections->clear();
+    Wprojections->clear();
 
     unsetGLStates();
 }

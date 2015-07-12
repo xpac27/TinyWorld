@@ -4,8 +4,10 @@
 #include "utils/Log.hpp"
 #include <math.h>
 
+using namespace ECS;
+
 MovementSystem::MovementSystem(
-    ECS::ComponentManager<Movement>* mc
+    ComponentManager<Movement>* mc
 )
     : System({mc})
     , movementComponents(mc)
@@ -13,7 +15,7 @@ MovementSystem::MovementSystem(
 
 void MovementSystem::update(float /*seconds*/, float delta)
 {
-    ECS::id entity;
+    id entity;
     Movement* movement;
 
     // for (unsigned int i = 0; i < getEntities()->size(); i ++) {

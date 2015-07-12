@@ -1,4 +1,5 @@
 #pragma once
+#include "ecs/Id.hpp"
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
@@ -11,6 +12,7 @@ namespace ECS {
 class MeshStore;
 class Program;
 struct DirectionalLight;
+template <typename T> class Aggregator;
 
 class RenderSystem : public ECS::System
 {
@@ -22,8 +24,8 @@ public:
         ECS::ComponentManager<Movement>* mc
     );
 
-    void initialize();
-    void update();
+    void initialize() override;
+    void update() override;
 
 private:
 
@@ -33,20 +35,10 @@ private:
     MeshStore* meshStore;
     DirectionalLight* light;
     Program* program;
+    Aggregator<glm::mat4>* WVPprojections;
+    Aggregator<glm::mat4>* Wprojections;
 
-    glm::vec3 eyePosition;
-    glm::vec3 eyeRotation;
-    glm::mat4 modelScale;
-    glm::mat4 modelRotation;
-    glm::mat4 modelTranslation;
-    glm::mat4 viewTranslation;
-    glm::mat4 viewRotation;
-    glm::mat4 perspective;
-    glm::mat4 Wprojection;
-    glm::mat4 WVPprojection;
-
-    GLint shaderW = 0;
-    GLint shaderWVP = 0;
+    // TODO wrap that in a class
     GLint shaderTextureUnit = 0;
     GLint shaderLightColor = 0;
     GLint shaderLightAmbientIntensity = 0;

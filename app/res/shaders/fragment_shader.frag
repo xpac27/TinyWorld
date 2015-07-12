@@ -44,5 +44,4 @@ void main()
     }
 
     frag_colour = texture(textureUnit, uv0) * (ambientColor + diffuseColor + specularColor);
-
 }

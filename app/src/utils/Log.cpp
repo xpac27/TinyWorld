@@ -3,6 +3,24 @@
 #include "components/Life.hpp"
 #include "components/Visibility.hpp"
 
+void Log::nl()
+{
+    std::cout << "\033[0m" << std::endl;
+}
+
+void Log::style(Color foreground, Color background, Mode mode)
+{
+    std::cout << "\033[" << mode;
+    if (foreground != NONE) std::cout << ";" << (foreground + 29);
+    if (background != NONE) std::cout << ";" << (background + 39);
+    std::cout << "m";
+}
+
+void Log::style(Color foreground, Mode mode)
+{
+    style(foreground, NONE, mode);
+}
+
 void Log::dump(ECS::id entity)
 {
     printl("Entity", entity);
@@ -12,7 +30,8 @@ void Log::dump(Movement* c)
 {
     printl("Movement");
     printl("  position: ", c->position.x, c->position.y, c->position.z);
-    // printl("  rotation: ", c->rotation.x, c->rotation.y, c->rotation.z);
+    printl("  direction: ", c->direction.x, c->direction.y, c->direction.z);
+    printl("  velocity: ", c->velocity);
 }
 
 void Log::dump(Life* c)
@@ -29,9 +48,5 @@ void Log::dump(Visibility* c)
         case MeshType::CACODEMON: printl("  meshType: cacodemon"); break;
         case MeshType::FLAN: printl("  meshType: flan"); break;
     }
-}
-
-void Log::nl()
-{
-    std::cout << std::endl;
+    printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);
 }
