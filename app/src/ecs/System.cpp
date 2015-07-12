@@ -46,12 +46,12 @@ void System::initialize()
     // Nothing to do...
 }
 
-void System::entityAdded(id entity)
+void System::entityAdded(id /*entity*/)
 {
     // Nothing to do...
 }
 
-void System::entityRemoved(id entity)
+void System::entityRemoved(id /*entity*/)
 {
     // Nothing to do...
 }
