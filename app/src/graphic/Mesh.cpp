@@ -32,9 +32,7 @@ void Mesh::debug()
 
 void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
 {
-    if (instances == 0) {
-        return;
-    }
+    if (instances == 0) return;
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, WVPs, GL_DYNAMIC_DRAW);
@@ -42,24 +40,12 @@ void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
 
-    draw(instances);
-}
-
-void Mesh::draw(unsigned int instances)
-{
-    if (instances == 0) {
-        return;
-    }
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
 
-    if (instances > 0) {
-        glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);
-    } else {
-        glDrawElements(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0);
-    }
+    glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);
+
     glBindVertexArray(0);
 }
 

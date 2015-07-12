@@ -21,7 +21,6 @@ public:
 
     Mesh(const char *filename);
 
-    void draw(unsigned int instances = 0);
     void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
     void debug();
 
