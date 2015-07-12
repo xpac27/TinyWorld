@@ -12,6 +12,7 @@ namespace ECS {
 class MeshStore;
 class Program;
 struct DirectionalLight;
+template <typename T> class Aggregator;
 
 class RenderSystem : public ECS::System
 {
@@ -39,6 +40,8 @@ private:
     MeshStore* meshStore;
     DirectionalLight* light;
     Program* program;
+    Aggregator<glm::mat4>* WVPprojections;
+    Aggregator<glm::mat4>* Wprojections;
 
     // TODO wrap that in a class
     GLint shaderTextureUnit = 0;
@@ -49,9 +52,6 @@ private:
     GLint shaderSpecularPower = 0;
     GLint shaderLightDirection = 0;
     GLint shaderEyeWorldPosition = 0;
-
-    std::vector<glm::mat4> WVPprojections[3];
-    std::vector<glm::mat4> Wprojections[3];
 
     float count = 0.f;
 

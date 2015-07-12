@@ -11,7 +11,7 @@ namespace
                 aggregator.add(0, "a");
 
                 THEN("Index 0 contains 1 item") {
-                    CHECK(aggregator.get(0)->size() == 1);
+                    CHECK(aggregator.size(0) == 1);
                 }
 
                 THEN("Index 0's contains 'a'") {
@@ -30,7 +30,7 @@ namespace
                 aggregator.clear(0);
 
                 THEN("Index 0 contains 0 items") {
-                    CHECK(aggregator.get(0)->size() == 0);
+                    CHECK(aggregator.size(0) == 0);
                 }
             }
 
@@ -38,7 +38,7 @@ namespace
                 aggregator.clear(1);
 
                 THEN("Index 1 contains 0 items") {
-                    CHECK(aggregator.get(1)->size() == 0);
+                    CHECK(aggregator.size(1) == 0);
                 }
             }
         }
@@ -53,11 +53,11 @@ namespace
                 aggregator.clear();
 
                 THEN("Index 0 contains 0 items") {
-                    CHECK(aggregator.get(0)->size() == 0);
+                    CHECK(aggregator.size(0) == 0);
                 }
 
                 THEN("Index 1 contains 0 items") {
-                    CHECK(aggregator.get(1)->size() == 0);
+                    CHECK(aggregator.size(1) == 0);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace
                 aggregator.add(0, "a2");
 
                 THEN("Index 0 contains 2 item") {
-                    CHECK(aggregator.get(0)->size() == 2);
+                    CHECK(aggregator.size(0) == 2);
                 }
 
                 THEN("Index 0's contains 'a1' and 'a2'") {
@@ -86,7 +86,7 @@ namespace
                 aggregator.add(1, "b4");
 
                 THEN("Index 1 contains 4 item") {
-                    CHECK(aggregator.get(1)->size() == 4);
+                    CHECK(aggregator.size(1) == 4);
                 }
 
                 THEN("Index 1's contains 'b1', 'b2', 'b3' and 'b4'") {
@@ -101,7 +101,7 @@ namespace
                 aggregator.add(3, "c1");
 
                 THEN("Index 3 contains 1 item") {
-                    CHECK(aggregator.get(3)->size() == 1);
+                    CHECK(aggregator.size(3) == 1);
                 }
 
                 THEN("Index 3's contains 'c1'") {

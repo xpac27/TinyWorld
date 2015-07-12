@@ -2,6 +2,7 @@
 #include "utils/Log.hpp"
 #include "utils/Shader.hpp"
 #include "utils/Program.hpp"
+#include "utils/Aggregator.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
@@ -24,6 +25,8 @@ RenderSystem::RenderSystem(
     , meshStore(new MeshStore())
     , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
     , program(new Program())
+    , WVPprojections(new Aggregator<mat4>())
+    , Wprojections(new Aggregator<mat4>())
     , visibilityComponents(vc)
     , movementComponents(mc)
 {}
@@ -91,8 +94,6 @@ void RenderSystem::update()
 
     count += 0.03;
 
-    unsigned int type = 0;
-
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
 
@@ -109,19 +110,15 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            // TODO create a class MeshBatch(type) with inc, dec and a draw functions
-            // and have a vector of MeshBatch in a class MeshBatchManager
-            // with drawBatches, inc(type), dec(type) (onEntityAdded / Removed) functions
-            type = unsigned(visibility->meshType);
-            WVPprojections[type].push_back(perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
-            Wprojections[type].push_back(modelTranslation * modelRotation * modelScale);
+            WVPprojections->add(visibility->meshType, perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
+            Wprojections->add(visibility->meshType, modelTranslation * modelRotation * modelScale);
         }
     }
 
     for (unsigned int t = 0; t < 3; t ++) {
-        meshStore->getMesh(MeshType(t))->draw(unsigned(Wprojections[t].size()), WVPprojections[t].data(), Wprojections[t].data());
-        WVPprojections[t].clear();
-        Wprojections[t].clear();
+        meshStore->getMesh(MeshType(t))->draw(WVPprojections->size(t), WVPprojections->get(t)->data(), Wprojections->get(t)->data());
+        WVPprojections->clear(t);
+        Wprojections->clear(t);
     }
 
     unsetGLStates();
@@ -130,14 +127,14 @@ void RenderSystem::update()
 void RenderSystem::entityAdded(id entity)
 {
     if (visibilityComponents->hasComponent(entity)) {
-        Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].push_back(mat4());
+        // Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].push_back(mat4());
     }
 }
 
 void RenderSystem::entityRemoved(id entity)
 {
     if (visibilityComponents->hasComponent(entity)) {
-        Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].pop_back();
+        // Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].pop_back();
     }
 }
 
