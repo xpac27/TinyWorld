@@ -10,7 +10,7 @@ configure:
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
-	@make app -C build
+	@make app -C build -j8
 
 run:
 	@echo "$(S) Running the app $(E)"
@@ -22,7 +22,7 @@ debug:
 
 test:
 	@echo "$(S) Compiling tests $(E)"
-	@make tests -C build
+	@make tests -C build -j8
 	@echo "$(S) Running tests $(E)"
 	@./build/tests/tests
 

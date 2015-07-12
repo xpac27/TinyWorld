@@ -100,8 +100,6 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             visibility = visibilityComponents->getComponent(entity);
 
-            modelScale = scale(mat4(1.0f), visibility->scale);
-
             if (movementComponents->hasComponent(entity)) {
                 movement = movementComponents->getComponent(entity);
 
@@ -110,32 +108,21 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
+            modelScale = scale(mat4(1.0f), visibility->scale);
+
             WVPprojections->add(visibility->meshType, perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
             Wprojections->add(visibility->meshType, modelTranslation * modelRotation * modelScale);
         }
     }
 
-    for (unsigned int t = 0; t < 3; t ++) {
+    for (unsigned int t = 0; t < WVPprojections->size(); t ++) {
         meshStore->getMesh(MeshType(t))->draw(WVPprojections->size(t), WVPprojections->get(t)->data(), Wprojections->get(t)->data());
-        WVPprojections->clear(t);
-        Wprojections->clear(t);
     }
+
+    WVPprojections->clear();
+    Wprojections->clear();
 
     unsetGLStates();
-}
-
-void RenderSystem::entityAdded(id entity)
-{
-    if (visibilityComponents->hasComponent(entity)) {
-        // Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].push_back(mat4());
-    }
-}
-
-void RenderSystem::entityRemoved(id entity)
-{
-    if (visibilityComponents->hasComponent(entity)) {
-        // Wprojections[unsigned(visibilityComponents->getComponent(entity)->meshType)].pop_back();
-    }
 }
 
 void RenderSystem::setGLStates()

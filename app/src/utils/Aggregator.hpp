@@ -11,6 +11,7 @@ public:
     void clear(unsigned int index);
     void clear();
 
+    unsigned int size() const;
     unsigned int size(unsigned int index) const;
 
     const std::vector<T>* get(unsigned int index) const;
@@ -41,6 +42,12 @@ void Aggregator<T>::clear()
     for (auto &list : itemLists) {
         list.clear();
     }
+}
+
+template<typename T>
+unsigned int Aggregator<T>::size() const
+{
+    return unsigned(itemLists.size());
 }
 
 template<typename T>

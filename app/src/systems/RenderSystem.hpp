@@ -27,11 +27,6 @@ public:
     void initialize() override;
     void update() override;
 
-protected:
-
-    void entityAdded(ECS::id entity) override;
-    void entityRemoved(ECS::id entity) override;
-
 private:
 
     void setGLStates();
