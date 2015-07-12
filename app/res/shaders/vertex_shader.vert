@@ -3,13 +3,12 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoords;
 layout (location = 2) in vec3 normals;
+layout (location = 3) in mat4 WVP; // 3-6
+layout (location = 7) in mat4 W;   // 7-10
 
 out vec2 uv0;
 out vec3 normal0;
 out vec3 worldPosition0;
-
-uniform mat4 WVP;
-uniform mat4 W;
 
 void main(void)
 {

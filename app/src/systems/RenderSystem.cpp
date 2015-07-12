@@ -92,7 +92,6 @@ void RenderSystem::update()
     count += 0.03;
 
     unsigned int type = 0;
-    unsigned int totals[3] = {0};
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         entity = getEntities()->at(i);
@@ -114,14 +113,15 @@ void RenderSystem::update()
             // and have a vector of MeshBatch in a class MeshBatchManager
             // with drawBatches, inc(type), dec(type) (onEntityAdded / Removed) functions
             type = unsigned(visibility->meshType);
-            Wprojections[type][totals[type]] = modelTranslation * modelRotation * modelScale;
-            WVPprojections[type][totals[type]] = perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale;
-            totals[type] ++;
+            WVPprojections[type].push_back(perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
+            Wprojections[type].push_back(modelTranslation * modelRotation * modelScale);
         }
     }
 
     for (unsigned int t = 0; t < 3; t ++) {
-        meshStore->getMesh(MeshType(t))->draw(totals[t], Wprojections[t].data(), WVPprojections[t].data());
+        meshStore->getMesh(MeshType(t))->draw(unsigned(Wprojections[t].size()), WVPprojections[t].data(), Wprojections[t].data());
+        WVPprojections[t].clear();
+        Wprojections[t].clear();
     }
 
     unsetGLStates();

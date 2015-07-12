@@ -2,6 +2,7 @@
 #include "graphic/Material.hpp"
 #include "utils/OBJ.hpp"
 #include "utils/PNG.hpp"
+#include "utils/Log.hpp"
 #include <string>
 
 using namespace std;
@@ -31,6 +32,10 @@ void Mesh::debug()
 
 void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
 {
+    if (instances == 0) {
+        return;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, WVPs, GL_DYNAMIC_DRAW);
 
@@ -42,6 +47,10 @@ void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* 
 
 void Mesh::draw(unsigned int instances)
 {
+    if (instances == 0) {
+        return;
+    }
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
@@ -59,7 +68,7 @@ void Mesh::loadVAO()
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glGenBuffers(4, VAB);
+    glGenBuffers(6, VAB);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[POS_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);

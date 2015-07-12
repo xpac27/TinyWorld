@@ -31,6 +31,7 @@ private:
     void loadTextures();
     GLuint loadTexture(const char *filename);
 
+    // TODO wrap that in a class
     GLuint VAO;
     GLuint VAB[6];
     GLsizei totalIndexes {0};

@@ -40,6 +40,7 @@ private:
     DirectionalLight* light;
     Program* program;
 
+    // TODO wrap that in a class
     GLint shaderTextureUnit = 0;
     GLint shaderLightColor = 0;
     GLint shaderLightAmbientIntensity = 0;
@@ -49,8 +50,8 @@ private:
     GLint shaderLightDirection = 0;
     GLint shaderEyeWorldPosition = 0;
 
-    std::vector<glm::mat4> Wprojections[3];
     std::vector<glm::mat4> WVPprojections[3];
+    std::vector<glm::mat4> Wprojections[3];
 
     float count = 0.f;
 
