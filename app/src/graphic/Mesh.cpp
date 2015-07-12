@@ -76,14 +76,14 @@ void Mesh::loadVAO()
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
     for (unsigned int i = 0; i < 4 ; i++) {
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
         glVertexAttribDivisor(3 + i, 1);
         glEnableVertexAttribArray(3 + i);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
     for (unsigned int i = 0; i < 4 ; i++) {
-        glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+        glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
         glVertexAttribDivisor(7 + i, 1);
         glEnableVertexAttribArray(7 + i);
     }
