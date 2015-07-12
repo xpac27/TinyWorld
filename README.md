@@ -10,6 +10,9 @@ Todo:
 - [ ] continus formated statistics
 - [ ] terrain height
 - [ ] controled camera
+- [ ] shadow mapping (for 1 directional light only)
+- [ ] light pre-pass (deferred lighting)
+- [ ] deferred shading
 - [x] batched rendering
 - [x] ambiant, diffuse, specular lighting
 - [x] png textures
