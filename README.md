@@ -9,8 +9,8 @@ Todo:
 - [ ] make entities move randomly and die after some time
 - [ ] continus formated statistics
 - [ ] terrain height
-- [ ] batched rendering
 - [ ] controled camera
+- [x] batched rendering
 - [x] ambiant, diffuse, specular lighting
 - [x] png textures
 - [x] obj, mtl parser
