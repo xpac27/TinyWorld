@@ -1,13 +1,13 @@
-#include "RenderSystem.hpp"
+#include "systems/RenderSystem.hpp"
+#include "ecs/ComponentManager.hpp"
+#include "ecs/Id.hpp"
 #include "utils/Log.hpp"
 #include "utils/Shader.hpp"
 #include "utils/Program.hpp"
 #include "utils/Aggregator.hpp"
-#include "ecs/ComponentManager.hpp"
 #include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
 #include "graphic/DirectionalLight.hpp"
-#include "ecs/Id.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <math.h>

@@ -1,6 +1,6 @@
-#include "SystemManager.hpp"
-#include "SystemStatistics.hpp"
-#include "System.hpp"
+#include "ecs/SystemManager.hpp"
+#include "ecs/SystemStatistics.hpp"
+#include "ecs/System.hpp"
 #include "utils/Log.hpp"
 
 

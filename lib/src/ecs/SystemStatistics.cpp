@@ -1,4 +1,4 @@
-#include "SystemStatistics.hpp"
+#include "ecs/SystemStatistics.hpp"
 #include "utils/Log.hpp"
 #include <math.h>
 #include <GLFW/glfw3.h>

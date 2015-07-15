@@ -1,4 +1,4 @@
-#include "MovementSystem.hpp"
+#include "systems/MovementSystem.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "ecs/Id.hpp"
 #include "utils/Log.hpp"
@@ -13,10 +13,10 @@ MovementSystem::MovementSystem(
     , movementComponents(mc)
 {}
 
-void MovementSystem::update(float /*seconds*/, float delta)
+void MovementSystem::update(float /*seconds*/, float /*delta*/)
 {
-    id entity;
-    Movement* movement;
+    // id entity;
+    // Movement* movement;
 
     // for (unsigned int i = 0; i < getEntities()->size(); i ++) {
     //     entity = getEntities()->at(i);

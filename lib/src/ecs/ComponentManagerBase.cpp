@@ -1,4 +1,4 @@
-#include "ComponentManagerBase.hpp"
+#include "ecs/ComponentManagerBase.hpp"
 
 namespace ECS {
 

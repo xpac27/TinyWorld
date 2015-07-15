@@ -24,7 +24,7 @@ test:
 	@echo "$(S) Compiling tests $(E)"
 	@make tests -C build -j8
 	@echo "$(S) Running tests $(E)"
-	@./build/tests/tests
+	@./build/lib/tests/tests
 
 report:
 	@echo "$(S) Compiling static analysis report $(E)"

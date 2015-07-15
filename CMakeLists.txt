@@ -13,4 +13,4 @@ endif()
 add_definitions( "-std=c++11" )
 
 add_subdirectory(app)
-add_subdirectory(tests)
+add_subdirectory(lib)

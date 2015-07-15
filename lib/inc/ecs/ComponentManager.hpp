@@ -1,6 +1,6 @@
 #pragma once
-#include "ComponentManagerBase.hpp"
-#include "Id.hpp"
+#include "ecs/ComponentManagerBase.hpp"
+#include "ecs/Id.hpp"
 #include <vector>
 #include <assert.h>
 
