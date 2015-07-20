@@ -8,6 +8,13 @@ MeshStore::MeshStore()
 {
 }
 
+MeshStore::~MeshStore()
+{
+    delete cube;
+    delete cacodemon;
+    delete flan;
+}
+
 Mesh* MeshStore::getMesh(MeshType type)
 {
     switch (type) {

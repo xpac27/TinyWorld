@@ -4,17 +4,19 @@
 #include "utils/Random.hpp"
 
 Game::Game()
+    : visualSystems("VIS")
+    , simulationSystems("SIM")
 {
-    visualSystems.addSystem(new RenderSystem(&visibilityComponents, &movementComponents));
-    simulationSystems.addSystem(new MovementSystem(&movementComponents));
+    visualSystems.addRenderSystem(&visibilityComponents, &movementComponents);
+    visualSystems.initialize();
+
+    simulationSystems.addMovementSystem(&movementComponents);
     simulationSystems.setLatency(1.f / 100.f);
+    simulationSystems.initialize();
 
     for (int i = 0; i < 100; i ++) {
         addEntity();
     }
-
-    simulationSystems.initialize();
-    visualSystems.initialize();
 }
 
 void Game::draw()

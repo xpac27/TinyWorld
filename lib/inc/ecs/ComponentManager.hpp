@@ -14,6 +14,7 @@ public:
 
     void addComponent(id entity);
     void delComponent(id entity);
+
     bool hasComponent(id entity);
 
 private:

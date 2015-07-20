@@ -20,6 +20,7 @@ class Mesh
 public:
 
     Mesh(const char *filename);
+    ~Mesh();
 
     void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
     void debug();

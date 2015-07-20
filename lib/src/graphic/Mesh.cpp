@@ -25,6 +25,10 @@ Mesh::Mesh(const char *filename)
     loadTextures();
 }
 
+Mesh::~Mesh()
+{
+}
+
 void Mesh::debug()
 {
     OBJ::debug(vertexes, normals, indexes);

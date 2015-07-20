@@ -24,8 +24,8 @@ private:
 
     ECS::EntityManager entities = {};
 
-    ECS::SystemManager visualSystems = ECS::SystemManager("VIS");
-    ECS::SystemManager simulationSystems = ECS::SystemManager("SIM");
+    ECS::SystemManager visualSystems;
+    ECS::SystemManager simulationSystems;
 
     ECS::ComponentManager<Life> lifeComponents = ECS::ComponentManager<Life>();
     ECS::ComponentManager<Movement> movementComponents = ECS::ComponentManager<Movement>();

@@ -1,8 +1,10 @@
 #include "ecs/SystemManager.hpp"
 #include "ecs/SystemStatistics.hpp"
 #include "ecs/System.hpp"
+#include "ecs/ComponentManager.hpp"
+#include "systems/RenderSystem.hpp"
+#include "systems/MovementSystem.hpp"
 #include "utils/Log.hpp"
-
 
 using namespace Log;
 
@@ -13,14 +15,15 @@ SystemManager::SystemManager(const char* _name)
     , statistics(new SystemStatistics())
 {}
 
+SystemManager::~SystemManager()
+{
+    delete name;
+    delete statistics;
+}
+
 void SystemManager::setLatency(float seconds)
 {
     latency = seconds;
-}
-
-void SystemManager::addSystem(System* system)
-{
-    systems.push_back(system);
 }
 
 void SystemManager::printStats()
@@ -30,7 +33,7 @@ void SystemManager::printStats()
 
 void SystemManager::initialize()
 {
-    for (auto system : systems) {
+    for (auto& system : systems) {
        system->initialize();
     }
 }
@@ -38,7 +41,7 @@ void SystemManager::initialize()
 void SystemManager::update()
 {
     statistics->updating(); // TODO wrap that in the for loop and stat all systems
-    for (auto system : systems) {
+    for (auto& system : systems) {
         system->update();
     }
     statistics->updated();
@@ -50,10 +53,25 @@ void SystemManager::update(float seconds)
         float delta = seconds - previousUpdateCall;
         statistics->updating();
         previousUpdateCall = seconds;
-        for (auto system : systems) {
+        for (auto& system : systems) {
             system->update(seconds, delta);
         }
         statistics->updated();
     }
+}
+
+void SystemManager::addRenderSystem(ECS::ComponentManager<Visibility>* visibilityComponents, ECS::ComponentManager<Movement>* movementComponents)
+{
+    addSystem(new RenderSystem(visibilityComponents, movementComponents));
+}
+
+void SystemManager::addMovementSystem(ECS::ComponentManager<Movement>* movementComponents)
+{
+    addSystem(new MovementSystem(movementComponents));
+}
+
+void SystemManager::addSystem(System* system)
+{
+    systems.push_back(system);
 }
 }

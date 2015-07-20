@@ -8,6 +8,7 @@ class MeshStore
 public:
 
     MeshStore();
+    ~MeshStore();
 
     Mesh* getMesh(MeshType type);
 
