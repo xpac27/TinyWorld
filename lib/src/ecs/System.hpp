@@ -31,6 +31,5 @@ private:
     void onEntityRemoved(id entity);
 
     std::vector<id> entities {};
-    std::vector<ComponentManagerBase*> componentManagers {};
 };
 }

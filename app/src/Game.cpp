@@ -2,6 +2,7 @@
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
 #include "utils/Random.hpp"
+#include <glm/detail/func_geometric.hpp>
 
 Game::Game()
     : visualSystems("VIS")

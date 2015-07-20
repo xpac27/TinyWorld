@@ -9,6 +9,7 @@ struct DirectionalLight
     float ambientIntensity;
     float diffuseIntensity;
 
+    DirectionalLight() {}
     DirectionalLight(glm::vec3 _color, glm::vec3 _direction, float _ambientIntensity, float _diffuseIntensity)
         : color(_color)
         , direction(_direction)

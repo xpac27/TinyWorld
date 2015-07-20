@@ -1,12 +1,11 @@
 #pragma once
+#include "ecs/SystemStatistics.hpp"
 #include <vector>
 
 struct Movement;
 struct Visibility;
-
 namespace ECS {
 class System;
-class SystemStatistics;
 template <typename T> class ComponentManager;
 
 class SystemManager
@@ -15,7 +14,6 @@ class SystemManager
 public:
 
     SystemManager(const char* _name);
-    ~SystemManager();
 
     void setLatency(float seconds);
     void printStats();
@@ -32,10 +30,9 @@ private:
 
     float latency = 0.f;
     float previousUpdateCall = 0.f;
+    const char name;
 
-    const char* name;
-
-    SystemStatistics* statistics;
+    SystemStatistics statistics;
 
     std::vector<System*> systems = {};
 };

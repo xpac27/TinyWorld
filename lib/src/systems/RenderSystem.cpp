@@ -3,11 +3,8 @@
 #include "ecs/Id.hpp"
 #include "utils/Log.hpp"
 #include "utils/Shader.hpp"
-#include "utils/Program.hpp"
-#include "utils/Aggregator.hpp"
 #include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
-#include "graphic/DirectionalLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <math.h>
@@ -22,38 +19,45 @@ RenderSystem::RenderSystem(
     ComponentManager<Movement>* mc
 )
     : System({vc, mc})
-    , meshStore(new MeshStore())
-    , light(new DirectionalLight(vec3(1.0, 0.9, 0.7), normalize(vec3(1.f, 1.f, -1.0f)), 0.2f, 1.0f))
-    , program(new Program())
-    , WVPprojections(new Aggregator<mat4>())
-    , Wprojections(new Aggregator<mat4>())
     , visibilityComponents(vc)
     , movementComponents(mc)
-{}
+    , meshStore(new MeshStore())
+{
+    // TODO make this date driven
+    light.color = vec3(1.0, 0.9, 0.7);
+    light.direction = normalize(vec3(1.f, 1.f, -1.0f));
+    light.ambientIntensity = 0.2f;
+    light.diffuseIntensity = 1.0f;
+}
+
+RenderSystem::~RenderSystem()
+{
+    delete meshStore;
+}
 
 void RenderSystem::initialize()
 {
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    Shader vertexShader(GL_VERTEX_SHADER, program);
+    Shader vertexShader(GL_VERTEX_SHADER, &program);
     vertexShader.read("app/res/shaders/vertex_shader.vert");
     vertexShader.compile();
 
-    Shader fragmentShader(GL_FRAGMENT_SHADER, program);
+    Shader fragmentShader(GL_FRAGMENT_SHADER, &program);
     fragmentShader.read("app/res/shaders/fragment_shader.frag");
     fragmentShader.compile();
 
-    program->link();
+    program.link();
 
-    shaderTextureUnit = program->getLocation("textureUnit");
-    shaderLightColor = program->getLocation("light.color");
-    shaderLightAmbientIntensity = program->getLocation("light.ambientIntensity");
-    shaderLightDiffuseIntensity = program->getLocation("light.diffuseIntensity");
-    shaderLightDirection = program->getLocation("light.direction");
-    shaderSpecularIntensity = program->getLocation("specularIntensity");
-    shaderSpecularPower = program->getLocation("specularPower");
-    shaderEyeWorldPosition = program->getLocation("eyeWorldPosition");
+    shaderTextureUnit = program.getLocation("textureUnit");
+    shaderLightColor = program.getLocation("light.color");
+    shaderLightAmbientIntensity = program.getLocation("light.ambientIntensity");
+    shaderLightDiffuseIntensity = program.getLocation("light.diffuseIntensity");
+    shaderLightDirection = program.getLocation("light.direction");
+    shaderSpecularIntensity = program.getLocation("specularIntensity");
+    shaderSpecularPower = program.getLocation("specularPower");
+    shaderEyeWorldPosition = program.getLocation("eyeWorldPosition");
 }
 
 void RenderSystem::update()
@@ -72,12 +76,12 @@ void RenderSystem::update()
     glm::mat4 perspective;
 
     setGLStates();
-    program->use();
+    program.use();
     glUniform1i(shaderTextureUnit, 0);
-    glUniform3f(shaderLightColor, light->color.x, light->color.y, light->color.z);
-    glUniform3f(shaderLightDirection, light->direction.x, light->direction.y, light->direction.z);
-    glUniform1f(shaderLightAmbientIntensity, light->ambientIntensity);
-    glUniform1f(shaderLightDiffuseIntensity, light->diffuseIntensity);
+    glUniform3f(shaderLightColor, light.color.x, light.color.y, light.color.z);
+    glUniform3f(shaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(shaderLightAmbientIntensity, light.ambientIntensity);
+    glUniform1f(shaderLightDiffuseIntensity, light.diffuseIntensity);
     glUniform1f(shaderSpecularIntensity, 4.0);
     glUniform1f(shaderSpecularPower, 32.0);
     glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
@@ -110,17 +114,17 @@ void RenderSystem::update()
 
             modelScale = scale(mat4(1.0f), visibility->scale);
 
-            WVPprojections->add(visibility->meshType, perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
-            Wprojections->add(visibility->meshType, modelTranslation * modelRotation * modelScale);
+            WVPprojections.add(visibility->meshType, perspective * viewRotation * viewTranslation * modelTranslation * modelRotation * modelScale);
+            Wprojections.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
         }
     }
 
-    for (unsigned int t = 0; t < WVPprojections->size(); t ++) {
-        meshStore->getMesh(MeshType(t))->draw(WVPprojections->size(t), WVPprojections->get(t)->data(), Wprojections->get(t)->data());
+    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
     }
 
-    WVPprojections->clear();
-    Wprojections->clear();
+    WVPprojections.clear();
+    Wprojections.clear();
 
     unsetGLStates();
 }

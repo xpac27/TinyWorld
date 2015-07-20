@@ -3,16 +3,16 @@
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
+#include "graphic/DirectionalLight.hpp"
+#include "utils/Program.hpp"
+#include "utils/Aggregator.hpp"
 #include <GL/glew.h>
-#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
 
-namespace ECS {
-    template <typename T> class ComponentManager;
-}
 class MeshStore;
-class Program;
-struct DirectionalLight;
-template <typename T> class Aggregator;
+namespace ECS {
+template <typename T> class ComponentManager;
+}
 
 class RenderSystem : public ECS::System
 {
@@ -23,6 +23,7 @@ public:
         ECS::ComponentManager<Visibility>* vc,
         ECS::ComponentManager<Movement>* mc
     );
+    ~RenderSystem();
 
     void initialize() override;
     void update() override;
@@ -32,11 +33,10 @@ private:
     void setGLStates();
     void unsetGLStates();
 
-    MeshStore* meshStore;
-    DirectionalLight* light;
-    Program* program;
-    Aggregator<glm::mat4>* WVPprojections;
-    Aggregator<glm::mat4>* Wprojections;
+    Program program;
+    DirectionalLight light;
+    Aggregator<glm::mat4> WVPprojections;
+    Aggregator<glm::mat4> Wprojections;
 
     // TODO wrap that in a class
     GLint shaderTextureUnit = 0;
@@ -52,4 +52,7 @@ private:
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;
+
+    // TODO init from outside (systems class?)
+    MeshStore* meshStore;
 };

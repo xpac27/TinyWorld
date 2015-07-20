@@ -13,11 +13,9 @@ public:
 
 private:
 
-	float averageUpdateFrequency;
-
 	float getTime();
-    float averageUpdateDuration {0};
-	float updateTime {0};
-
+    float averageUpdateDuration {0.0};
+	float updateTime {0.0};
+	float averageUpdateFrequency {1.0};
 };
 }

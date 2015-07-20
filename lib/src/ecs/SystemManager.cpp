@@ -1,5 +1,4 @@
 #include "ecs/SystemManager.hpp"
-#include "ecs/SystemStatistics.hpp"
 #include "ecs/System.hpp"
 #include "ecs/ComponentManager.hpp"
 #include "systems/RenderSystem.hpp"
@@ -11,15 +10,8 @@ using namespace Log;
 namespace ECS {
 
 SystemManager::SystemManager(const char* _name)
-    : name(_name)
-    , statistics(new SystemStatistics())
+    : name(*_name)
 {}
-
-SystemManager::~SystemManager()
-{
-    delete name;
-    delete statistics;
-}
 
 void SystemManager::setLatency(float seconds)
 {
@@ -28,7 +20,7 @@ void SystemManager::setLatency(float seconds)
 
 void SystemManager::printStats()
 {
-    statistics->print(name);
+    statistics.print(&name);
 }
 
 void SystemManager::initialize()
@@ -40,23 +32,23 @@ void SystemManager::initialize()
 
 void SystemManager::update()
 {
-    statistics->updating(); // TODO wrap that in the for loop and stat all systems
+    statistics.updating(); // TODO wrap that in the for loop and stat all systems
     for (auto& system : systems) {
         system->update();
     }
-    statistics->updated();
+    statistics.updated();
 }
 
 void SystemManager::update(float seconds)
 {
     if (seconds - previousUpdateCall > latency) {
         float delta = seconds - previousUpdateCall;
-        statistics->updating();
+        statistics.updating();
         previousUpdateCall = seconds;
         for (auto& system : systems) {
             system->update(seconds, delta);
         }
-        statistics->updated();
+        statistics.updated();
     }
 }
 
