@@ -44,7 +44,7 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 ### Mac OSX
 
-    brew install glew glfw3 glm libpng cmake
+    brew install homebrew/versions/glfw3 glew glm libpng cmake
 
 Optionaly, in order to use Clang Static Analyzer:
 
