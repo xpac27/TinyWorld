@@ -4,8 +4,8 @@ project(tests)
 enable_testing()
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-file(GLOB_RECURSE source_files "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
 
-add_executable(tests ${source_files})
+add_executable(tests ${SOURCE_FILES})
 target_include_directories(tests PUBLIC "lib" "../src" "../inc")
 target_link_libraries(tests lib)

@@ -2,7 +2,7 @@ all: configure compile run
 S = \n[1;33m--
 E = [0m
 
-.PHONY: all
+.PHONY: all configure run debug test report coverage clean reset
 
 configure:
 	@echo "$(S) Configuring builds $(E)"
@@ -29,6 +29,17 @@ test:
 report:
 	@echo "$(S) Compiling static analysis report $(E)"
 	@scan-build make app -C build
+
+coverage:
+	@echo "$(S) Running code coverage analysis $(E)"
+	@make lib_coverage -C build -j8
+	@./build/lib/lib_coverage
+	@llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
+	@rm -rf coverage && mkdir -p coverage
+	@lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info
+	@lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info
+	@genhtml coverage/cov.info -o coverage
+	@open coverage/index.html
 
 clean:
 	@echo "$(S) Compiling sources $(E)"

@@ -5,4 +5,4 @@
 build/*
 !build/modules
 reports/*
-!reports/CMakeLists.txt
+coverage/*
