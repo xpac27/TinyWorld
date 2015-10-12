@@ -60,6 +60,6 @@ Download GLM from the website, unzip it and copy the `glm` folder (containing th
 
 Follow ([this guide](http://www.glfw.org/docs/latest/compile.html)) to install GLFW3 from sources.
 
-Optionaly, in order to use Clang Static Analyzer:
+Optionaly, in order to use Clang Static Analyzer and Code Coverage:
 
-    apt-get install llvm
+    apt-get install llvm lcov
