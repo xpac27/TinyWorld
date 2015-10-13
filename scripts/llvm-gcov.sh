@@ -1,2 +1,2 @@
 #!/bin/bash
-exec xcrun llvm-cov gcov "$@"
+exec llvm-cov gcov "$@"

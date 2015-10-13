@@ -38,7 +38,7 @@ coverage:
 	echo "$(S) Generate code coverage report $(E)"
 	make lib_coverage -C build -j8
 	./build/lib/lib_coverage
-	xcrun llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
+	llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
 	rm -rf coverage && mkdir -p coverage
 	lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info
 	lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info

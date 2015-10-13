@@ -9,6 +9,9 @@ install:
     - brew install glew glfw3 glm lcov
     - gem install coveralls-lcov
 
+before_script:
+    - export PATH=$PATH:/Library/Developer/CommandLineTools/usr/bin/
+
 script:
     - make configure
     - make coverage
