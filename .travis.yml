@@ -1,20 +1,17 @@
 os: osx
 language: cpp
 compiler: clang
-python: 2.7
 branches:
     only: master
 
 install:
     - brew update
-    - brew install glew
-    - brew install glfw3
-    - brew install glm
+    - brew install glew glfw3 glm
+    - gem install coveralls-lcov
 
 script:
     - make configure
-    - make generate_coverage
+    - make coverage
 
 after_success:
-    - pip install --user cpp-coveralls
-    - coveralls --exclude tests --gcov-options '\-lp'
+    - coveralls-lcov coverage/cov.info

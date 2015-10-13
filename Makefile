@@ -2,7 +2,7 @@ all: configure compile run
 S = \n[1;33m--
 E = [0m
 
-.PHONY: all configure run debug test report coverage generate_coverage configure_report clean reset
+.PHONY: all configure run debug test report coverage coverage_html configure_report clean reset
 
 configure:
 	@echo "$(S) Configuring builds $(E)"
@@ -11,11 +11,6 @@ configure:
 configure_report:
 	@echo "$(S) Configuring builds $(E)"
 	@mkdir -p build/report && cd build/report && cmake -DCMAKE_C_COMPILER=ccc-analyzer -DCMAKE_CXX_COMPILER=c++-analyzer -DGLM_COMPILER=0 ../..
-
-generate_coverage:
-	@echo "$(S) Generate code coverage analysis $(E)"
-	@make lib_coverage -C build -j8
-	@./build/lib/lib_coverage
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
@@ -39,12 +34,17 @@ report: configure_report
 	@echo "$(S) Compiling static analysis report $(E)"
 	@scan-build -V make app -C build/report
 
-coverage: generate_coverage
-	@echo "$(S) Generate code coverage report $(E)"
-	@llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
-	@rm -rf coverage && mkdir -p coverage
-	@lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info
-	@lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info
+coverage:
+	echo "$(S) Generate code coverage report $(E)"
+	make lib_coverage -C build -j8
+	./build/lib/lib_coverage
+	llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
+	rm -rf coverage && mkdir -p coverage
+	lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info
+	lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info
+	lcov --list coverage/cov.info
+
+coverage_html: coverage
 	@genhtml coverage/cov.info -o coverage
 	@open coverage/index.html
 
