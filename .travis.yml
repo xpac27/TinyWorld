@@ -4,6 +4,9 @@ compiler: clang
 branches:
     only: master
 
+before_install:
+    - pip install --user codecov
+
 install:
     - brew update
     - brew install glew
@@ -13,3 +16,6 @@ install:
 script:
     - make configure
     - make test
+
+after_success:
+    - codecov
