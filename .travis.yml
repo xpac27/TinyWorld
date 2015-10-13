@@ -10,4 +10,4 @@ install:
 
 script:
     - make configure
-    - make tests
+    - make test
