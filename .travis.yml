@@ -15,7 +15,7 @@ install:
 
 script:
     - make configure
-    - make test
+    - make generate_coverage
 
 after_success:
     - codecov
