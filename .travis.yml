@@ -8,7 +8,6 @@ install:
     - brew update
     - brew install glew glfw3 glm lcov
     - gem install coveralls-lcov
-    - alias llvm-cov="xcrun llvm-cov"
 
 script:
     - make configure
