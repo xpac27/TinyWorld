@@ -1,6 +1,7 @@
 os: osx
 language: cpp
 compiler: clang
+python: 2.7
 branches:
     only: master
 
@@ -15,5 +16,5 @@ script:
     - make generate_coverage
 
 after_success:
-    - pip install --user codecov
-    - /usr/local/bin/codecov
+    - pip install --user cpp-coveralls
+    - coveralls --exclude tests --gcov-options '\-lp'
