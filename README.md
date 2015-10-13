@@ -48,7 +48,7 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 Optionaly, in order to use Clang Static Analyzer:
 
-    brew install llvm
+    brew install llvm lcov
     export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
 
 ### Ubuntu
