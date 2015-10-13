@@ -6,15 +6,8 @@ branches:
 
 install:
     - brew update
-    - brew install glew glfw3 glm lcov
-    - gem install coveralls-lcov
-
-before_script:
-    - export PATH=$PATH:/Library/Developer/CommandLineTools/usr/bin/
+    - brew install glew glfw3 glm
 
 script:
     - make configure
-    - make coverage
-
-after_success:
-    - coveralls-lcov coverage/cov.info
+    - make tests
