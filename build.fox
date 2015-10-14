@@ -1,0 +1,8 @@
+build obj(*): auto app/src/*.cpp lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+includedirs = lib/inc lib/src app/src
+build app(helloworld): auto obj(*)
+
+filter system: Darwin
+    cxxflags = -std=c++11
+    ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
+    libs = objc png GLEW glfw3
