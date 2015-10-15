@@ -1,6 +1,7 @@
-build obj(*): auto app/src/*.cpp lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+build out/obj/obj(*): auto app/src/*.cpp lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+build out/app(app): auto out/obj/obj(*)
+
 includedirs = lib/inc lib/src app/src
-build app(helloworld): auto obj(*)
 
 filter system: Darwin
     cxxflags = -std=c++11

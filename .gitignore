@@ -6,6 +6,5 @@
 .ninja_log
 build.ninja
 out/*
-!build/modules
 reports/*
 coverage/*
