@@ -38,18 +38,21 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 - `make compile` - compile the application
 - `make test` - compile and run the tests
-- `make report` - compile the application and run the static analyzer on it
+- `make report` - compile the application and run the static code analyzer on it
+- `make coverage` - compile the application and run the code coverage analyzer on it
 
 ## Setup
 
 ### Mac OSX
 
-    brew install homebrew/versions/glfw3 glew glm libpng cmake
+    brew install glfw3 glew glm libpng ninja
 
 Optionaly, in order to use Clang Static Analyzer:
 
-    brew install llvm
-    export PATH="$PATH:/usr/local/Cellar/llvm/3.5.1/share/clang/tools/scan-build"
+	brew install lcov
+    brew install llvm --with-clang
+	export PATH="$PATH:/usr/local/opt/llvm/share/clang/tools/scan-build"
+	export PATH="$PATH:/usr/local/opt/llvm/bin/"
 
 ### Ubuntu
 

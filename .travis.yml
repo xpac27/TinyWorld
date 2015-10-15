@@ -6,14 +6,8 @@ branches:
 
 install:
     - brew update
-    - brew install glew
-    - brew install glfw3
-    - brew install glm
+    - brew install glfw3 glew glm libpng ninja
 
 script:
     - make configure
-    - make generate_coverage
-
-after_success:
-    - pip install --user codecov
-    - /usr/local/bin/codecov
+    - make test
