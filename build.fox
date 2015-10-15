@@ -1,31 +1,24 @@
-build out/objects/lib/obj(*): auto lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
-build out/libs/lib(tw): auto out/objects/lib/obj(*)
-
-build out/objects/app/obj(*): auto app/src/*.cpp
-build out/app(tinyworl): auto out/objects/app/obj(*) out/libs/lib(tw)
-
-build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
-build out/app(tests): auto out/objects/tests/obj(*) out/libs/lib(tw)
-
-includedirs = lib/inc lib/src lib/tests/src app/inc 
+cxxflags = -std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
 
 filter system: Darwin
-    cxxflags = -std=c++11
     ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
-    libs = objc png GLEW glfw3
+    libs = objc png glfw3 GLEW
 
+filter coverage: true toolset: clang
+    cxxflags += -fprofile-arcs -ftest-coverage
+    ldflags += --coverage
 
-# add_definitions( "-Weverything" )
-# add_definitions( "-Wno-c++98-compat" )
-# add_definitions( "-Wno-c++98-compat-pedantic" )
-# add_definitions( "-Wno-newline-eof" )
-# add_definitions( "-Wno-padded" )
-# add_definitions( "-Wno-exit-time-destructors" )
-# 
-# add_executable(lib_coverage ${SOURCE_FILES} ${TEST_SOURCE_FILES})
-# set_target_properties(lib_coverage PROPERTIES COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
-# set_target_properties(lib_coverage PROPERTIES LINK_FLAGS "--coverage")
-# target_include_directories(lib_coverage PUBLIC "src" "inc" "tests/lib")
-# target_link_libraries(lib_coverage ${PNG_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
-# 
-# set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+includedirs = lib/inc
+
+build out/objects/lib/obj(*): auto lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+    includedirs += lib/src
+
+build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
+    includedirs += lib/tests/src lib/src
+
+build out/objects/app/obj(*): auto app/src/*.cpp
+    includedirs += app/inc
+
+build out/libs/shlib(tw) | out/libs/lib(tw): auto out/objects/lib/obj(*)
+build out/app(tests): auto out/objects/tests/obj(*) out/libs/shlibdep(tw)
+build out/app(tinyworld): auto out/objects/app/obj(*) out/libs/shlibdep(tw)

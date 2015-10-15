@@ -6,54 +6,53 @@ E = [0m
 
 configure:
 	@echo "$(S) Configuring builds $(E)"
-	@mkdir -p build && cd build && cmake ..
-
-configure_report:
-	@echo "$(S) Configuring builds $(E)"
-	@mkdir -p build/report && cd build/report && cmake -DCMAKE_C_COMPILER=ccc-analyzer -DCMAKE_CXX_COMPILER=c++-analyzer -DGLM_COMPILER=0 ../..
-
-generate_coverage:
-	@echo "$(S) Generate code coverage analysis $(E)"
-	@make lib_coverage -C build -j8
-	@./build/lib/lib_coverage
+	@bf
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
-	@make app -C build -j8
+	@ninja out/tinyworld
 
 run:
 	@echo "$(S) Running the app $(E)"
-	@./build/app/app
+	@./out/tinyworld
 
 debug:
 	@echo "$(S) Debugging the app $(E)"
-	@lldb -f build/app/app
+	@lldb -f out/tinyworld
 
 test:
 	@echo "$(S) Compiling tests $(E)"
-	@make tests -C build -j8
+	@ninja out/tests
 	@echo "$(S) Running tests $(E)"
-	@./build/lib/tests/tests
+	@./out/tests
+
+clean:
+	@echo "$(S) Compiling sources $(E)"
+	@ninja -t clean
+	@echo "done!"
+
+reset:
+	@echo "$(S) Removing all build data $(E)"
+	@rm -rf out
+	@echo "done!"
+
+coverage:
+	@echo "$(S) Generate code coverage report $(E)"
+	@bf coverage=true
+	@ninja out/tests
+	@./out/tests
+	@llvm-cov gcov -f `find out -name "*.gcda" | grep -v "dir/tests" | xargs` &> /dev/null
+	@rm -rf coverage && mkdir -p coverage
+	@lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info &> /dev/null
+	@lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info &> /dev/null
+	@lcov --list coverage/cov.info
+	@genhtml coverage/cov.info -o coverage &> /dev/null
+	@open coverage/index.html
 
 report: configure_report
 	@echo "$(S) Compiling static analysis report $(E)"
 	@scan-build -V make app -C build/report
 
-coverage: generate_coverage
-	@echo "$(S) Generate code coverage report $(E)"
-	@llvm-cov gcov -f `find build -name "*.gcda" | grep -v "dir/tests" | xargs`
-	@rm -rf coverage && mkdir -p coverage
-	@lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info
-	@lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info
-	@genhtml coverage/cov.info -o coverage
-	@open coverage/index.html
-
-clean:
-	@echo "$(S) Compiling sources $(E)"
-	@make clean -C build
-	@echo "done!"
-
-reset:
-	@echo "$(S) Removing all build data $(E)"
-	@rm -rf build
-	@echo "done!"
+configure_report:
+	@echo "$(S) Configuring builds $(E)"
+	@mkdir -p build/report && cd build/report && cmake -DCMAKE_C_COMPILER=ccc-analyzer -DCMAKE_CXX_COMPILER=c++-analyzer -DGLM_COMPILER=0 ../..
