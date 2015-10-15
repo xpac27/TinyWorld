@@ -13,3 +13,19 @@ filter system: Darwin
     cxxflags = -std=c++11
     ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
     libs = objc png GLEW glfw3
+
+
+# add_definitions( "-Weverything" )
+# add_definitions( "-Wno-c++98-compat" )
+# add_definitions( "-Wno-c++98-compat-pedantic" )
+# add_definitions( "-Wno-newline-eof" )
+# add_definitions( "-Wno-padded" )
+# add_definitions( "-Wno-exit-time-destructors" )
+# 
+# add_executable(lib_coverage ${SOURCE_FILES} ${TEST_SOURCE_FILES})
+# set_target_properties(lib_coverage PROPERTIES COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+# set_target_properties(lib_coverage PROPERTIES LINK_FLAGS "--coverage")
+# target_include_directories(lib_coverage PUBLIC "src" "inc" "tests/lib")
+# target_link_libraries(lib_coverage ${PNG_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+# 
+# set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
