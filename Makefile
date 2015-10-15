@@ -7,6 +7,7 @@ E = [0m
 configure:
 	@echo "$(S) Configuring builds $(E)"
 	@bf
+	@ninja -t compdb cxx > out/compilation_commands.json
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
