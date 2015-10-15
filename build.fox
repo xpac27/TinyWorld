@@ -1,4 +1,5 @@
-cxxflags = -std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+filter toolset: clang
+    cxxflags = -std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
 
 filter system: Darwin
     ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
