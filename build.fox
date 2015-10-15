@@ -1,7 +1,13 @@
-build out/obj/obj(*): auto app/src/*.cpp lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
-build out/app(app): auto out/obj/obj(*)
+build out/objects/lib/obj(*): auto lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+build out/libs/lib(tw): auto out/objects/lib/obj(*)
 
-includedirs = lib/inc lib/src app/src
+build out/objects/app/obj(*): auto app/src/*.cpp
+build out/app(tinyworl): auto out/objects/app/obj(*) out/libs/lib(tw)
+
+build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
+build out/app(tests): auto out/objects/tests/obj(*) out/libs/lib(tw)
+
+includedirs = lib/inc lib/src lib/tests/src app/inc 
 
 filter system: Darwin
     cxxflags = -std=c++11
