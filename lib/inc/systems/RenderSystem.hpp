@@ -6,8 +6,8 @@
 #include "graphic/DirectionalLight.hpp"
 #include "utils/Program.hpp"
 #include "utils/Aggregator.hpp"
-#include <GL/glew.h>
 #include <glm/mat4x4.hpp>
+#include <GL/glew.h>
 
 class MeshStore;
 namespace ECS {
@@ -32,8 +32,9 @@ private:
 
     void setGLStates();
     void unsetGLStates();
+    void renderPass(glm::vec3 eyePosition);
 
-    Program program;
+    Program rendering;
     DirectionalLight light;
     Aggregator<glm::mat4> WVPprojections;
     Aggregator<glm::mat4> Wprojections;
