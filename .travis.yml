@@ -12,7 +12,7 @@ install:
 before_script:
     - dos2unix bf
     - chmod +x bf
-    - alias bf="./bf"
+    - mv bf /usr/local/bin/
 
 script:
     - make configure
