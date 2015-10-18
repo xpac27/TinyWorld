@@ -3,7 +3,11 @@
 
 using namespace Log;
 
-FrameBuffer::FrameBuffer(int width, int height)
+FrameBuffer::FrameBuffer()
+{
+}
+
+void FrameBuffer::initialize(int width, int height)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -13,12 +17,14 @@ FrameBuffer::FrameBuffer(int width, int height)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
     checkStatus();
+    idle();
 }
 
 void FrameBuffer::bindForWriting() const 
@@ -26,10 +32,15 @@ void FrameBuffer::bindForWriting() const
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 }
 
-void FrameBuffer::bindForReading(GLenum textureUnit) const
+void FrameBuffer::bindForReading() const
 {
-    glActiveTexture(textureUnit);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void FrameBuffer::idle() const
+{
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 void FrameBuffer::checkStatus() const

@@ -46,6 +46,7 @@ void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* 
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuses[0]);
+
     glBindVertexArray(VAO);
 
     glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);

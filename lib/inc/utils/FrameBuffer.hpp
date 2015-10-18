@@ -6,10 +6,12 @@ class FrameBuffer
 
 public:
 
-    FrameBuffer(int width, int height);
+    FrameBuffer();
 
+    void initialize(int width, int height);
     void bindForWriting() const;
-    void bindForReading(GLenum textureUnit) const;
+    void bindForReading() const;
+    void idle() const;
 
 private:
 

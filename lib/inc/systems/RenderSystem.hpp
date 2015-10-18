@@ -6,6 +6,7 @@
 #include "graphic/DirectionalLight.hpp"
 #include "utils/Program.hpp"
 #include "utils/Aggregator.hpp"
+#include "utils/FrameBuffer.hpp"
 #include <glm/mat4x4.hpp>
 #include <GL/glew.h>
 
@@ -39,6 +40,8 @@ private:
     Program shadowing;
 
     DirectionalLight light;
+
+    FrameBuffer frameBuffer;
 
     Aggregator<glm::mat4> WVPEyeProjections;
     Aggregator<glm::mat4> WVPLightProjections;

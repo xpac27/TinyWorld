@@ -60,6 +60,8 @@ void RenderSystem::initialize()
     rendering.link();
     shadowing.link();
 
+    frameBuffer.initialize(100, 100);
+
     renderingTextureUnit = rendering.getLocation("textureUnit");
     renderingLightColor = rendering.getLocation("light.color");
     renderingLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
@@ -102,9 +104,10 @@ void RenderSystem::update()
 
     setGLStates();
     shadowPass();
-    // renderPass(eyePOV.getPosition());
+    renderPass(eyePOV.getPosition());
     unsetGLStates();
     WVPEyeProjections.clear();
+    WVPLightProjections.clear();
     Wprojections.clear();
 
     count += 0.03;
@@ -139,16 +142,19 @@ void RenderSystem::unsetGLStates()
 
 void RenderSystem::shadowPass()
 {
+    frameBuffer.bindForWriting();
+
     glClear(GL_DEPTH_BUFFER_BIT);
 
     shadowing.use();
 
     glUniform1i(renderingTextureUnit, 0);
 
-    for (unsigned int t = 0; t < WVPEyeProjections.size(); t ++) {
+    for (unsigned int t = 0; t < WVPLightProjections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data());
     }
 
+    frameBuffer.idle();
     shadowing.idle();
 }
 
