@@ -41,29 +41,40 @@ void RenderSystem::initialize()
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    Shader vertexShader(GL_VERTEX_SHADER, &rendering);
-    vertexShader.read("app/res/shaders/rendering.vs");
-    vertexShader.compile();
+    Shader renderingVS(GL_VERTEX_SHADER, &rendering);
+    renderingVS.read("app/res/shaders/rendering.vs");
+    renderingVS.compile();
 
-    Shader fragmentShader(GL_FRAGMENT_SHADER, &rendering);
-    fragmentShader.read("app/res/shaders/rendering.fs");
-    fragmentShader.compile();
+    Shader renderingFS(GL_FRAGMENT_SHADER, &rendering);
+    renderingFS.read("app/res/shaders/rendering.fs");
+    renderingFS.compile();
+
+    Shader shadowingVS(GL_VERTEX_SHADER, &shadowing);
+    shadowingVS.read("app/res/shaders/shadowing.vs");
+    shadowingVS.compile();
+
+    Shader shadowingFS(GL_FRAGMENT_SHADER, &shadowing);
+    shadowingFS.read("app/res/shaders/shadowing.fs");
+    shadowingFS.compile();
 
     rendering.link();
+    shadowing.link();
 
-    shaderTextureUnit = rendering.getLocation("textureUnit");
-    shaderLightColor = rendering.getLocation("light.color");
-    shaderLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
-    shaderLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
-    shaderLightDirection = rendering.getLocation("light.direction");
-    shaderSpecularIntensity = rendering.getLocation("specularIntensity");
-    shaderSpecularPower = rendering.getLocation("specularPower");
-    shaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
+    renderingTextureUnit = rendering.getLocation("textureUnit");
+    renderingLightColor = rendering.getLocation("light.color");
+    renderingLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
+    renderingLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
+    renderingLightDirection = rendering.getLocation("light.direction");
+    renderingSpecularIntensity = rendering.getLocation("specularIntensity");
+    renderingSpecularPower = rendering.getLocation("specularPower");
+    renderingEyeWorldPosition = rendering.getLocation("eyePOVWorldPosition");
+    shadowingTextureUnit = shadowing.getLocation("textureUnit");
 }
 
 void RenderSystem::update()
 {
-    Camera eye(0.f, -3.f, 6.f, float(M_PI) / -5.f, 0.f, 0.f);
+    Camera eyePOV(0.f, -3.f, 6.f, float(M_PI) / -5.f, 0.f, 0.f);
+    Camera lightPOV(0.f, 0.f, 6.f, 0.f, 0.f, 0.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         id entity = getEntities()->at(i);
@@ -71,8 +82,8 @@ void RenderSystem::update()
         if (visibilityComponents->hasComponent(entity)) {
             Visibility* visibility = visibilityComponents->getComponent(entity);
 
-            mat4 modelRotation;
-            mat4 modelTranslation;
+            mat4 modelRotation(1.0f);
+            mat4 modelTranslation(1.0f);
             mat4 modelScale = scale(mat4(1.0f), visibility->scale);
 
             if (movementComponents->hasComponent(entity)) {
@@ -83,14 +94,17 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
+            WVPEyeProjections.add(visibility->meshType, eyePOV.getPerspective() * eyePOV.getRotation() * eyePOV.getTranslation() * modelTranslation * modelRotation * modelScale);
+            WVPLightProjections.add(visibility->meshType, lightPOV.getPerspective() * lightPOV.getRotation() * lightPOV.getTranslation() * modelTranslation * modelRotation * modelScale);
             Wprojections.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
         }
     }
 
-    renderPass(eye.getPosition());
-
-    WVPprojections.clear();
+    setGLStates();
+    shadowPass();
+    // renderPass(eyePOV.getPosition());
+    unsetGLStates();
+    WVPEyeProjections.clear();
     Wprojections.clear();
 
     count += 0.03;
@@ -107,7 +121,6 @@ void RenderSystem::setGLStates()
 
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderSystem::unsetGLStates()
@@ -124,23 +137,39 @@ void RenderSystem::unsetGLStates()
     glDepthMask(GL_FALSE);
 }
 
-void RenderSystem::renderPass(glm::vec3 eyePosition)
+void RenderSystem::shadowPass()
 {
-    setGLStates();
+    glClear(GL_DEPTH_BUFFER_BIT);
 
-    rendering.use();
-    glUniform1i(shaderTextureUnit, 0);
-    glUniform3f(shaderLightColor, light.color.x, light.color.y, light.color.z);
-    glUniform3f(shaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
-    glUniform1f(shaderLightAmbientIntensity, light.ambientIntensity);
-    glUniform1f(shaderLightDiffuseIntensity, light.diffuseIntensity);
-    glUniform1f(shaderSpecularIntensity, 4.0);
-    glUniform1f(shaderSpecularPower, 32.0);
-    glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
+    shadowing.use();
 
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+    glUniform1i(renderingTextureUnit, 0);
+
+    for (unsigned int t = 0; t < WVPEyeProjections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data());
     }
 
-    unsetGLStates();
+    shadowing.idle();
+}
+
+void RenderSystem::renderPass(glm::vec3 POVPosition)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    rendering.use();
+
+    glUniform1i(renderingTextureUnit, 0);
+    glUniform3f(renderingLightColor, light.color.x, light.color.y, light.color.z);
+    glUniform3f(renderingLightDirection, light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(renderingLightAmbientIntensity, light.ambientIntensity);
+    glUniform1f(renderingLightDiffuseIntensity, light.diffuseIntensity);
+    glUniform1f(renderingSpecularIntensity, 4.0);
+    glUniform1f(renderingSpecularPower, 32.0);
+    glUniform3f(renderingEyeWorldPosition, POVPosition.x, POVPosition.y, POVPosition.z);
+
+    for (unsigned int t = 0; t < WVPEyeProjections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->draw(WVPEyeProjections.size(t), WVPEyeProjections.get(t)->data(), Wprojections.get(t)->data());
+    }
+
+    rendering.idle();
 }

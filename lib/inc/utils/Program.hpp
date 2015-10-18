@@ -14,6 +14,7 @@ public:
 
     void link();
     void use();
+    void idle();
 
 private:
 

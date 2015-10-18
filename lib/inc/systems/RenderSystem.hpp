@@ -32,22 +32,28 @@ private:
 
     void setGLStates();
     void unsetGLStates();
-    void renderPass(glm::vec3 eyePosition);
+    void shadowPass();
+    void renderPass(glm::vec3 POVPosition);
 
     Program rendering;
+    Program shadowing;
+
     DirectionalLight light;
-    Aggregator<glm::mat4> WVPprojections;
+
+    Aggregator<glm::mat4> WVPEyeProjections;
+    Aggregator<glm::mat4> WVPLightProjections;
     Aggregator<glm::mat4> Wprojections;
 
     // TODO wrap that in a class
-    GLint shaderTextureUnit = 0;
-    GLint shaderLightColor = 0;
-    GLint shaderLightAmbientIntensity = 0;
-    GLint shaderLightDiffuseIntensity = 0;
-    GLint shaderSpecularIntensity = 0;
-    GLint shaderSpecularPower = 0;
-    GLint shaderLightDirection = 0;
-    GLint shaderEyeWorldPosition = 0;
+    GLint renderingTextureUnit = 0;
+    GLint renderingLightColor = 0;
+    GLint renderingLightAmbientIntensity = 0;
+    GLint renderingLightDiffuseIntensity = 0;
+    GLint renderingSpecularIntensity = 0;
+    GLint renderingSpecularPower = 0;
+    GLint renderingLightDirection = 0;
+    GLint renderingEyeWorldPosition = 0;
+    GLint shadowingTextureUnit = 0;
 
     float count = 0.f;
 
