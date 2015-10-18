@@ -6,7 +6,13 @@ branches:
 
 install:
     - brew update
-    - brew install glfw3 glew glm libpng ninja
+    - brew install glfw3 glew glm libpng ninja dos2unix
+    - curl -LO https://github.com/beardsvibe/buildfox/releases/download/v0.1-dev/bf
+
+before_script:
+    - dos2unix bf
+    - chmod +x bf
+    - alias bf="./bf"
 
 script:
     - make configure
