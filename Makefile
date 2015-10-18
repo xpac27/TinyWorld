@@ -2,7 +2,7 @@ all: configure compile run
 S = \n[1;33m--
 E = [0m
 
-.PHONY: all configure run debug test report coverage generate_coverage configure_report clean reset
+.PHONY: all configure run debug test report coverage configure_report clean reset
 
 configure:
 	@echo "$(S) Configuring builds $(E)"
