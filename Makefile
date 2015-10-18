@@ -6,6 +6,7 @@ E = [0m
 
 configure:
 	@echo "$(S) Configuring builds $(E)"
+	@mkdir -p out
 	@bf
 	@ninja -t compdb cxx > out/compilation_commands.json
 
