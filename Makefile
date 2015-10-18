@@ -8,7 +8,7 @@ configure:
 	@echo "$(S) Configuring builds $(E)"
 	@mkdir -p out
 	@bf
-	@ninja -t compdb cxx > out/compilation_commands.json
+	@ninja -t compdb cxx > out/compile_commands.json
 
 compile:
 	@echo "$(S) Compiling sources $(E)"
