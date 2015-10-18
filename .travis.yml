@@ -2,7 +2,7 @@ os: osx
 language: cpp
 compiler: clang
 branches:
-    only: master
+    except: /^WIP-.*$/
 
 install:
     - brew update
