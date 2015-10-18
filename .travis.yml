@@ -5,7 +5,6 @@ branches:
     except: /^WIP-.*$/
 
 install:
-    - brew update
     - brew install glew glfw3 glm ninja dos2unix
     - curl -LO https://github.com/beardsvibe/buildfox/releases/download/v0.1-dev/bf
 
