@@ -6,7 +6,13 @@ branches:
 
 install:
     - brew update
-    - brew install glew glfw3 glm
+    - brew install glew glfw3 glm ninja dos2unix
+    - curl -LO https://github.com/beardsvibe/buildfox/releases/download/v0.1-dev/bf
+
+before_script:
+    - dos2unix bf
+    - chmod +x bf
+    - mv bf /usr/local/bin/
 
 script:
     - make configure
