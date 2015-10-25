@@ -51,6 +51,7 @@ private:
 
     // TODO wrap that in a class
     GLint renderingTextureUnit = 0;
+    GLint renderingShadowMap = 0;
     GLint renderingLightColor = 0;
     GLint renderingLightAmbientIntensity = 0;
     GLint renderingLightDiffuseIntensity = 0;

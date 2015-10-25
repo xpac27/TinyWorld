@@ -72,6 +72,7 @@ void RenderSystem::initialize()
     frameBuffer.initialize(100, 100);
 
     renderingTextureUnit = rendering.getLocation("textureUnit");
+    renderingShadowMap = rendering.getLocation("shadowMap");
     renderingLightColor = rendering.getLocation("light.color");
     renderingLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
     renderingLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
@@ -85,7 +86,7 @@ void RenderSystem::initialize()
 void RenderSystem::update()
 {
     Camera eyePOV(0.f, -3.f, 6.f, float(M_PI) / -5.f, 0.f, 0.f);
-    Camera lightPOV(0.f, 0.f, 6.f, 0.f, 0.f, 0.f);
+    Camera lightPOV(0.f, 0.f, 6.f, float(M_PI) / -5.f, float(M_PI), 0.f);
 
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         id entity = getEntities()->at(i);
@@ -114,7 +115,7 @@ void RenderSystem::update()
     setGLStates();
     shadowPass();
     renderPass(eyePOV.getPosition());
-    debugPass();
+    // debugPass();
     unsetGLStates();
 
     WVPEyeProjections.clear();
@@ -163,7 +164,7 @@ void RenderSystem::shadowPass()
     shadowing.use();
 
     for (unsigned int t = 0; t < WVPLightProjections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data(), WVPLightProjections.get(t)->data());
     }
 
     frameBuffer.idle();
@@ -178,6 +179,7 @@ void RenderSystem::renderPass(glm::vec3 POVPosition)
     rendering.use();
 
     glUniform1i(renderingTextureUnit, 0);
+    glUniform1i(renderingShadowMap, 1);
     glUniform3f(renderingLightColor, light.color.x, light.color.y, light.color.z);
     glUniform3f(renderingLightDirection, light.direction.x, light.direction.y, light.direction.z);
     glUniform1f(renderingLightAmbientIntensity, light.ambientIntensity);
@@ -186,9 +188,11 @@ void RenderSystem::renderPass(glm::vec3 POVPosition)
     glUniform1f(renderingSpecularPower, 32.0);
     glUniform3f(renderingEyeWorldPosition, POVPosition.x, POVPosition.y, POVPosition.z);
 
+    frameBuffer.bindForReading(GL_TEXTURE1);
+
     for (unsigned int t = 0; t < WVPEyeProjections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindTexture();
-        meshStore->getMesh(MeshType(t))->draw(WVPEyeProjections.size(t), WVPEyeProjections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->draw(WVPEyeProjections.size(t), WVPEyeProjections.get(t)->data(), Wprojections.get(t)->data(), WVPLightProjections.get(t)->data());
     }
 
     rendering.idle();
@@ -200,11 +204,11 @@ void RenderSystem::debugPass()
 
     glUniform1i(debugingTextureUnit, 0);
 
-    frameBuffer.bindForReading();
+    frameBuffer.bindForReading(GL_TEXTURE0);
 
     mat4 m(1.0f);
     m = translate(m, glm::vec3(0, 0, -1));
-    meshStore->getMesh(MeshType::PLAN)->draw(1, &m, &m);
+    meshStore->getMesh(MeshType::PLAN)->draw(1, &m, &m, &m);
 
     frameBuffer.idle();
     debuging.idle();

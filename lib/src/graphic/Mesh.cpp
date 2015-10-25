@@ -45,7 +45,7 @@ void Mesh::bindTexture()
     }
 }
 
-void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
+void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws, const glm::mat4* Ls)
 {
     if (instances == 0) return;
 
@@ -54,6 +54,9 @@ void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* 
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[L_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ls, GL_DYNAMIC_DRAW);
 
     glBindVertexArray(VAO);
 
@@ -67,7 +70,7 @@ void Mesh::loadVAO()
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glGenBuffers(6, VAB);
+    glGenBuffers(7, VAB);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[POS_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
@@ -99,6 +102,13 @@ void Mesh::loadVAO()
         glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
         glVertexAttribDivisor(7 + i, 1);
         glEnableVertexAttribArray(7 + i);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[L_VB]);
+    for (unsigned int i = 0; i < 4 ; i++) {
+        glVertexAttribPointer(11 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
+        glVertexAttribDivisor(11 + i, 1);
+        glEnableVertexAttribArray(11 + i);
     }
 
     glBindVertexArray(0);

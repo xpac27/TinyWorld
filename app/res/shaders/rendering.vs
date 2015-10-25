@@ -5,10 +5,12 @@ layout (location = 1) in vec2 textureCoords;
 layout (location = 2) in vec3 normals;
 layout (location = 3) in mat4 WVP; // 3-6
 layout (location = 7) in mat4 W;   // 7-10
+layout (location = 11) in mat4 L;  // 11-14
 
 out vec2 uv0;
 out vec3 normal0;
 out vec3 worldPosition0;
+out vec3 shadowCoord0;
 
 void main(void)
 {
@@ -17,4 +19,5 @@ void main(void)
     uv0 = textureCoords;
     normal0 = (W * vec4(normals, 0.0f)).xyz;
     worldPosition0 = (W * vec4(position, 1.0f)).xyz;
+    shadowCoord0 = (L * vec4(position, 1.0f)).xyz;
 }

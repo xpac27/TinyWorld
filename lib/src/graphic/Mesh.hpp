@@ -11,6 +11,7 @@
 #define TEX_VB 3
 #define WVP_VB 4
 #define W_VB 5
+#define L_VB 6
 
 struct Material;
 
@@ -22,7 +23,7 @@ public:
     Mesh(const char *filename);
     ~Mesh();
 
-    void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
+    void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws, const glm::mat4* Ls);
     void bindTexture();
     void debug();
 
@@ -35,7 +36,7 @@ private:
 
     // TODO wrap that in a class
     GLuint VAO;
-    GLuint VAB[6];
+    GLuint VAB[7];
     GLsizei totalIndexes {0};
 
     std::vector<glm::vec3> vertexes;

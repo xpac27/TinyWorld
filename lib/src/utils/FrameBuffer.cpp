@@ -39,9 +39,9 @@ void FrameBuffer::bindForWriting() const
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 }
 
-void FrameBuffer::bindForReading() const
+void FrameBuffer::bindForReading(GLuint textureUnit) const
 {
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 

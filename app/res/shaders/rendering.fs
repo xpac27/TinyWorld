@@ -3,6 +3,7 @@
 in vec2 uv0;
 in vec3 normal0;
 in vec3 worldPosition0;
+in vec3 shadowCoord0;
 
 out vec4 frag_colour;
 
@@ -15,6 +16,7 @@ struct directionalLight
 };
 
 uniform sampler2D textureUnit;
+uniform sampler2D shadowMap;
 
 uniform directionalLight light;
 

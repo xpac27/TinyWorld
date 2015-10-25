@@ -10,7 +10,7 @@ public:
 
     void initialize(int width, int height);
     void bindForWriting() const;
-    void bindForReading() const;
+    void bindForReading(GLuint textureUnit) const;
     void idle() const;
 
 private:
