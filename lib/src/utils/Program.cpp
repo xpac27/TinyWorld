@@ -40,3 +40,8 @@ void Program::use()
 {
     glUseProgram(reference);
 }
+
+void Program::idle()
+{
+    glUseProgram(0);
+}

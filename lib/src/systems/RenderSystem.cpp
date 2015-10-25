@@ -88,7 +88,9 @@ void RenderSystem::update()
         }
     }
 
+    setGLStates();
     renderPass(eye.getPosition());
+    unsetGLStates();
 
     WVPprojections.clear();
     Wprojections.clear();
@@ -126,8 +128,6 @@ void RenderSystem::unsetGLStates()
 
 void RenderSystem::renderPass(glm::vec3 eyePosition)
 {
-    setGLStates();
-
     rendering.use();
     glUniform1i(shaderTextureUnit, 0);
     glUniform3f(shaderLightColor, light.color.x, light.color.y, light.color.z);
@@ -139,8 +139,9 @@ void RenderSystem::renderPass(glm::vec3 eyePosition)
     glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->bindTexture();
         meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
     }
 
-    unsetGLStates();
+    rendering.idle();
 }
