@@ -58,7 +58,7 @@ private:
     GLint renderingSpecularPower = 0;
     GLint renderingLightDirection = 0;
     GLint renderingEyeWorldPosition = 0;
-    GLint shadowingTextureUnit = 0;
+    // TODO wrap that in a class
     GLint debugingTextureUnit = 0;
 
     float count = 0.f;

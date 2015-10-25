@@ -19,4 +19,5 @@ private:
 
     GLuint fbo;
     GLuint texture;
+    GLuint m_DepthBuffer;
 };

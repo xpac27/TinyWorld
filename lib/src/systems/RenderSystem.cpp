@@ -79,7 +79,6 @@ void RenderSystem::initialize()
     renderingSpecularIntensity = rendering.getLocation("specularIntensity");
     renderingSpecularPower = rendering.getLocation("specularPower");
     renderingEyeWorldPosition = rendering.getLocation("eyePOVWorldPosition");
-    shadowingTextureUnit = shadowing.getLocation("textureUnit");
     debugingTextureUnit = debuging.getLocation("textureUnit");
 }
 
@@ -114,9 +113,10 @@ void RenderSystem::update()
 
     setGLStates();
     shadowPass();
-    // renderPass(eyePOV.getPosition());
+    renderPass(eyePOV.getPosition());
     debugPass();
     unsetGLStates();
+
     WVPEyeProjections.clear();
     WVPLightProjections.clear();
     Wprojections.clear();
@@ -133,6 +133,8 @@ void RenderSystem::setGLStates()
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
+    glEnable(GL_TEXTURE_2D);
+
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 }
@@ -145,6 +147,7 @@ void RenderSystem::unsetGLStates()
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
@@ -159,13 +162,12 @@ void RenderSystem::shadowPass()
 
     shadowing.use();
 
-    glUniform1i(shadowingTextureUnit, 0);
-
     for (unsigned int t = 0; t < WVPLightProjections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data());
     }
 
     frameBuffer.idle();
+
     shadowing.idle();
 }
 
@@ -200,8 +202,9 @@ void RenderSystem::debugPass()
 
     frameBuffer.bindForReading();
 
-    mat4 matrix(1.0f);
-    meshStore->getMesh(MeshType::PLAN)->draw(1, &matrix, &matrix);
+    mat4 m(1.0f);
+    m = translate(m, glm::vec3(0, 0, -1));
+    meshStore->getMesh(MeshType::PLAN)->draw(1, &m, &m);
 
     frameBuffer.idle();
     debuging.idle();

@@ -6,11 +6,7 @@ layout (location = 2) in vec3 normals;
 layout (location = 3) in mat4 WVP; // 3-6
 layout (location = 7) in mat4 W;   // 7-10
 
-out vec2 uv0;
-
 void main(void)
 {
     gl_Position = WVP * vec4(position, 1.0f);
-
-    uv0 = textureCoords;
 }

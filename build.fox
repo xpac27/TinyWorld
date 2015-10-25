@@ -20,6 +20,6 @@ build obj(out/objects/tests/*): auto lib/tests/src/*.cpp
 build obj(out/objects/app/*): auto app/src/*.cpp
     includedirs += app/inc
 
-build lib(out/libs/tw): auto obj(out/objects/lib/**/*)
-build app(out/tests): auto obj(out/objects/tests/*) lib(out/libs/tw)
-build app(out/tinyworld): auto obj(out/objects/app/*) lib(out/libs/tw)
+build out/libs/lib(tw): auto obj(out/objects/lib/**/*)
+build app(out/tests): auto obj(out/objects/tests/*) out/libs/lib(tw)
+build app(out/tinyworld): auto obj(out/objects/app/*) out/libs/lib(tw)
