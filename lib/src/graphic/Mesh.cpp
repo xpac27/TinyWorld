@@ -27,11 +27,22 @@ Mesh::Mesh(const char *filename)
 
 Mesh::~Mesh()
 {
+    for (auto diffuse : diffuses) {
+        glDeleteTextures(1, &diffuse);
+    }
 }
 
 void Mesh::debug()
 {
     OBJ::debug(vertexes, normals, indexes);
+}
+
+void Mesh::bindTexture()
+{
+    if (diffuses.size() > 0) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuses[0]);
+    }
 }
 
 void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
@@ -44,8 +55,6 @@ void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuses[0]);
     glBindVertexArray(VAO);
 
     glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);
@@ -97,7 +106,7 @@ void Mesh::loadVAO()
 
 void Mesh::loadTextures()
 {
-    for (auto m : materials) {
+    for (auto &m : materials) {
         diffuses.push_back(loadTexture(m.map_Kd.data()));
     }
 }

@@ -23,12 +23,14 @@ public:
     ~Mesh();
 
     void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
+    void bindTexture();
     void debug();
 
 private:
 
     void loadVAO();
     void loadTextures();
+
     GLuint loadTexture(const char *filename);
 
     // TODO wrap that in a class
