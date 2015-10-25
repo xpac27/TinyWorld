@@ -13,6 +13,7 @@ Todo:
 - [ ] shadow mapping (for 1 directional light only)
 - [ ] light pre-pass (deferred lighting)
 - [ ] deferred shading
+- [ ] shadow volume
 - [x] batched rendering
 - [x] ambiant, diffuse, specular lighting
 - [x] png textures
