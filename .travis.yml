@@ -5,14 +5,12 @@ branches:
     except: /^WIP-.*$/
 
 install:
-    - brew install glew glfw3 glm ninja dos2unix
-    - curl -LO https://github.com/beardsvibe/buildfox/releases/download/v0.1-dev/bf
+    - brew install glew glfw3 glm ninja
+    - pip install --user buildfox
+    - mv /Users/travis/Library/Python/2.7/bin/bf /usr/local/bin/
 
 before_script:
-    - dos2unix bf
-    - chmod +x bf
-    - mv bf /usr/local/bin/
+    - make configure
 
 script:
-    - make configure
     - make test
