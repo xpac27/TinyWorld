@@ -11,7 +11,7 @@ filter coverage: true toolset: clang
 
 includedirs = lib/inc
 
-build out/objects/lib/obj(*): auto lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+build out/objects/lib/obj(**/*): auto lib/src/**/*.cpp
     includedirs += lib/src
 
 build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
@@ -20,6 +20,6 @@ build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
 build out/objects/app/obj(*): auto app/src/*.cpp
     includedirs += app/inc
 
-build out/libs/shlib(tw) | out/libs/lib(tw): auto out/objects/lib/obj(*)
+build out/libs/shlib(tw) | out/libs/lib(tw): auto out/objects/lib/obj(**/*)
 build out/app(tests): auto out/objects/tests/obj(*) out/libs/shlibdep(tw)
 build out/app(tinyworld): auto out/objects/app/obj(*) out/libs/shlibdep(tw)
