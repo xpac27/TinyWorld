@@ -1,5 +1,5 @@
 filter toolset: clang
-    cxxflags = -std=c++11 -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+    cxxflags = -g -std=c++11 -stdlib=libc++ -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
 
 filter system: Darwin
     ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
@@ -11,15 +11,15 @@ filter coverage: true toolset: clang
 
 includedirs = lib/inc
 
-build out/objects/lib/obj(*): auto lib/src/ecs/*.cpp lib/src/graphic/*.cpp lib/src/utils/*.cpp lib/src/systems/*.cpp
+build obj(out/objects/lib/**/*): auto lib/src/**/*.cpp
     includedirs += lib/src
 
-build out/objects/tests/obj(*): auto lib/tests/src/*.cpp
+build obj(out/objects/tests/*): auto lib/tests/src/*.cpp
     includedirs += lib/tests/src lib/src
 
-build out/objects/app/obj(*): auto app/src/*.cpp
+build obj(out/objects/app/*): auto app/src/*.cpp
     includedirs += app/inc
 
-build out/libs/shlib(tw) | out/libs/lib(tw): auto out/objects/lib/obj(*)
-build out/app(tests): auto out/objects/tests/obj(*) out/libs/shlibdep(tw)
-build out/app(tinyworld): auto out/objects/app/obj(*) out/libs/shlibdep(tw)
+build out/libs/lib(tw): auto obj(out/objects/lib/**/*)
+build app(out/tests): auto obj(out/objects/tests/*) out/libs/lib(tw)
+build app(out/tinyworld): auto obj(out/objects/app/*) out/libs/lib(tw)
