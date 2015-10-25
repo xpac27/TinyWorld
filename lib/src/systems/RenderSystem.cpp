@@ -57,8 +57,17 @@ void RenderSystem::initialize()
     shadowingFS.read("app/res/shaders/shadowing.fs");
     shadowingFS.compile();
 
+    Shader debugingVS(GL_VERTEX_SHADER, &debuging);
+    debugingVS.read("app/res/shaders/debuging.vs");
+    debugingVS.compile();
+
+    Shader debugingFS(GL_FRAGMENT_SHADER, &debuging);
+    debugingFS.read("app/res/shaders/debuging.fs");
+    debugingFS.compile();
+
     rendering.link();
     shadowing.link();
+    debuging.link();
 
     frameBuffer.initialize(100, 100);
 
@@ -71,6 +80,7 @@ void RenderSystem::initialize()
     renderingSpecularPower = rendering.getLocation("specularPower");
     renderingEyeWorldPosition = rendering.getLocation("eyePOVWorldPosition");
     shadowingTextureUnit = shadowing.getLocation("textureUnit");
+    debugingTextureUnit = debuging.getLocation("textureUnit");
 }
 
 void RenderSystem::update()
@@ -104,7 +114,8 @@ void RenderSystem::update()
 
     setGLStates();
     shadowPass();
-    renderPass(eyePOV.getPosition());
+    // renderPass(eyePOV.getPosition());
+    debugPass();
     unsetGLStates();
     WVPEyeProjections.clear();
     WVPLightProjections.clear();
@@ -148,7 +159,7 @@ void RenderSystem::shadowPass()
 
     shadowing.use();
 
-    glUniform1i(renderingTextureUnit, 0);
+    glUniform1i(shadowingTextureUnit, 0);
 
     for (unsigned int t = 0; t < WVPLightProjections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->draw(WVPLightProjections.size(t), WVPLightProjections.get(t)->data(), Wprojections.get(t)->data());
@@ -174,8 +185,24 @@ void RenderSystem::renderPass(glm::vec3 POVPosition)
     glUniform3f(renderingEyeWorldPosition, POVPosition.x, POVPosition.y, POVPosition.z);
 
     for (unsigned int t = 0; t < WVPEyeProjections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->bindTexture();
         meshStore->getMesh(MeshType(t))->draw(WVPEyeProjections.size(t), WVPEyeProjections.get(t)->data(), Wprojections.get(t)->data());
     }
 
     rendering.idle();
+}
+
+void RenderSystem::debugPass()
+{
+    debuging.use();
+
+    glUniform1i(debugingTextureUnit, 0);
+
+    frameBuffer.bindForReading();
+
+    mat4 matrix(1.0f);
+    meshStore->getMesh(MeshType::PLAN)->draw(1, &matrix, &matrix);
+
+    frameBuffer.idle();
+    debuging.idle();
 }

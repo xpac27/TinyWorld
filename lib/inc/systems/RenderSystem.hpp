@@ -35,9 +35,11 @@ private:
     void unsetGLStates();
     void shadowPass();
     void renderPass(glm::vec3 POVPosition);
+    void debugPass();
 
     Program rendering;
     Program shadowing;
+    Program debuging;
 
     DirectionalLight light;
 
@@ -57,6 +59,7 @@ private:
     GLint renderingLightDirection = 0;
     GLint renderingEyeWorldPosition = 0;
     GLint shadowingTextureUnit = 0;
+    GLint debugingTextureUnit = 0;
 
     float count = 0.f;
 

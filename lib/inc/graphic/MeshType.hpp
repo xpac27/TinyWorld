@@ -2,5 +2,5 @@
 
 enum MeshType
 {
-    CUBE, CACODEMON, FLAN
+    PLAN, CUBE, CACODEMON, FLAN
 };

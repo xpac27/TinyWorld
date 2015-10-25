@@ -6,7 +6,7 @@ class FrameBuffer
 
 public:
 
-    FrameBuffer();
+    ~FrameBuffer();
 
     void initialize(int width, int height);
     void bindForWriting() const;
