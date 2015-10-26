@@ -10,7 +10,7 @@ using namespace glm;
 
 Mesh::Mesh(const char *filename)
 {
-    OBJ(vertexes, uvs, normals, indexes, materials).load(filename);
+    OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
     totalIndexes = GLsizei(indexes.size());
 
     if (uvs.size() < vertexes.size()) {

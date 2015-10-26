@@ -11,8 +11,9 @@ class OBJ
 
 public:
 
-    OBJ(std::vector<glm::vec3> &_vertexes, std::vector<glm::vec2> &_uvs, std::vector<glm::vec3> &_normals, std::vector<unsigned int> &_indexes, std::vector<Material> &_materials)
-        : vertexes(_vertexes)
+    OBJ(std::vector<glm::vec3> &_triangles, std::vector<glm::vec3> &_vertexes, std::vector<glm::vec2> &_uvs, std::vector<glm::vec3> &_normals, std::vector<unsigned int> &_indexes, std::vector<Material> &_materials)
+        : triangles(_triangles)
+        , vertexes(_vertexes)
         , uvs(_uvs)
         , normals(_normals)
         , indexes(_indexes)
@@ -36,7 +37,9 @@ private:
     void skipNextChar(std::ifstream &fin);
     void skipLine(std::ifstream &fin);
     void addPoint(unsigned int values[3]);
+    void addTriangle(unsigned int values[3]);
 
+    std::vector<glm::vec3> &triangles;
     std::vector<glm::vec3> &vertexes;
     std::vector<glm::vec2> &uvs;
     std::vector<glm::vec3> &normals;

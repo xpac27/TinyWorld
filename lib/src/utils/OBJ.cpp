@@ -17,7 +17,7 @@ void OBJ::load(const char *filename)
     if (openFile(filename, fin)) {
         parseLines(fin);
     }
-    printl("obj loaded with ", vertexes.size(), "vertexes ", indexes.size(), "indexes");
+    printl("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
@@ -86,13 +86,16 @@ void OBJ::parseNormal(ifstream &fin)
 void OBJ::parseFace(ifstream &fin)
 {
     unsigned int values[3] {0};
+    unsigned int faceIndexes[3] {0};
     for (unsigned int point = 0; point < 3; point ++) {
         for (unsigned int type = 0; type < 3; type ++) {
             fin >> values[type];
             skipNextChar(fin);
         }
+        faceIndexes[point] = values[0] - 1;
         addPoint(values);
     }
+    addTriangle(faceIndexes);
 }
 
 void OBJ::addPoint(unsigned int values[3])
@@ -104,6 +107,11 @@ void OBJ::addPoint(unsigned int values[3])
 
     normals.resize(vertexes.size());
     normals[values[0] - 1] = normalList[values[2] - 1];
+}
+
+void OBJ::addTriangle(unsigned int values[3])
+{
+    triangles.push_back(vec3(values[0], values[1], values[2]));
 }
 
 void OBJ::skipNextChar(std::ifstream &fin)

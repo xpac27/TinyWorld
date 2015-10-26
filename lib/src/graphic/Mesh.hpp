@@ -14,6 +14,22 @@
 
 struct Material;
 
+// struct Plane
+// {
+//     float a;
+//     float b;
+//     float c;
+//     float d;
+// };
+//
+// struct Triangle
+// {
+//     int vertexes[3];      // Index Of Each Vertex Within An Object That Makes Up The Triangle Of This Face
+//     int neighbours[3];    // Index Of Each Triangle That Neighbours This One Within The Object
+//     Plane equation;       // Equation Of A Plane That Contains This Triangle
+//     bool visible;         // Is The Face Visible By The Light?
+// };
+
 class Mesh
 {
 
@@ -38,10 +54,11 @@ private:
     GLuint VAB[6];
     GLsizei totalIndexes {0};
 
+    std::vector<unsigned int> indexes;
+    std::vector<glm::vec3> triangles;
     std::vector<glm::vec3> vertexes;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    std::vector<unsigned int> indexes;
     std::vector<Material> materials;
     std::vector<GLuint> diffuses;
 };
