@@ -123,57 +123,35 @@ void Mesh::computeTrianglesNeighbours()
     }
 }
 
-void Mesh::computeTrianglesVisibility(glm::vec3 &lightDirection)
+void Mesh::updateTrianglesVisibility(glm::vec3 &direction)
 {
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         trianglesVisibility[t] = (
-            trianglesPlaneEquations[t][0] * lightDirection[0]
-          + trianglesPlaneEquations[t][1] * lightDirection[1]
-          + trianglesPlaneEquations[t][2] * lightDirection[2]
+            trianglesPlaneEquations[t][0] * direction[0]
+          + trianglesPlaneEquations[t][1] * direction[1]
+          + trianglesPlaneEquations[t][2] * direction[2]
           + trianglesPlaneEquations[t][3] > 0);
     }
 }
 
-// TODO save shadow if light and mesh are linked to static entities
-void Mesh::updateShadowVolume(vec3 &lightDirection, vector<mat4x3> &quads, unsigned int &totalQuads)
+void Mesh::updateSilhouette(vec3 &direction)
 {
-    computeTrianglesVisibility(lightDirection);
+    updateTrianglesVisibility(direction);
+    silouhette.clear();
 
-    totalQuads = 0;
-
-    // For each visible triangle
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         if (trianglesVisibility[t]) {
-
-            // For each edge of the triangle
-            for (int edge = 0; edge < 3; edge ++){
-
+            for (int edge = 0; edge < 3; edge ++){ // For each visible triangle's edges
                 // If edge's neighbouring face is not visible, or if there is no neighbour
-                // then this edge is part of the silouhette
+                // then this edge's vertexes are part of the silouhette
                 int neighbourIndex = trianglesNeighbours[t][edge];
                 if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
-
-                    // Get edge's vertexes
-                    vec3& vertex1 = vertexes[triangles[t][edge]];
-                    vec3& vertex2 = vertexes[triangles[t][(edge + 1) % 3]];
-
-                    // Overwrite or push a new quad into the list
-                    if (totalQuads < quads.size()) {
-                        quads[totalQuads] = extractQuadFromEdge(vertex1, vertex2, lightDirection);
-                    } else {
-                        quads.push_back(extractQuadFromEdge(vertex1, vertex2, lightDirection));
-                    }
-
-                    ++totalQuads;
+                    silouhette.push_back(triangles[t][edge]);
+                    silouhette.push_back(triangles[t][(edge + 1) % 3]);
                 }
             }
         }
     }
-}
-
-glm::mat4x3 Mesh::extractQuadFromEdge(glm::vec3 &vertex1, glm::vec3 &vertex2, glm::vec3 &direction)
-{
-    return mat4x3(vertex1, vertex2, vertex1 * direction * 1000.f, vertex2 * direction * 1000.f);
 }
 
 GLuint Mesh::loadTexture(const char *filename)
