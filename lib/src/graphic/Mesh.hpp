@@ -6,14 +6,8 @@
 #include <glm/mat4x3.hpp>
 #include <vector>
 
-#define IND_VB 0
-#define POS_VB 1
-#define NOR_VB 2
-#define TEX_VB 3
-#define WVP_VB 4
-#define W_VB 5
-
 struct Material;
+class MeshVertexArray;
 
 class Mesh
 {
@@ -43,10 +37,7 @@ private:
 
     GLuint loadTexture(const char *filename);
 
-    // TODO wrap that in a class
-    GLuint VAO;
-    GLuint VAB[6];
-    GLsizei totalIndexes {0};
+    MeshVertexArray* vertexArray;
 
     std::vector<unsigned int> indexes;
     std::vector<bool> trianglesVisibility;
