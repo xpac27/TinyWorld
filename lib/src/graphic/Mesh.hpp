@@ -14,15 +14,6 @@
 
 struct Material;
 
-//
-// struct Triangle
-// {
-//     int vertexes[3];      // Index Of Each Vertex Within An Object That Makes Up The Triangle Of This Face
-//     int neighbours[3];    // Index Of Each Triangle That Neighbours This One Within The Object
-//     Plane equation;       // Equation Of A Plane That Contains This Triangle
-//     bool visible;         // Is The Face Visible By The Light?
-// };
-
 class Mesh
 {
 
@@ -39,7 +30,8 @@ private:
 
     void loadVAO();
     void loadTextures();
-    void computePlaneEquations();
+    void computeTrianglesPlaneEquations();
+    void computeTrianglesNeighbours();
 
     GLuint loadTexture(const char *filename);
 
@@ -50,11 +42,12 @@ private:
 
     std::vector<unsigned int> indexes;
     std::vector<glm::uvec3> triangles;
+    std::vector<glm::ivec3> trianglesNeighbours;
+    std::vector<glm::vec4> trianglesPlaneEquations;
     std::vector<glm::vec3> vertexes;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<Material> materials;
     std::vector<GLuint> diffuses;
-    std::vector<glm::vec4> planeEquations;
 };
 

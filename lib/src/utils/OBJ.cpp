@@ -135,25 +135,55 @@ void OBJ::parseMTLLib(ifstream &fin)
 
 void OBJ::debug()
 {
-    debug(vertexes, normals, indexes);
+    OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
 }
 
-void OBJ::debug(vector<glm::vec3> &_vertexes, vector<glm::vec3> &_normals, vector<unsigned int> &_indexes)
+void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes, std::vector<Material> &materials)
 {
+    nl();
+    info("printing mesh details");
+    
+    nl();
+    printl("  vertexes:");
     unsigned int index = 0;
-    for (auto v : _vertexes) {
-        printl(index++, "v", v.x, v.y, v.z);
+    for (auto v : vertexes) {
+        printl("    ", ++index, "=", v.x, v.y, v.z);
     }
-    print("\n");
 
+    nl();
+    printl("  normals:");
     index = 0;
-    for (auto n : _normals) {
-        printl(index++, "vn", n.x, n.y, n.z);
+    for (auto n : normals) {
+        printl("    ", ++index, "=", n.x, n.y, n.z);
     }
-    print("\n");
 
-    for (unsigned int i = 0; i < _indexes.size(); i += 3) {
-        printl("-", _indexes[i+0], _indexes[i+1], _indexes[i+2]);
+    nl();
+    printl("  uvs:");
+    index = 0;
+    for (auto u : uvs) {
+        printl("    ", ++index, "=", u.x, u.y);
     }
-    printl("\n---->>> ", _vertexes.size(), "v -", _normals.size(), "n -", _indexes.size(), "i");
+
+    nl();
+    printl("  triangles:");
+    for (auto t : triangles) {
+        printl("    ", t.x + 1, t.y + 1, t.z + 1);
+    }
+
+    nl();
+    printl("  materials:");
+    for (auto m : materials) {
+        printl("    ", "name", "=", m.name);
+        printl("    ", "d", "=", m.d);
+        printl("    ", "Ns", "=", m.Ns);
+        printl("    ", "Ka", "=", m.Ka[0], m.Ka[1], m.Ka[2]);
+        printl("    ", "Kd", "=", m.Kd[0], m.Kd[1], m.Kd[2]);
+        printl("    ", "Ks", "=", m.Ks[0], m.Ks[1], m.Ks[2]);
+        printl("    ", "Kd", "=", m.map_Kd);
+        printl("    ", "Ks", "=", m.map_Ks);
+        printl("    ", "Bump", "=", m.map_Bump);
+    }
+
+    nl();
+    printl("    Totals indexes:", indexes.size());
 }

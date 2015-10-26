@@ -23,7 +23,7 @@ public:
     void load(const char *filename);
     void debug();
 
-    static void debug(std::vector<glm::vec3> &vertexes, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes);
+    static void debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes, std::vector<Material> &materials);
 
 private:
 

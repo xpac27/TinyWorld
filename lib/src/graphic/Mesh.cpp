@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace glm;
+using namespace Log;
 
 Mesh::Mesh(const char *filename)
 {
@@ -23,7 +24,8 @@ Mesh::Mesh(const char *filename)
 
     loadVAO();
     loadTextures();
-    computePlaneEquations();
+    computeTrianglesPlaneEquations();
+    computeTrianglesNeighbours();
 }
 
 Mesh::~Mesh()
@@ -35,7 +37,7 @@ Mesh::~Mesh()
 
 void Mesh::debug()
 {
-    OBJ::debug(vertexes, normals, indexes);
+    OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
 }
 
 void Mesh::bindTexture()
@@ -112,21 +114,50 @@ void Mesh::loadTextures()
     }
 }
 
-void Mesh::computePlaneEquations()
+void Mesh::computeTrianglesPlaneEquations()
 {
+    trianglesNeighbours.resize(triangles.size());
+
     for (auto &triangle : triangles) {
         const vec3& v1 = vertexes[triangle[0]];
         const vec3& v2 = vertexes[triangle[1]];
         const vec3& v3 = vertexes[triangle[2]];
 
-        planeEquations.push_back(vec4(
+        trianglesPlaneEquations.push_back(vec4(
             v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z),
             v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x),
             v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y),
             - (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z))
         ));
     }
-    planeEquations.shrink_to_fit();
+    trianglesPlaneEquations.shrink_to_fit();
+}
+
+void Mesh::computeTrianglesNeighbours()
+{
+    trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
+
+    for (unsigned int t1 = 0; t1 < triangles.size(); t1++) {
+        for (unsigned int t2 = t1 + 1; t2 < triangles.size(); t2++) {
+            for (int a = 0; a < 3; a++) {
+                if (trianglesNeighbours[t1][a] == -1) {
+                    for (int b = 0; b < 3; b++) {
+                        unsigned int triangle_1_indexA = triangles[t1][a];
+                        unsigned int triangle_1_indexB = triangles[t1][b];
+                        unsigned int triangle_2_indexA = triangles[t2][a];
+                        unsigned int triangle_2_indexB = triangles[t2][b];
+
+                        if ((triangle_1_indexA == triangle_2_indexA && triangle_1_indexB == triangle_2_indexB)
+                        || (triangle_1_indexA == triangle_2_indexB && triangle_1_indexB == triangle_2_indexA)) {
+                            trianglesNeighbours[t1][a] = int(t2);
+                            trianglesNeighbours[t2][b] = int(t1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    trianglesNeighbours.shrink_to_fit();
 }
 
 GLuint Mesh::loadTexture(const char *filename)
