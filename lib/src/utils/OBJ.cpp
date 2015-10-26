@@ -117,7 +117,7 @@ void OBJ::addPoint(unsigned int values[3])
 
 void OBJ::addTriangle(unsigned int values[3])
 {
-    triangles.push_back(vec3(values[0], values[1], values[2]));
+    triangles.push_back(uvec3(values[0], values[1], values[2]));
 }
 
 void OBJ::skipNextChar(std::ifstream &fin)
