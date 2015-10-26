@@ -17,10 +17,16 @@ void OBJ::load(const char *filename)
     if (openFile(filename, fin)) {
         parseLines(fin);
     }
-    printl("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
+    triangles.shrink_to_fit();
+    vertexes.shrink_to_fit();
+    uvs.shrink_to_fit();
+    normals.shrink_to_fit();
+    indexes.shrink_to_fit();
+    materials.shrink_to_fit();
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
+    printl("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
 }
 
 bool OBJ::openFile(const char *filename, ifstream &fin)

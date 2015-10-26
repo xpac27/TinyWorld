@@ -23,6 +23,7 @@ Mesh::Mesh(const char *filename)
 
     loadVAO();
     loadTextures();
+    computePlaneEquations();
 }
 
 Mesh::~Mesh()
@@ -109,6 +110,23 @@ void Mesh::loadTextures()
     for (auto &m : materials) {
         diffuses.push_back(loadTexture(m.map_Kd.data()));
     }
+}
+
+void Mesh::computePlaneEquations()
+{
+    for (auto &triangle : triangles) {
+        const vec3& v1 = vertexes[triangle[0]];
+        const vec3& v2 = vertexes[triangle[1]];
+        const vec3& v3 = vertexes[triangle[2]];
+
+        planeEquations.push_back(vec4(
+            v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z),
+            v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x),
+            v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y),
+            - (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z))
+        ));
+    }
+    planeEquations.shrink_to_fit();
 }
 
 GLuint Mesh::loadTexture(const char *filename)

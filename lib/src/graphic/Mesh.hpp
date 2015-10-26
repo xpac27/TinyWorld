@@ -14,13 +14,6 @@
 
 struct Material;
 
-// struct Plane
-// {
-//     float a;
-//     float b;
-//     float c;
-//     float d;
-// };
 //
 // struct Triangle
 // {
@@ -46,6 +39,7 @@ private:
 
     void loadVAO();
     void loadTextures();
+    void computePlaneEquations();
 
     GLuint loadTexture(const char *filename);
 
@@ -55,11 +49,12 @@ private:
     GLsizei totalIndexes {0};
 
     std::vector<unsigned int> indexes;
-    std::vector<glm::vec3> triangles;
+    std::vector<glm::uvec3> triangles;
     std::vector<glm::vec3> vertexes;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<Material> materials;
     std::vector<GLuint> diffuses;
+    std::vector<glm::vec4> planeEquations;
 };
 
