@@ -4,12 +4,12 @@ using namespace glm;
 
 void MeshVertexArray::initialize(std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes)
 {
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    glGenBuffers(7, VAB);
+    glGenVertexArrays(2, VAO);
 
-    glGenBuffers(6, VAB);
+    glBindVertexArray(VAO[VOL_VO]);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[POS_VB]);
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[VER_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -41,6 +41,10 @@ void MeshVertexArray::initialize(std::vector<glm::vec3> &vertexes, std::vector<g
         glEnableVertexAttribArray(7 + i);
     }
 
+    glBindVertexArray(VAO[SIL_VO]);
+    glBindBuffer(GL_ARRAY_BUFFER, VAB[VER_VB]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[SIL_VB]);
+
     glBindVertexArray(0);
 }
 
@@ -53,9 +57,20 @@ void MeshVertexArray::uploadMatrices(unsigned int instances, const glm::mat4* WV
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
 }
 
-void MeshVertexArray::bind()
+void MeshVertexArray::uploadSilhouette(std::vector<unsigned int> &indexes)
 {
-    glBindVertexArray(VAO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[SIL_VB]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_DYNAMIC_DRAW);
+}
+
+void MeshVertexArray::bindVolume()
+{
+    glBindVertexArray(VAO[VOL_VO]);
+}
+
+void MeshVertexArray::bindSilhouette()
+{
+    glBindVertexArray(VAO[SIL_VO]);
 }
 
 void MeshVertexArray::idle()

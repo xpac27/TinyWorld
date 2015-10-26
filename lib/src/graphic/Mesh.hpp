@@ -16,8 +16,9 @@ public:
     Mesh(const char *filename);
     ~Mesh();
 
+    void update(glm::vec3 &lightDirection);
     void draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
-    void updateSilhouette(glm::vec3 &direction);
+    void drawShadowVolume();
     void bindTexture();
     void debug();
 
@@ -31,6 +32,7 @@ private:
     void computeTrianglesPlaneEquations();
     void computeTrianglesNeighbours();
     void updateTrianglesVisibility(glm::vec3 &lightDirection);
+    void updateSilhouette();
 
     GLuint loadTexture(const char *filename);
 

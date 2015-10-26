@@ -45,13 +45,27 @@ void Mesh::bindTexture()
     }
 }
 
-void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
+void Mesh::update(vec3 &lightDirection)
+{
+    updateTrianglesVisibility(lightDirection);
+    updateSilhouette();
+    vertexArray->uploadSilhouette(silouhette);
+}
+
+void Mesh::draw(unsigned int instances, const mat4* WVPs, const mat4* Ws)
 {
     if (instances == 0) return;
 
     vertexArray->uploadMatrices(instances, WVPs, Ws);
-    vertexArray->bind();
+    vertexArray->bindVolume();
     glDrawElementsInstanced(GL_TRIANGLES, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
+    vertexArray->idle();
+}
+
+void Mesh::drawShadowVolume()
+{
+    vertexArray->bindSilhouette();
+    glDrawElements(GL_QUADS, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0);
     vertexArray->idle();
 }
 
@@ -123,22 +137,20 @@ void Mesh::computeTrianglesNeighbours()
     }
 }
 
-void Mesh::updateTrianglesVisibility(glm::vec3 &direction)
+void Mesh::updateTrianglesVisibility(vec3 &lightDirection)
 {
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         trianglesVisibility[t] = (
-            trianglesPlaneEquations[t][0] * direction[0]
-          + trianglesPlaneEquations[t][1] * direction[1]
-          + trianglesPlaneEquations[t][2] * direction[2]
+            trianglesPlaneEquations[t][0] * lightDirection[0]
+          + trianglesPlaneEquations[t][1] * lightDirection[1]
+          + trianglesPlaneEquations[t][2] * lightDirection[2]
           + trianglesPlaneEquations[t][3] > 0);
     }
 }
 
-void Mesh::updateSilhouette(vec3 &direction)
+void Mesh::updateSilhouette()
 {
-    updateTrianglesVisibility(direction);
     silouhette.clear();
-
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         if (trianglesVisibility[t]) {
             for (int edge = 0; edge < 3; edge ++){ // For each visible triangle's edges
