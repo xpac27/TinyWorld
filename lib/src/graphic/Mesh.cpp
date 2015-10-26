@@ -12,18 +12,14 @@ using namespace Log;
 Mesh::Mesh(const char *filename)
 {
     OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
+
     totalIndexes = GLsizei(indexes.size());
 
-    if (uvs.size() < vertexes.size()) {
-        uvs.resize(vertexes.size(), vec2(0.f));
-    }
-
-    if (materials.size() == 0) {
-        materials.push_back(Material("default"));
-    }
-
+    verifyUVs();
+    verifyMeterials();
     loadVAO();
     loadTextures();
+    initializeTriangleData();
     computeTrianglesPlaneEquations();
     computeTrianglesNeighbours();
 }
@@ -114,10 +110,29 @@ void Mesh::loadTextures()
     }
 }
 
+void Mesh::verifyUVs()
+{
+    if (uvs.size() < vertexes.size()) {
+        uvs.resize(vertexes.size(), vec2(0.f));
+    }
+}
+
+void Mesh::verifyMeterials()
+{
+    if (materials.size() == 0) {
+        materials.push_back(Material("default"));
+    }
+}
+
+void Mesh::initializeTriangleData()
+{
+    trianglesVisibility.resize(triangles.size(), false);
+    trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
+    trianglesPlaneEquations.resize(triangles.size());
+}
+
 void Mesh::computeTrianglesPlaneEquations()
 {
-    trianglesNeighbours.resize(triangles.size());
-
     for (auto &triangle : triangles) {
         const vec3& v1 = vertexes[triangle[0]];
         const vec3& v2 = vertexes[triangle[1]];
@@ -130,13 +145,10 @@ void Mesh::computeTrianglesPlaneEquations()
             - (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z))
         ));
     }
-    trianglesPlaneEquations.shrink_to_fit();
 }
 
 void Mesh::computeTrianglesNeighbours()
 {
-    trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
-
     for (unsigned int t1 = 0; t1 < triangles.size(); t1++) {
         for (unsigned int t2 = t1 + 1; t2 < triangles.size(); t2++) {
             for (int a = 0; a < 3; a++) {
@@ -157,7 +169,59 @@ void Mesh::computeTrianglesNeighbours()
             }
         }
     }
-    trianglesNeighbours.shrink_to_fit();
+}
+
+void Mesh::computeTrianglesVisibility(glm::vec3 &lightDirection)
+{
+    for (unsigned int t = 0; t < triangles.size(); t ++) {
+        trianglesVisibility[t] = (
+            trianglesPlaneEquations[t][0] * lightDirection[0]
+          + trianglesPlaneEquations[t][1] * lightDirection[1]
+          + trianglesPlaneEquations[t][2] * lightDirection[2]
+          + trianglesPlaneEquations[t][3] > 0);
+    }
+}
+
+// TODO save shadow if light and mesh are linked to static entities
+void Mesh::updateShadowVolume(vec3 &lightDirection, vector<mat4x3> &quads, unsigned int &totalQuads)
+{
+    computeTrianglesVisibility(lightDirection);
+
+    totalQuads = 0;
+
+    // For each visible triangle
+    for (unsigned int t = 0; t < triangles.size(); t ++) {
+        if (trianglesVisibility[t]) {
+
+            // For each edge of the triangle
+            for (int edge = 0; edge < 3; edge ++){
+
+                // If edge's neighbouring face is not visible, or if there is no neighbour
+                // then this edge is part of the silouhette
+                int neighbourIndex = trianglesNeighbours[t][edge];
+                if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
+
+                    // Get edge's vertexes
+                    vec3& vertex1 = vertexes[triangles[t][edge]];
+                    vec3& vertex2 = vertexes[triangles[t][(edge + 1) % 3]];
+
+                    // Overwrite or push a new quad into the list
+                    if (totalQuads < quads.size()) {
+                        quads[totalQuads] = extractQuadFromEdge(vertex1, vertex2, lightDirection);
+                    } else {
+                        quads.push_back(extractQuadFromEdge(vertex1, vertex2, lightDirection));
+                    }
+
+                    ++totalQuads;
+                }
+            }
+        }
+    }
+}
+
+glm::mat4x3 Mesh::extractQuadFromEdge(glm::vec3 &vertex1, glm::vec3 &vertex2, glm::vec3 &direction)
+{
+    return mat4x3(vertex1, vertex2, vertex1 * direction * 1000.f, vertex2 * direction * 1000.f);
 }
 
 GLuint Mesh::loadTexture(const char *filename)
