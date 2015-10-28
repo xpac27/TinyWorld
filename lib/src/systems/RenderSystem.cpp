@@ -136,7 +136,7 @@ void RenderSystem::unsetGLStates()
 void RenderSystem::shadowPass()
 {
     shadowing.use();
-    vec3 dir(-1, -1 ,-1);
+    vec3 dir(1, 1 ,1);
 
     printl("==========");
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
