@@ -41,8 +41,8 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::CUBE;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(2, 2, 2);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::FLAN;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(30, 30, 30);
     movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
     movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};
     movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);

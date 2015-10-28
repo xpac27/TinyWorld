@@ -45,7 +45,7 @@ private:
     std::vector<glm::ivec3> trianglesNeighbours;
     std::vector<glm::vec4> trianglesPlaneEquations;
     std::vector<glm::uvec3> triangles;
-    std::vector<glm::vec3> vertexes;
+    std::vector<glm::vec4> vertexes;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<Material> materials;

@@ -1,18 +1,25 @@
 #include "MeshVertexArray.hpp"
+#include "utils/Log.hpp"
+#include <algorithm>
 
 using namespace glm;
 using namespace std;
 
-void MeshVertexArray::initialize(vector<glm::vec3> &vertexes, vector<glm::vec2> &uvs, vector<glm::vec3> &normals)
+void MeshVertexArray::initialize(vector<glm::vec4> &vertexes, vector<glm::vec2> &uvs, vector<glm::vec3> &normals)
 {
+    std::vector<vec4> vertexesCopy;
+    vertexesCopy.resize(vertexes.size());
+    transform(vertexes.begin(), vertexes.end(), vertexesCopy.begin(), [](vec4 v) { v[3] = 0.f; return v; });
+
     glGenBuffers(6, VAB);
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[VER_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * vertexes.size() * 2, vertexes.data(), GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * vertexesCopy.size(), sizeof(GLfloat) * 4 * vertexesCopy.size(), vertexesCopy.data());
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[TEX_VB]);

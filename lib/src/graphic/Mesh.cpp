@@ -49,10 +49,6 @@ void Mesh::updateShadowVolume(vec3 &lightDirection)
 {
     updateTrianglesVisibility(lightDirection);
     updateSilhouette();
-    // for (auto i : silouhette) {
-    //     print("_", i);
-    // }
-    // printl("===============");
 }
 
 void Mesh::updateMatrices(unsigned int instances, const mat4* WVPs, const mat4* Ws)
@@ -72,7 +68,7 @@ void Mesh::drawShadowVolume(unsigned int instances)
 {
     vertexArray->uploadIndexes(silouhette);
     vertexArray->bind();
-    glDrawElementsInstanced(GL_LINES, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0, instances);
+    glDrawElementsInstanced(GL_TRIANGLES, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
 }
 
@@ -107,17 +103,9 @@ void Mesh::initializeTriangleData()
 void Mesh::computeTrianglesPlaneEquations()
 {
     for (auto &triangle : triangles) {
-        const vec3& v1 = vertexes[triangle[0]];
-        const vec3& v2 = vertexes[triangle[1]];
-        const vec3& v3 = vertexes[triangle[2]];
-        // printl("v1", v1.x, v1.y, v1.z);
-        // printl("v2", v2.x, v2.y, v2.z);
-        // printl("v3", v3.x, v3.y, v3.z);
-        //
-        // printl(v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z));
-        // printl(v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x));
-        // printl(v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y));
-        // printl(- (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z)));
+        const vec4& v1 = vertexes[triangle[0]];
+        const vec4& v2 = vertexes[triangle[1]];
+        const vec4& v3 = vertexes[triangle[2]];
 
         trianglesPlaneEquations.push_back(vec4(
             v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z),
@@ -155,41 +143,32 @@ void Mesh::computeTrianglesNeighbours()
 
 void Mesh::updateTrianglesVisibility(vec3 &lightDirection)
 {
-    // printl("visibility:");
-    // print("    ");
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         trianglesVisibility[t] = (
             trianglesPlaneEquations[t][0] * lightDirection[0]
           + trianglesPlaneEquations[t][1] * lightDirection[1]
           + trianglesPlaneEquations[t][2] * lightDirection[2]
           + trianglesPlaneEquations[t][3] > 0);
-        // printl(trianglesPlaneEquations[t][0], trianglesPlaneEquations[t][1], trianglesPlaneEquations[t][2], trianglesPlaneEquations[t][3]);
-        // print(".", trianglesVisibility[t]);
     }
-    // nl();
 }
 
 void Mesh::updateSilhouette()
 {
     silouhette.clear();
+    unsigned int totalVertexes = unsigned(vertexes.size());
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         if (trianglesVisibility[t]) {
-            // silouhette.push_back(triangles[t][0]);
-            // silouhette.push_back(triangles[t][1]);
-            // silouhette.push_back(triangles[t][1]);
-            // silouhette.push_back(triangles[t][2]);
-            // silouhette.push_back(triangles[t][2]);
-            // silouhette.push_back(triangles[t][0]);
-
             for (int edge = 0; edge < 3; edge ++){ // For each visible triangle's edges
                 // If edge's neighbouring face is not visible, or if it has no neighbour
                 // then this edge's vertexes are part of the silouhette
                 int neighbourIndex = trianglesNeighbours[t][edge];
                 if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
-                    // print("Hop!");
                     silouhette.push_back(triangles[t][edge]);
+                    silouhette.push_back(triangles[t][edge] + totalVertexes);
                     silouhette.push_back(triangles[t][(edge + 1) % 3]);
-                    // break;
+                    silouhette.push_back(triangles[t][(edge + 1) % 3]);
+                    silouhette.push_back(triangles[t][edge] + totalVertexes);
+                    silouhette.push_back(triangles[t][(edge + 1) % 3] + totalVertexes);
                 }
             }
         }

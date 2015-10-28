@@ -2,10 +2,10 @@
 #include "graphic/Mesh.hpp"
 
 MeshStore::MeshStore()
-    // : plan(new Mesh("plan.obj"))
-    : cube(new Mesh("cube.obj"))
-    // , cacodemon(new Mesh("cacodemon.obj"))
-    // , flan(new Mesh("flan.obj"))
+    : plan(new Mesh("plan.obj"))
+    , cube(new Mesh("cube.obj"))
+    , cacodemon(new Mesh("cacodemon.obj"))
+    , flan(new Mesh("flan.obj"))
 {
 }
 
@@ -20,9 +20,9 @@ MeshStore::~MeshStore()
 Mesh* MeshStore::getMesh(MeshType type)
 {
     switch (type) {
-        case MeshType::PLAN: return cube;
+        case MeshType::PLAN: return plan;
         case MeshType::CUBE: return cube;
-        case MeshType::CACODEMON: return cube;
-        case MeshType::FLAN: return cube;
+        case MeshType::CACODEMON: return cacodemon;
+        case MeshType::FLAN: return flan;
     }
 }

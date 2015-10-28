@@ -16,7 +16,7 @@ class MeshVertexArray
 {
 public:
 
-    void initialize(std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals);
+    void initialize(std::vector<glm::vec4> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals);
     void uploadMatrices(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
     void uploadIndexes(std::vector<unsigned int> &indexes);
     void bind();

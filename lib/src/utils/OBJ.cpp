@@ -4,6 +4,7 @@
 #include "utils/Log.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <cstring>
 #include <assert.h>
 
@@ -72,7 +73,7 @@ void OBJ::parseVertex(ifstream &fin)
 {
     GLfloat f1, f2, f3;
     fin >> f1 >> f2 >> f3;
-    vertexes.push_back(vec3(f1, f2, f3));
+    vertexes.push_back(vec4(f1, f2, f3, 1.0f));
 }
 
 void OBJ::parseUVs(ifstream &fin)
@@ -138,7 +139,7 @@ void OBJ::debug()
     OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
 }
 
-void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes, std::vector<Material> &materials)
+void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes, std::vector<Material> &materials)
 {
     nl();
     info("printing mesh details");

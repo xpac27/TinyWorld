@@ -96,7 +96,7 @@ void RenderSystem::update()
 
     setGLStates();
     shadowPass();
-    // renderPass(eye.getPosition());
+    renderPass(eye.getPosition());
     unsetGLStates();
 
     WVPprojections.clear();
@@ -138,9 +138,7 @@ void RenderSystem::shadowPass()
     shadowing.use();
     vec3 dir(1, 1 ,1);
 
-    printl("==========");
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        printl("  draw");
         meshStore->getMesh(MeshType(t))->updateShadowVolume(dir);
         meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
         meshStore->getMesh(MeshType(t))->drawShadowVolume(WVPprojections.size(t));
@@ -152,7 +150,6 @@ void RenderSystem::shadowPass()
 void RenderSystem::renderPass(glm::vec3 eyePosition)
 {
     rendering.use();
-    // shadowing.use();
     glUniform1i(renderingShaderTextureUnit, 0);
     glUniform3f(renderingShaderLightColor, light.color.x, light.color.y, light.color.z);
     glUniform3f(renderingShaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
@@ -169,5 +166,4 @@ void RenderSystem::renderPass(glm::vec3 eyePosition)
     }
 
     rendering.idle();
-    // shadowing.idle();
 }
