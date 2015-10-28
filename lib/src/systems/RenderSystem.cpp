@@ -52,6 +52,7 @@ void RenderSystem::initialize()
     renderingShaderSpecularIntensity = rendering.getLocation("specularIntensity");
     renderingShaderSpecularPower = rendering.getLocation("specularPower");
     renderingShaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
+    shadowingShaderLight = shadowing.getLocation("light");
 }
 
 void RenderSystem::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
@@ -91,6 +92,7 @@ void RenderSystem::update()
 
             WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
             Wprojections.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
+            rotations.add(visibility->meshType, vec3(0.f, 0.f, count));
         }
     }
 
@@ -101,6 +103,7 @@ void RenderSystem::update()
 
     WVPprojections.clear();
     Wprojections.clear();
+    rotations.clear();
 
     count += 0.03;
 }
@@ -136,12 +139,16 @@ void RenderSystem::unsetGLStates()
 void RenderSystem::shadowPass()
 {
     shadowing.use();
-    vec3 dir(1, 1 ,1);
+    // vec3 dir(1, 1 ,1);
 
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->updateShadowVolume(dir);
         meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
-        meshStore->getMesh(MeshType(t))->drawShadowVolume(WVPprojections.size(t));
+        for (unsigned int i = 0; i < rotations.size(t); i++) {
+            vec3 dir = rotations.get(t)->at(i) * light.direction;
+            glUniform4f(shadowingShaderLight, dir.x, dir.y, dir.z, 0.f);
+            meshStore->getMesh(MeshType(t))->updateShadowVolume(dir);
+            meshStore->getMesh(MeshType(t))->drawShadowVolume(i);
+        }
     }
 
     shadowing.idle();

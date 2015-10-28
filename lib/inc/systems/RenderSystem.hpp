@@ -41,6 +41,7 @@ private:
     DirectionalLight light;
     Aggregator<glm::mat4> WVPprojections;
     Aggregator<glm::mat4> Wprojections;
+    Aggregator<glm::vec3> rotations;
 
     // TODO wrap that in a class
     GLint renderingShaderTextureUnit = 0;
@@ -51,7 +52,7 @@ private:
     GLint renderingShaderSpecularPower = 0;
     GLint renderingShaderLightDirection = 0;
     GLint renderingShaderEyeWorldPosition = 0;
-    GLint shadowingShaderWVP = 0;
+    GLint shadowingShaderLight = 0;
 
     float count = 0.f;
 

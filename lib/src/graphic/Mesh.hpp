@@ -19,7 +19,7 @@ public:
     void updateShadowVolume(glm::vec3 &lightDirection);
     void updateMatrices(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
     void draw(unsigned int instances);
-    void drawShadowVolume(unsigned int instances);
+    void drawShadowVolume(unsigned int instance);
     void bindTexture();
     void debug();
 

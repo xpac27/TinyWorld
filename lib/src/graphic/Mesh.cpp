@@ -64,11 +64,11 @@ void Mesh::draw(unsigned int instances)
     vertexArray->idle();
 }
 
-void Mesh::drawShadowVolume(unsigned int instances)
+void Mesh::drawShadowVolume(unsigned int instance)
 {
     vertexArray->uploadIndexes(silouhette);
     vertexArray->bind();
-    glDrawElementsInstanced(GL_TRIANGLES, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0, instances);
+    glDrawElementsInstancedBaseVertex(GL_TRIANGLES, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0, 1, instance);
     vertexArray->idle();
 }
 
@@ -147,7 +147,7 @@ void Mesh::updateTrianglesVisibility(vec3 &lightDirection)
         trianglesVisibility[t] = (
             trianglesPlaneEquations[t][0] * lightDirection[0]
           + trianglesPlaneEquations[t][1] * lightDirection[1]
-          + trianglesPlaneEquations[t][2] * lightDirection[2]
+          + trianglesPlaneEquations[t][2] * lightDirection[2] * -1   // TODO why?
           + trianglesPlaneEquations[t][3] > 0);
     }
 }
