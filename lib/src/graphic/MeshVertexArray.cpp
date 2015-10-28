@@ -1,13 +1,14 @@
 #include "MeshVertexArray.hpp"
 
 using namespace glm;
+using namespace std;
 
-void MeshVertexArray::initialize(std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes)
+void MeshVertexArray::initialize(vector<glm::vec3> &vertexes, vector<glm::vec2> &uvs, vector<glm::vec3> &normals)
 {
-    glGenBuffers(7, VAB);
-    glGenVertexArrays(2, VAO);
+    glGenBuffers(6, VAB);
+    glGenVertexArrays(1, &VAO);
 
-    glBindVertexArray(VAO[VOL_VO]);
+    glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[VER_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
@@ -25,7 +26,6 @@ void MeshVertexArray::initialize(std::vector<glm::vec3> &vertexes, std::vector<g
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[IND_VB]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
     for (unsigned int i = 0; i < 4 ; i++) {
@@ -41,10 +41,6 @@ void MeshVertexArray::initialize(std::vector<glm::vec3> &vertexes, std::vector<g
         glEnableVertexAttribArray(7 + i);
     }
 
-    glBindVertexArray(VAO[SIL_VO]);
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[VER_VB]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[SIL_VB]);
-
     glBindVertexArray(0);
 }
 
@@ -57,20 +53,15 @@ void MeshVertexArray::uploadMatrices(unsigned int instances, const glm::mat4* WV
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
 }
 
-void MeshVertexArray::uploadSilhouette(std::vector<unsigned int> &indexes)
+void MeshVertexArray::uploadIndexes(vector<unsigned int> &indexes)
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[SIL_VB]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[IND_VB]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_DYNAMIC_DRAW);
 }
 
-void MeshVertexArray::bindVolume()
+void MeshVertexArray::bind()
 {
-    glBindVertexArray(VAO[VOL_VO]);
-}
-
-void MeshVertexArray::bindSilhouette()
-{
-    glBindVertexArray(VAO[SIL_VO]);
+    glBindVertexArray(VAO);
 }
 
 void MeshVertexArray::idle()

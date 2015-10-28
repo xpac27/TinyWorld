@@ -17,7 +17,7 @@ Mesh::Mesh(const char *filename)
 
     verifyUVs();
     verifyMeterials();
-    vertexArray->initialize(vertexes, uvs, normals, indexes);
+    vertexArray->initialize(vertexes, uvs, normals);
     loadTextures();
     initializeTriangleData();
     computeTrianglesPlaneEquations();
@@ -45,27 +45,34 @@ void Mesh::bindTexture()
     }
 }
 
-void Mesh::update(vec3 &lightDirection)
+void Mesh::updateShadowVolume(vec3 &lightDirection)
 {
     updateTrianglesVisibility(lightDirection);
     updateSilhouette();
-    vertexArray->uploadSilhouette(silouhette);
+    // for (auto i : silouhette) {
+    //     print("_", i);
+    // }
+    // printl("===============");
 }
 
-void Mesh::draw(unsigned int instances, const mat4* WVPs, const mat4* Ws)
+void Mesh::updateMatrices(unsigned int instances, const mat4* WVPs, const mat4* Ws)
 {
-    if (instances == 0) return;
-
     vertexArray->uploadMatrices(instances, WVPs, Ws);
-    vertexArray->bindVolume();
+}
+
+void Mesh::draw(unsigned int instances)
+{
+    vertexArray->uploadIndexes(indexes);
+    vertexArray->bind();
     glDrawElementsInstanced(GL_TRIANGLES, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
 }
 
-void Mesh::drawShadowVolume()
+void Mesh::drawShadowVolume(unsigned int instances)
 {
-    vertexArray->bindSilhouette();
-    glDrawElements(GL_QUADS, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0);
+    vertexArray->uploadIndexes(silouhette);
+    vertexArray->bind();
+    glDrawElementsInstanced(GL_LINES, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
 }
 
@@ -94,7 +101,7 @@ void Mesh::initializeTriangleData()
 {
     trianglesVisibility.resize(triangles.size(), false);
     trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
-    trianglesPlaneEquations.resize(triangles.size());
+    trianglesPlaneEquations.reserve(triangles.size());
 }
 
 void Mesh::computeTrianglesPlaneEquations()
@@ -103,6 +110,14 @@ void Mesh::computeTrianglesPlaneEquations()
         const vec3& v1 = vertexes[triangle[0]];
         const vec3& v2 = vertexes[triangle[1]];
         const vec3& v3 = vertexes[triangle[2]];
+        // printl("v1", v1.x, v1.y, v1.z);
+        // printl("v2", v2.x, v2.y, v2.z);
+        // printl("v3", v3.x, v3.y, v3.z);
+        //
+        // printl(v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z));
+        // printl(v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x));
+        // printl(v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y));
+        // printl(- (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z)));
 
         trianglesPlaneEquations.push_back(vec4(
             v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z),
@@ -129,6 +144,7 @@ void Mesh::computeTrianglesNeighbours()
                         || (triangle_1_indexA == triangle_2_indexB && triangle_1_indexB == triangle_2_indexA)) {
                             trianglesNeighbours[t1][a] = int(t2);
                             trianglesNeighbours[t2][b] = int(t1);
+                            // break;
                         }
                     }
                 }
@@ -139,13 +155,18 @@ void Mesh::computeTrianglesNeighbours()
 
 void Mesh::updateTrianglesVisibility(vec3 &lightDirection)
 {
+    // printl("visibility:");
+    // print("    ");
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         trianglesVisibility[t] = (
             trianglesPlaneEquations[t][0] * lightDirection[0]
           + trianglesPlaneEquations[t][1] * lightDirection[1]
           + trianglesPlaneEquations[t][2] * lightDirection[2]
           + trianglesPlaneEquations[t][3] > 0);
+        // printl(trianglesPlaneEquations[t][0], trianglesPlaneEquations[t][1], trianglesPlaneEquations[t][2], trianglesPlaneEquations[t][3]);
+        // print(".", trianglesVisibility[t]);
     }
+    // nl();
 }
 
 void Mesh::updateSilhouette()
@@ -158,8 +179,10 @@ void Mesh::updateSilhouette()
                 // then this edge's vertexes are part of the silouhette
                 int neighbourIndex = trianglesNeighbours[t][edge];
                 if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
+                    // print("Hop!");
                     silouhette.push_back(triangles[t][edge]);
                     silouhette.push_back(triangles[t][(edge + 1) % 3]);
+                    // break;
                 }
             }
         }

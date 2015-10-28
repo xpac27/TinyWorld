@@ -41,24 +41,30 @@ void RenderSystem::initialize()
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    Shader vertexShader(GL_VERTEX_SHADER, &rendering);
-    vertexShader.read("app/res/shaders/rendering.vs");
-    vertexShader.compile();
+    initializeShader(rendering, "app/res/shaders/rendering.vs", "app/res/shaders/rendering.fs");
+    initializeShader(shadowing, "app/res/shaders/shadowing.vs", "app/res/shaders/shadowing.fs");
 
-    Shader fragmentShader(GL_FRAGMENT_SHADER, &rendering);
-    fragmentShader.read("app/res/shaders/rendering.fs");
-    fragmentShader.compile();
+    renderingShaderTextureUnit = rendering.getLocation("textureUnit");
+    renderingShaderLightColor = rendering.getLocation("light.color");
+    renderingShaderLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
+    renderingShaderLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
+    renderingShaderLightDirection = rendering.getLocation("light.direction");
+    renderingShaderSpecularIntensity = rendering.getLocation("specularIntensity");
+    renderingShaderSpecularPower = rendering.getLocation("specularPower");
+    renderingShaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
+}
 
-    rendering.link();
+void RenderSystem::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
+{
+    Shader renderingVertexShader(GL_VERTEX_SHADER, &program);
+    renderingVertexShader.read(vertexShaderFilePath);
+    renderingVertexShader.compile();
 
-    shaderTextureUnit = rendering.getLocation("textureUnit");
-    shaderLightColor = rendering.getLocation("light.color");
-    shaderLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
-    shaderLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
-    shaderLightDirection = rendering.getLocation("light.direction");
-    shaderSpecularIntensity = rendering.getLocation("specularIntensity");
-    shaderSpecularPower = rendering.getLocation("specularPower");
-    shaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
+    Shader renderingFragmentShader(GL_FRAGMENT_SHADER, &program);
+    renderingFragmentShader.read(fragmentShaderFilePath);
+    renderingFragmentShader.compile();
+
+    program.link();
 }
 
 void RenderSystem::update()
@@ -89,7 +95,8 @@ void RenderSystem::update()
     }
 
     setGLStates();
-    renderPass(eye.getPosition());
+    shadowPass();
+    // renderPass(eye.getPosition());
     unsetGLStates();
 
     WVPprojections.clear();
@@ -126,22 +133,41 @@ void RenderSystem::unsetGLStates()
     glDepthMask(GL_FALSE);
 }
 
+void RenderSystem::shadowPass()
+{
+    shadowing.use();
+    vec3 dir(-1, -1 ,-1);
+
+    printl("==========");
+    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+        printl("  draw");
+        meshStore->getMesh(MeshType(t))->updateShadowVolume(dir);
+        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->drawShadowVolume(WVPprojections.size(t));
+    }
+
+    shadowing.idle();
+}
+
 void RenderSystem::renderPass(glm::vec3 eyePosition)
 {
     rendering.use();
-    glUniform1i(shaderTextureUnit, 0);
-    glUniform3f(shaderLightColor, light.color.x, light.color.y, light.color.z);
-    glUniform3f(shaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
-    glUniform1f(shaderLightAmbientIntensity, light.ambientIntensity);
-    glUniform1f(shaderLightDiffuseIntensity, light.diffuseIntensity);
-    glUniform1f(shaderSpecularIntensity, 4.0);
-    glUniform1f(shaderSpecularPower, 32.0);
-    glUniform3f(shaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
+    // shadowing.use();
+    glUniform1i(renderingShaderTextureUnit, 0);
+    glUniform3f(renderingShaderLightColor, light.color.x, light.color.y, light.color.z);
+    glUniform3f(renderingShaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(renderingShaderLightAmbientIntensity, light.ambientIntensity);
+    glUniform1f(renderingShaderLightDiffuseIntensity, light.diffuseIntensity);
+    glUniform1f(renderingShaderSpecularIntensity, 4.0);
+    glUniform1f(renderingShaderSpecularPower, 32.0);
+    glUniform3f(renderingShaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindTexture();
-        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t));
     }
 
     rendering.idle();
+    // shadowing.idle();
 }

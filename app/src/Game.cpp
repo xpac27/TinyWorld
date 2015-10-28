@@ -15,9 +15,9 @@ Game::Game()
     simulationSystems.setLatency(1.f / 100.f);
     simulationSystems.initialize();
 
-    for (int i = 0; i < 100; i ++) {
+    // for (int i = 0; i < 100; i ++) {
         addEntity();
-    }
+    // }
 }
 
 void Game::draw()
@@ -41,9 +41,11 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::CUBE;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(2, 2, 2);
     movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
     movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};
     movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);
-    movementComponents.getComponent(entity)->position.x = Random::get(-20.f, 20.f);
-    movementComponents.getComponent(entity)->position.y = Random::get(-20.f, 20.f);
+    // movementComponents.getComponent(entity)->position.x = Random::get(-20.f, 20.f);
+    // movementComponents.getComponent(entity)->position.y = Random::get(-20.f, 20.f);
 }

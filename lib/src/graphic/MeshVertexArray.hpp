@@ -5,29 +5,25 @@
 #include <glm/mat4x4.hpp>
 #include <vector>
 
-#define VOL_VO 0
-#define SIL_VO 1
-#define SIL_VB 0
-#define IND_VB 1
-#define VER_VB 2
-#define NOR_VB 3
-#define TEX_VB 4
-#define WVP_VB 5
-#define W_VB 6
+#define IND_VB 0
+#define VER_VB 1
+#define NOR_VB 2
+#define TEX_VB 3
+#define WVP_VB 4
+#define W_VB 5
 
 class MeshVertexArray
 {
 public:
 
-    void initialize(std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes);
+    void initialize(std::vector<glm::vec3> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals);
     void uploadMatrices(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
-    void uploadSilhouette(std::vector<unsigned int> &indexes);
-    void bindVolume();
-    void bindSilhouette();
+    void uploadIndexes(std::vector<unsigned int> &indexes);
+    void bind();
     void idle();
 
 private:
 
-    GLuint VAO[2];
-    GLuint VAB[7];
+    GLuint VAO;
+    GLuint VAB[6];
 };
