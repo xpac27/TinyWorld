@@ -45,7 +45,17 @@ void Mesh::bindTexture()
     }
 }
 
-void Mesh::updateShadowVolume(vec3 &lightDirection)
+void Mesh::bindIndexes()
+{
+    vertexArray->uploadIndexes(indexes);
+}
+
+void Mesh::bindSilhouette()
+{
+    vertexArray->uploadIndexes(silhouette);
+}
+
+void Mesh::updateShadowVolume(const vec3 &lightDirection)
 {
     updateTrianglesVisibility(lightDirection);
     updateSilhouette();
@@ -58,17 +68,18 @@ void Mesh::updateMatrices(unsigned int instances, const mat4* WVPs, const mat4* 
 
 void Mesh::draw(unsigned int instances)
 {
-    vertexArray->uploadIndexes(indexes);
     vertexArray->bind();
     glDrawElementsInstanced(GL_TRIANGLES, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
 }
 
-void Mesh::drawShadowVolume(unsigned int instance)
+void Mesh::drawShadowVolume()
 {
-    vertexArray->uploadIndexes(silouhette);
+    if (silhouette.size() == 0) return;
+
     vertexArray->bind();
-    glDrawElementsInstancedBaseVertex(GL_TRIANGLES, GLsizei(silouhette.size()), GL_UNSIGNED_INT, 0, 1, instance);
+    // glDrawElementsInstancedBaseInstance(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0, 1, instance);
+    glDrawElements(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0);
     vertexArray->idle();
 }
 
@@ -107,13 +118,27 @@ void Mesh::computeTrianglesPlaneEquations()
         const vec4& v2 = vertexes[triangle[1]];
         const vec4& v3 = vertexes[triangle[2]];
 
-        trianglesPlaneEquations.push_back(vec4(
-            v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z),
-            v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x),
-            v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y),
-            - (v1.x * (v2.y * v3.z - v3.y * v2.z) + v2.x * (v3.y * v1.z - v1.y * v3.z) + v3.x * (v1.y * v2.z - v2.y * v1.z))
+        trianglesPlaneEquations.push_back(fvec4(
+              v1.y * (v2.z - v3.z) 
+            + v2.y * (v3.z - v1.z) 
+            + v3.y * (v1.z - v2.z),
+            
+              v1.z * (v2.x - v3.x) 
+            + v2.z * (v3.x - v1.x) 
+            + v3.z * (v1.x - v2.x),
+            
+              v1.x * (v2.y - v3.y) 
+            + v2.x * (v3.y - v1.y) 
+            + v3.x * (v1.y - v2.y),
+            
+            -(v1.x * (v2.y * v3.z - v3.y * v2.z) 
+            + v2.x * (v3.y * v1.z - v1.y * v3.z) 
+            + v3.x * (v1.y * v2.z - v2.y * v1.z))
         ));
     }
+    // for (auto &e : trianglesPlaneEquations) {
+    //     printl(e.x, e.y, e.z, e.w);
+    // }
 }
 
 void Mesh::computeTrianglesNeighbours()
@@ -141,34 +166,28 @@ void Mesh::computeTrianglesNeighbours()
     }
 }
 
-void Mesh::updateTrianglesVisibility(vec3 &lightDirection)
+void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
 {
+    vec4 l(lightDirection.x, lightDirection.y, lightDirection.z, 0.f);
     for (unsigned int t = 0; t < triangles.size(); t ++) {
-        trianglesVisibility[t] = (
-            trianglesPlaneEquations[t][0] * lightDirection[0]
-          + trianglesPlaneEquations[t][1] * lightDirection[1]
-          + trianglesPlaneEquations[t][2] * lightDirection[2] * -1   // TODO why?
-          + trianglesPlaneEquations[t][3] > 0);
+        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], l) > 0.f;
     }
 }
 
 void Mesh::updateSilhouette()
 {
-    silouhette.clear();
+    silhouette.clear();
     unsigned int totalVertexes = unsigned(vertexes.size());
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         if (trianglesVisibility[t]) {
             for (int edge = 0; edge < 3; edge ++){ // For each visible triangle's edges
                 // If edge's neighbouring face is not visible, or if it has no neighbour
-                // then this edge's vertexes are part of the silouhette
+                // then this edge's vertexes are part of the silhouette
                 int neighbourIndex = trianglesNeighbours[t][edge];
                 if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
-                    silouhette.push_back(triangles[t][edge]);
-                    silouhette.push_back(triangles[t][edge] + totalVertexes);
-                    silouhette.push_back(triangles[t][(edge + 1) % 3]);
-                    silouhette.push_back(triangles[t][(edge + 1) % 3]);
-                    silouhette.push_back(triangles[t][edge] + totalVertexes);
-                    silouhette.push_back(triangles[t][(edge + 1) % 3] + totalVertexes);
+                    silhouette.push_back(triangles[t][(edge + 1) % 3]);
+                    silhouette.push_back(triangles[t][edge] + totalVertexes);
+                    silhouette.push_back(triangles[t][edge]);
                 }
             }
         }

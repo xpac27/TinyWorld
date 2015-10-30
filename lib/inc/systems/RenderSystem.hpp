@@ -32,6 +32,7 @@ private:
 
     void setGLStates();
     void unsetGLStates();
+    void updateMatrices();
     void shadowPass();
     void renderPass(glm::vec3 eyePosition);
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
@@ -53,6 +54,7 @@ private:
     GLint renderingShaderLightDirection = 0;
     GLint renderingShaderEyeWorldPosition = 0;
     GLint shadowingShaderLight = 0;
+    GLint shadowingShaderWVP = 0;
 
     float count = 0.f;
 

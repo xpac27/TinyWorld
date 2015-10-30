@@ -15,9 +15,10 @@ Game::Game()
     simulationSystems.setLatency(1.f / 100.f);
     simulationSystems.initialize();
 
-    // for (int i = 0; i < 100; i ++) {
+    setupWorld();
+    for (int i = 0; i < 10; i ++) {
         addEntity();
-    // }
+    }
 }
 
 void Game::draw()
@@ -36,16 +37,25 @@ void Game::update(float seconds)
     simulationSystems.update(seconds);
 }
 
+void Game::setupWorld()
+{
+    ECS::id entity = entities.addEntity();
+    visibilityComponents.addComponent(entity);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::PLAN;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(25, 25, 1);
+}
+
 void Game::addEntity()
 {
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::FLAN;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(30, 30, 30);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::CUBE;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(1, 1, 1);
     movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
     movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};
     movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);
-    // movementComponents.getComponent(entity)->position.x = Random::get(-20.f, 20.f);
-    // movementComponents.getComponent(entity)->position.y = Random::get(-20.f, 20.f);
+    movementComponents.getComponent(entity)->position.x = Random::get(-6.f, 6.f);
+    movementComponents.getComponent(entity)->position.y = Random::get(-6.f, 6.f);
+    movementComponents.getComponent(entity)->position.z = 0.5f;
 }

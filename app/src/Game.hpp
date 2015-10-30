@@ -20,6 +20,7 @@ public:
 
 private:
 
+    void setupWorld();
     void addEntity();
 
     ECS::EntityManager entities = {};

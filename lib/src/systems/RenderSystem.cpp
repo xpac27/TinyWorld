@@ -26,7 +26,7 @@ RenderSystem::RenderSystem(
 {
     // TODO make this date driven
     light.color = vec3(1.0, 0.9, 0.7);
-    light.direction = normalize(vec3(1.f, 1.f, -1.0f));
+    light.direction = normalize(vec3(1.f, 1.f, -1.f));
     light.ambientIntensity = 0.2f;
     light.diffuseIntensity = 1.0f;
 }
@@ -53,6 +53,7 @@ void RenderSystem::initialize()
     renderingShaderSpecularPower = rendering.getLocation("specularPower");
     renderingShaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
     shadowingShaderLight = shadowing.getLocation("light");
+    shadowingShaderWVP = shadowing.getLocation("WVP");
 }
 
 void RenderSystem::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
@@ -86,17 +87,18 @@ void RenderSystem::update()
                 Movement* movement = movementComponents->getComponent(entity);
 
                 modelTranslation = translate(mat4(1.0f), movement->position);
-                modelRotation = orientation(movement->direction, vec3(-1.0f, 0.0f, 0.0f));
+                // modelRotation = orientation(movement->direction, vec3(-1.0f, 0.0f, 0.0f));
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
             WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
             Wprojections.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
-            rotations.add(visibility->meshType, vec3(0.f, 0.f, count));
+            rotations.add(visibility->meshType, rotate(light.direction, count * -1, vec3(0.f, 0.f, 1.f)));
         }
     }
 
     setGLStates();
+    updateMatrices();
     shadowPass();
     renderPass(eye.getPosition());
     unsetGLStates();
@@ -105,7 +107,7 @@ void RenderSystem::update()
     Wprojections.clear();
     rotations.clear();
 
-    count += 0.03;
+    count += 0.01;
 }
 
 void RenderSystem::setGLStates()
@@ -117,6 +119,10 @@ void RenderSystem::setGLStates()
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -126,6 +132,7 @@ void RenderSystem::unsetGLStates()
 {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
     glDisable(GL_COLOR_MATERIAL);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -136,18 +143,24 @@ void RenderSystem::unsetGLStates()
     glDepthMask(GL_FALSE);
 }
 
+void RenderSystem::updateMatrices()
+{
+    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+    }
+}
+
 void RenderSystem::shadowPass()
 {
     shadowing.use();
-    // vec3 dir(1, 1 ,1);
-
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+    for (unsigned int t = 0; t < rotations.size(); t ++) {
         for (unsigned int i = 0; i < rotations.size(t); i++) {
-            vec3 dir = rotations.get(t)->at(i) * light.direction;
-            glUniform4f(shadowingShaderLight, dir.x, dir.y, dir.z, 0.f);
-            meshStore->getMesh(MeshType(t))->updateShadowVolume(dir);
-            meshStore->getMesh(MeshType(t))->drawShadowVolume(i);
+            glUniformMatrix4fv(shadowingShaderWVP, 1, GL_FALSE, &WVPprojections.get(t)->at(i)[0][0]);
+            glUniform4f(shadowingShaderLight, rotations.get(t)->at(i).x, rotations.get(t)->at(i).y, rotations.get(t)->at(i).z, 0.f);
+
+            meshStore->getMesh(MeshType(t))->updateShadowVolume(rotations.get(t)->at(i));
+            meshStore->getMesh(MeshType(t))->bindSilhouette();
+            meshStore->getMesh(MeshType(t))->drawShadowVolume();
         }
     }
 
@@ -168,7 +181,7 @@ void RenderSystem::renderPass(glm::vec3 eyePosition)
 
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindTexture();
-        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+        meshStore->getMesh(MeshType(t))->bindIndexes();
         meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t));
     }
 
