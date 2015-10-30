@@ -98,7 +98,6 @@ void RenderSystem::update()
     }
 
     setGLStates();
-    updateMatrices();
     shadowPass();
     renderPass(eye.getPosition());
     unsetGLStates();
@@ -119,10 +118,6 @@ void RenderSystem::setGLStates()
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendEquation(GL_FUNC_ADD);
-
     glDepthMask(GL_TRUE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -141,13 +136,6 @@ void RenderSystem::unsetGLStates()
     glDisable(GL_LIGHT0);
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDepthMask(GL_FALSE);
-}
-
-void RenderSystem::updateMatrices()
-{
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
-    }
 }
 
 void RenderSystem::shadowPass()
@@ -180,6 +168,7 @@ void RenderSystem::renderPass(glm::vec3 eyePosition)
     glUniform3f(renderingShaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
 
     for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
         meshStore->getMesh(MeshType(t))->bindTexture();
         meshStore->getMesh(MeshType(t))->bindIndexes();
         meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t));

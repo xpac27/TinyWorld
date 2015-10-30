@@ -32,7 +32,6 @@ private:
 
     void setGLStates();
     void unsetGLStates();
-    void updateMatrices();
     void shadowPass();
     void renderPass(glm::vec3 eyePosition);
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
