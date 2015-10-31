@@ -98,120 +98,52 @@ void RenderSystem::update()
         }
     }
 
-    uploadMatrices();
+    count += 0.01;
 
-    // Culling
-    glEnable(GL_CULL_FACE);
+    uploadMatrices();
+    render(eye.getPosition());
+}
+
+void RenderSystem::render(vec3 eyePosition)
+{
+    // Settings
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
     // Render depth
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
     glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LEQUAL);
     depthPass();
     glDepthMask(GL_FALSE);
 
     // Render shadows
-    glEnable(GL_STENCIL_TEST);
-    glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
-    glClear(GL_STENCIL_BUFFER_BIT);
-    glDepthFunc(GL_LESS);
-
-    // glDisable(GL_CULL_FACE);
-
-    // glActiveStencilFaceEXT(GL_FRONT);
-    // glStencilMask(~0);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
-    // glStencilFunc(GL_ALWAYS, 0, ~0);
-    //
-    // glActiveStencilFaceEXT(GL_BACK);
-    // glStencilMask(~0);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
-    // glStencilFunc(GL_ALWAYS, 0, ~0);
-
-    // glActiveStencilFaceEXT(GL_FRONT);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
-    // glStencilFunc(GL_ALWAYS, 0, 0xFFFFFFFFL);
-    //
-    // glActiveStencilFaceEXT(GL_BACK);
-    // glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
-    // glStencilFunc(GL_ALWAYS, 0, 0xFFFFFFFFL);
-
-    // shadowPass();
-    // glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
-
     glDisable(GL_CULL_FACE);
-    glStencilFunc(GL_ALWAYS, 0, 0);
+    glEnable(GL_STENCIL_TEST);
+    glClear(GL_STENCIL_BUFFER_BIT);
+    glStencilFunc(GL_ALWAYS, 0, 0xFFFFFFFFL);
     glStencilOpSeparate(GL_FRONT,GL_KEEP,GL_KEEP,GL_INCR_WRAP);
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
-    glDepthMask(GL_FALSE);
     shadowPass();
-
-        // glCullFace(GL_FRONT);
-        // glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-        // shadowPass();
-        //
-        // glCullFace(GL_BACK);
-        // glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
-        // shadowPass();
-
-    glEnable(GL_CULL_FACE);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
     // Render scene
-    glCullFace(GL_FRONT);
-    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glEnable(GL_CULL_FACE);
     glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
     glDepthFunc(GL_LEQUAL);
-    renderPass(eye.getPosition());
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glClear(GL_COLOR_BUFFER_BIT);
+    colorPass(eyePosition);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-
-    /*
-    // Clear depth and color buffers
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    glBlendFunc(GL_ONE, GL_ZERO); glEnable(GL_BLEND);
-    glDepthMask(0xFF); glDepthFunc(GL_LEQUAL);
-    depthPass();
-
-    // Light passes
-    glBlendFunc(GL_ONE, GL_ZERO);
-    glDepthMask(0x00);
-    glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
-
-    // Clear stencil buffer and switch to stencil-only rendering
-    glClear(GL_STENCIL_BUFFER_BIT); glColorMask(0, 0, 0, 0);
-    glDisable(GL_LIGHTING); glStencilFunc(GL_ALWAYS, 0, unsigned(~0));
-    glStencilMask(unsigned(~0));
-
-    glActiveStencilFaceEXT(GL_FRONT);
-    glStencilOp(GL_KEEP, GL_DECR_WRAP_EXT, GL_KEEP);
-    glActiveStencilFaceEXT(GL_BACK);
-    glStencilOp(GL_KEEP, GL_INCR_WRAP_EXT, GL_KEEP);
-    glCullFace(GL_NONE);
-    shadowPass();
-
-    glActiveStencilFaceEXT(GL_FRONT);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    glActiveStencilFaceEXT(GL_BACK);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    glDepthFunc(GL_EQUAL); glColorMask(1, 1, 1, 1);
-    glCullFace(GL_BACK);
-
-    renderPass(eye.getPosition());
-    */
 
     WVPprojections.clear();
     Wprojections.clear();
     rotations.clear();
-
-    count += 0.01;
 }
 
 void RenderSystem::uploadMatrices()
@@ -247,7 +179,7 @@ void RenderSystem::shadowPass()
     shadowing.idle();
 }
 
-void RenderSystem::renderPass(glm::vec3 eyePosition)
+void RenderSystem::colorPass(glm::vec3 eyePosition)
 {
     rendering.use();
     glUniform1i(renderingShaderTextureUnit, 0);

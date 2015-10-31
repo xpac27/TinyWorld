@@ -31,9 +31,10 @@ public:
 private:
 
     void uploadMatrices();
+    void render(glm::vec3 eyePosition);
     void depthPass();
     void shadowPass();
-    void renderPass(glm::vec3 eyePosition);
+    void colorPass(glm::vec3 eyePosition);
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
     Program rendering;
