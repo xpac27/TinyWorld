@@ -5,7 +5,7 @@ using namespace glm;
 
 Camera::Camera(float pos_x, float pos_y, float pos_z, float rot_x, float rot_y, float rot_z)
     : position(pos_x, pos_y, pos_z)
-	, perspective(glm::perspective(float(M_PI) / 2.f, 4.f / 3.f, 0.1f, 100.f))
+	, perspective(glm::infinitePerspective(float(M_PI) / 2.f, 4.f / 3.f, 0.1f))
 	, translation(translate(mat4(1.0f), vec3(pos_x, pos_y, pos_z) * -1.f))
     , rotation(mat4(1.0f))
 {

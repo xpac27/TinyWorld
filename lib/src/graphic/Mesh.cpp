@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "graphic/Material.hpp"
+#include "graphic/MeshVertexArray.hpp"
 #include "utils/OBJ.hpp"
 #include "utils/PNG.hpp"
 #include "utils/Log.hpp"
@@ -7,22 +8,20 @@
 
 using namespace std;
 using namespace glm;
+using namespace Log;
 
 Mesh::Mesh(const char *filename)
+    : vertexArray(new MeshVertexArray())
 {
-    OBJ(vertexes, uvs, normals, indexes, materials).load(filename);
-    totalIndexes = GLsizei(indexes.size());
+    OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
 
-    if (uvs.size() < vertexes.size()) {
-        uvs.resize(vertexes.size(), vec2(0.f));
-    }
-
-    if (materials.size() == 0) {
-        materials.push_back(Material("default"));
-    }
-
-    loadVAO();
+    verifyUVs();
+    verifyMeterials();
+    vertexArray->initialize(vertexes, uvs, normals);
     loadTextures();
+    initializeTriangleData();
+    computeTrianglesPlaneEquations();
+    computeTrianglesNeighbours();
 }
 
 Mesh::~Mesh()
@@ -30,11 +29,12 @@ Mesh::~Mesh()
     for (auto diffuse : diffuses) {
         glDeleteTextures(1, &diffuse);
     }
+    delete vertexArray;
 }
 
 void Mesh::debug()
 {
-    OBJ::debug(vertexes, normals, indexes);
+    OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
 }
 
 void Mesh::bindTexture()
@@ -45,69 +45,152 @@ void Mesh::bindTexture()
     }
 }
 
-void Mesh::draw(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
+void Mesh::bindIndexes()
 {
-    if (instances == 0) return;
-
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, WVPs, GL_DYNAMIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
-
-    glBindVertexArray(VAO);
-
-    glDrawElementsInstanced(GL_TRIANGLES, totalIndexes, GL_UNSIGNED_INT, 0, instances);
-
-    glBindVertexArray(0);
+    vertexArray->uploadIndexes(indexes);
 }
 
-void Mesh::loadVAO()
+void Mesh::bindSilhouette()
 {
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    vertexArray->uploadIndexes(silhouette);
+}
 
-    glGenBuffers(6, VAB);
+void Mesh::updateShadowVolume(const vec3 &lightDirection)
+{
+    updateTrianglesVisibility(lightDirection);
+    updateSilhouette();
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[POS_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
+void Mesh::updateMatrices(unsigned int instances, const mat4* WVPs, const mat4* Ws)
+{
+    vertexArray->uploadMatrices(instances, WVPs, Ws);
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[TEX_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * uvs.size(), uvs.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(1);
+void Mesh::draw(unsigned int instances)
+{
+    vertexArray->bind();
+    glDrawElementsInstanced(GL_TRIANGLES, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
+    vertexArray->idle();
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[NOR_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * normals.size(), normals.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(2);
+void Mesh::drawShadowVolume()
+{
+    if (silhouette.size() == 0) return;
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VAB[IND_VB]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes[0]) * indexes.size(), indexes.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
-    for (unsigned int i = 0; i < 4 ; i++) {
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
-        glVertexAttribDivisor(3 + i, 1);
-        glEnableVertexAttribArray(3 + i);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
-    for (unsigned int i = 0; i < 4 ; i++) {
-        glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
-        glVertexAttribDivisor(7 + i, 1);
-        glEnableVertexAttribArray(7 + i);
-    }
-
-    glBindVertexArray(0);
+    vertexArray->bind();
+    // glDrawElementsInstancedBaseInstance(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0, 1, instance);
+    glDrawElements(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0);
+    vertexArray->idle();
 }
 
 void Mesh::loadTextures()
 {
     for (auto &m : materials) {
         diffuses.push_back(loadTexture(m.map_Kd.data()));
+    }
+}
+
+void Mesh::verifyUVs()
+{
+    if (uvs.size() < vertexes.size()) {
+        uvs.resize(vertexes.size(), vec2(0.f));
+    }
+}
+
+void Mesh::verifyMeterials()
+{
+    if (materials.size() == 0) {
+        materials.push_back(Material("default"));
+    }
+}
+
+void Mesh::initializeTriangleData()
+{
+    trianglesVisibility.resize(triangles.size(), false);
+    trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
+    trianglesPlaneEquations.reserve(triangles.size());
+}
+
+void Mesh::computeTrianglesPlaneEquations()
+{
+    for (auto &triangle : triangles) {
+        const vec4& v1 = vertexes[triangle[0]];
+        const vec4& v2 = vertexes[triangle[1]];
+        const vec4& v3 = vertexes[triangle[2]];
+
+        trianglesPlaneEquations.push_back(fvec4(
+              v1.y * (v2.z - v3.z) 
+            + v2.y * (v3.z - v1.z) 
+            + v3.y * (v1.z - v2.z),
+            
+              v1.z * (v2.x - v3.x) 
+            + v2.z * (v3.x - v1.x) 
+            + v3.z * (v1.x - v2.x),
+            
+              v1.x * (v2.y - v3.y) 
+            + v2.x * (v3.y - v1.y) 
+            + v3.x * (v1.y - v2.y),
+            
+            -(v1.x * (v2.y * v3.z - v3.y * v2.z) 
+            + v2.x * (v3.y * v1.z - v1.y * v3.z) 
+            + v3.x * (v1.y * v2.z - v2.y * v1.z))
+        ));
+    }
+    // for (auto &e : trianglesPlaneEquations) {
+    //     printl(e.x, e.y, e.z, e.w);
+    // }
+}
+
+void Mesh::computeTrianglesNeighbours()
+{
+    for (unsigned int t1 = 0; t1 < triangles.size(); t1++) {
+        for (unsigned int t2 = t1 + 1; t2 < triangles.size(); t2++) {
+            for (int a = 0; a < 3; a++) {
+                if (trianglesNeighbours[t1][a] == -1) {
+                    for (int b = 0; b < 3; b++) {
+                        unsigned int triangle_1_indexA = triangles[t1][a];
+                        unsigned int triangle_1_indexB = triangles[t1][(a + 1) % 3];
+                        unsigned int triangle_2_indexA = triangles[t2][b];
+                        unsigned int triangle_2_indexB = triangles[t2][(b + 1) % 3];
+
+                        if ((triangle_1_indexA == triangle_2_indexA && triangle_1_indexB == triangle_2_indexB)
+                        || (triangle_1_indexA == triangle_2_indexB && triangle_1_indexB == triangle_2_indexA)) {
+                            trianglesNeighbours[t1][a] = int(t2);
+                            trianglesNeighbours[t2][b] = int(t1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
+{
+    vec4 l(lightDirection.x, lightDirection.y, lightDirection.z, 0.f);
+    for (unsigned int t = 0; t < triangles.size(); t ++) {
+        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], l) > 0.f;
+    }
+}
+
+void Mesh::updateSilhouette()
+{
+    silhouette.clear();
+    unsigned int totalVertexes = unsigned(vertexes.size());
+    for (unsigned int t = 0; t < triangles.size(); t ++) {
+        if (trianglesVisibility[t]) {
+            for (int edge = 0; edge < 3; edge ++){ // For each visible triangle's edges
+                // If edge's neighbouring face is not visible, or if it has no neighbour
+                // then this edge's vertexes are part of the silhouette
+                int neighbourIndex = trianglesNeighbours[t][edge];
+                if (neighbourIndex == -1 || trianglesVisibility[unsigned(neighbourIndex)] == false) {
+                    silhouette.push_back(triangles[t][(edge + 1) % 3]);
+                    silhouette.push_back(triangles[t][edge] + totalVertexes);
+                    silhouette.push_back(triangles[t][edge]);
+                }
+            }
+        }
     }
 }
 

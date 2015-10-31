@@ -2,5 +2,5 @@
 
 enum MeshType
 {
-    PLAN, CUBE, CACODEMON, FLAN
+    PLAN, CUBE, CACODEMON/*, FLAN*/
 };

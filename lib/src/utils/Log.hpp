@@ -53,12 +53,33 @@ void printl(T const& f, Tail const&... tail)
     std::cout << std::endl;
 }
 
+template <typename T>
+void warning(T const& f)
+{
+	style(YELLOW);
+	print("WARNING!! ");
+    print(f);
+	style(NONE);
+    std::cout << std::endl;
+}
+
 template <typename T, typename... Tail>
 void warning(T const& f, Tail const&... tail)
 {
 	style(YELLOW);
 	print("WARNING!! ");
     print(f, tail...);
+	style(NONE);
+    std::cout << std::endl;
+}
+
+template <typename T>
+void error(T const& f)
+{
+	style(RED);
+	print("ERROR!! ");
+    print(f);
+	style(NONE);
     std::cout << std::endl;
 }
 
@@ -68,6 +89,17 @@ void error(T const& f, Tail const&... tail)
 	style(RED);
 	print("ERROR!! ");
     print(f, tail...);
+	style(NONE);
+    std::cout << std::endl;
+}
+
+template <typename T>
+void success(T const& f)
+{
+	style(GREEN);
+	print("SUCCESS: ");
+    print(f);
+	style(NONE);
     std::cout << std::endl;
 }
 
@@ -77,6 +109,17 @@ void success(T const& f, Tail const&... tail)
 	style(GREEN);
 	print("SUCCESS: ");
     print(f, tail...);
+	style(NONE);
+    std::cout << std::endl;
+}
+
+template <typename T>
+void info(T const& f)
+{
+	style(CYAN);
+	print("INFO: ");
+    print(f);
+	style(NONE);
     std::cout << std::endl;
 }
 
@@ -86,6 +129,7 @@ void info(T const& f, Tail const&... tail)
 	style(CYAN);
 	print("INFO: ");
     print(f, tail...);
+	style(NONE);
     std::cout << std::endl;
 }
 }
