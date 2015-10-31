@@ -22,6 +22,7 @@ int main()
     // GLFW initialize
     if (glfwInit()){
         glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_STENCIL_BITS, 8);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);

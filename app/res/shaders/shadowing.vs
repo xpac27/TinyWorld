@@ -7,7 +7,5 @@ uniform mat4 WVP;
 
 void main(void)
 {
-    gl_Position = WVP * (position.w == 0
-        ? light
-        : position);
+    gl_Position = WVP * (position.w == 0 ? light : position);
 }

@@ -50,7 +50,7 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::CUBE;
+    visibilityComponents.getComponent(entity)->meshType = MeshType::CACODEMON;
     visibilityComponents.getComponent(entity)->scale = glm::vec3(1, 1, 1);
     movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
     movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};

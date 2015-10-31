@@ -30,14 +30,15 @@ public:
 
 private:
 
-    void setGLStates();
-    void unsetGLStates();
+    void uploadMatrices();
+    void depthPass();
     void shadowPass();
     void renderPass(glm::vec3 eyePosition);
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
     Program rendering;
     Program shadowing;
+    Program filling;
     DirectionalLight light;
     Aggregator<glm::mat4> WVPprojections;
     Aggregator<glm::mat4> Wprojections;
