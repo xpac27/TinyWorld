@@ -1,6 +1,6 @@
 all: configure compile run
 
-.PHONY: all configure run debug test report coverage configure_report clean reset
+.PHONY: all configure run debug test report coverage clean reset
 
 configure:
 	@mkdir -p out
@@ -40,8 +40,6 @@ coverage:
 	@genhtml coverage/cov.info -o coverage &> /dev/null
 	@open coverage/index.html
 
-report: configure_report
-	@scan-build -V make app -C build/report
-
-configure_report:
-	@mkdir -p build/report && cd build/report && cmake -DCMAKE_C_COMPILER=ccc-analyzer -DCMAKE_CXX_COMPILER=c++-analyzer -DGLM_COMPILER=0 ../..
+report:
+	@bf analysis=true
+	@scan-build -V ninja out/tinyworld

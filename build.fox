@@ -9,6 +9,10 @@ filter coverage: true toolset: clang
     cxxflags += -fprofile-arcs -ftest-coverage
     ldflags += --coverage
 
+filter analysis: true
+	cxx = c++-analyzer
+	defines = GLM_COMPILER=0
+
 includedirs = lib/inc
 
 build obj(out/objects/lib/**/*): auto lib/src/**/*.cpp
