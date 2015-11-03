@@ -1,10 +1,10 @@
 all: configure compile run
 
-.PHONY: all configure run debug test report coverage clean reset
+.PHONY: all configure run debug test analysis coverage clean reset
 
 configure:
 	@mkdir -p out
-	@bf
+	@bf debug=true
 	@ninja -t compdb cxx > out/compile_commands.json
 
 compile:
@@ -29,7 +29,7 @@ reset:
 	@echo "done!"
 
 coverage:
-	@bf coverage=true
+	@bf debug=true coverage=true
 	@ninja out/tests
 	@./out/tests
 	@llvm-cov gcov -f `find out -name "*.gcda" | grep -v "dir/tests" | xargs` &> /dev/null
@@ -40,6 +40,6 @@ coverage:
 	@genhtml coverage/cov.info -o coverage &> /dev/null
 	@open coverage/index.html
 
-report:
-	@bf analysis=true
+analysis:
+	@bf debug=true analysis=true
 	@scan-build -V ninja out/tinyworld

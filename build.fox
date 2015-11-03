@@ -1,17 +1,24 @@
 filter toolset: clang
-    cxxflags = -g -std=c++11 -stdlib=libc++ -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+    cxxflags  = -std=c++11 -stdlib=libc++ -Weverything 
+
+	filter debug: true
+		cxxflags += -g -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+
+	filter release: true
+		cxxflags += -g0
+
+	filter coverage: true
+		cxxflags += -fprofile-arcs -ftest-coverage
+		ldflags += --coverage
+
+	filter analysis: true
+		cxx = c++-analyzer
+		defines += GLM_COMPILER=0
 
 filter system: Darwin
-    ldflags = -fobjc-arc -framework Foundation -framework CoreVideo -framework Cocoa -framework IOKit -framework OpenGL
+	frameworks = Foundation CoreVideo Cocoa IOKit OpenGL
     libs = objc png glfw3 GLEW
-
-filter coverage: true toolset: clang
-    cxxflags += -fprofile-arcs -ftest-coverage
-    ldflags += --coverage
-
-filter analysis: true
-	cxx = c++-analyzer
-	defines = GLM_COMPILER=0
+    ldflags += -fobjc-arc
 
 includedirs = lib/inc
 

@@ -168,6 +168,7 @@ void Mesh::computeTrianglesNeighbours()
 
 void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
 {
+	// TODO optimize
     vec4 l(lightDirection.x, lightDirection.y, lightDirection.z, 0.f);
     for (unsigned int t = 0; t < triangles.size(); t ++) {
         trianglesVisibility[t] = dot(trianglesPlaneEquations[t], l) > 0.f;
@@ -176,6 +177,7 @@ void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
 
 void Mesh::updateSilhouette()
 {
+	// TODO optimize
     silhouette.clear();
     unsigned int totalVertexes = unsigned(vertexes.size());
     for (unsigned int t = 0; t < triangles.size(); t ++) {
