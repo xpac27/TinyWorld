@@ -46,6 +46,8 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 ### Mac OSX
 
+	brew update
+	brew tap homebrew/versions
 	brew install glfw3 glew glm libpng ninja
 	pip install buildfox
 
