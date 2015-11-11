@@ -28,8 +28,8 @@ Todo:
 * **GLFW** 3.1.1 + ([website](glfw.org/index.html))
 * **GLM** 0.9.6 + ([website](glm.g-truc.net))
 * **LibPNG** ([website](http://www.libpng.org/pub/png/libpng.html))
-* **CMake** 2.8.12 + ([website](http://www.cmake.org/))
-* **Clang Static Analyzer** ([website](http://clang-analyzer.llvm.org/index.html)) optional
+* **Ninja** 1.6.0 + ([website](https://martine.github.io/ninja/))
+* **Buildfox** 0.1.2 + ([website](https://github.com/beardsvibe/buildfox))
 
 ## Basic usage
 
@@ -46,12 +46,13 @@ Optionaly, you can run `make configure` once and use the commands above.
 
 ### Mac OSX
 
-    brew install glfw3 glew glm libpng ninja
+	brew install glfw3 glew glm libpng ninja
+	pip install buildfox
 
 Optionaly, in order to use Clang Static Analyzer:
 
 	brew install lcov
-    brew install llvm --with-clang
+	brew install llvm --with-clang
 	export PATH="$PATH:/usr/local/opt/llvm/share/clang/tools/scan-build"
 	export PATH="$PATH:/usr/local/opt/llvm/bin/"
 
