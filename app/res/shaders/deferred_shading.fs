@@ -36,8 +36,8 @@ void main()
         // Diffuse
         vec3 diffuse = max(dot(Normal, -Light.direction), 0.0) * Light.intensity * Light.color * Diffuse;
         // Specular
-        vec3 halfwayDir = normalize(-Light.direction + viewDir);
-        float spec = pow(max(dot(Normal, halfwayDir), 0.0), 16.0);
+        vec3 reflectDir = reflect(-Light.direction, Normal);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
         vec3 specular = Light.color * spec * Specular;
         // Compute
         lighting += diffuse + specular;
