@@ -60,12 +60,36 @@ Optionaly, in order to use Clang Static Analyzer:
 
 ### Ubuntu
 
+Prerequisits:
+
     apt-get update
-    apt-get install cmake libc++-dev libxrandr-dev libxxf86vm-dev libxi-dev libxcursor-dev libglew-dev libpng12-dev
+    apt-get install curl unzip python-pip
 
-Download GLM from the website, unzip it and copy the `glm` folder (containing the headers) to your `/usr/include` folder.
+Libs:
 
-Follow ([this guide](http://www.glfw.org/docs/latest/compile.html)) to install GLFW3 from sources.
+    apt-get install libc++-dev libxrandr-dev libxxf86vm-dev libxi-dev libxcursor-dev libglew-dev libpng12-dev
+
+Build system:
+
+    apt-get install ninja-build
+    pip install buildfox
+
+GLM:
+
+    curl -LO http://downloads.sourceforge.net/project/ogl-math/glm-0.9.6.3/glm-0.9.6.3.zip
+    unzip -q glm-0.9.6.3.zip
+    sudo cp -r glm/glm /usr/include/
+    rm -rf glm glm-0.9.6.3.zip
+
+GLFW3:
+
+    curl -LO https://github.com/glfw/glfw/releases/download/3.1.1/glfw-3.1.1.zip
+    unzip -q glfw-3.1.1.zip
+    cmake .
+    make
+    sudo make install
+    cd ..
+    rm glfw-3.1.1.zip
 
 Optionaly, in order to use Clang Static Analyzer and Code Coverage:
 
