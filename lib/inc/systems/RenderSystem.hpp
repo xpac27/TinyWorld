@@ -32,37 +32,23 @@ public:
 private:
 
     void uploadMatrices();
-    void render(glm::vec3 eyePosition);
+    void render();
     void render2();
     void depthPass();
     void shadowPass();
-    void colorPass(glm::vec3 eyePosition);
+    void geometryPass();
+    void lightingPass();
+    void colorPass();
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
-    Program rendering;
-    Program shadowing;
+    Program shadowVolume;
     Program filling;
     Program geometryBuffer;
     Program deferredShading;
     DirectionalLight light;
-    Aggregator<glm::mat4> WVPprojections;
-    Aggregator<glm::mat4> Wprojections;
-    Aggregator<glm::vec3> rotations;
 
+    Aggregator<glm::vec3> modelRotations;
     Aggregator<glm::mat4> modelMatrices;
-
-
-    // TODO wrap that in a class
-    GLint renderingShaderTextureUnit = 0;
-    GLint renderingShaderLightColor = 0;
-    GLint renderingShaderLightAmbientIntensity = 0;
-    GLint renderingShaderLightDiffuseIntensity = 0;
-    GLint renderingShaderSpecularIntensity = 0;
-    GLint renderingShaderSpecularPower = 0;
-    GLint renderingShaderLightDirection = 0;
-    GLint renderingShaderEyeWorldPosition = 0;
-    GLint shadowingShaderLight = 0;
-    GLint shadowingShaderWVP = 0;
 
     GLuint gBuffer;
     GLuint gPosition;

@@ -44,22 +44,10 @@ void RenderSystem::initialize()
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    initializeShader(rendering, "app/res/shaders/rendering.vs", "app/res/shaders/rendering.fs");
-    initializeShader(shadowing, "app/res/shaders/shadowing.vs", "app/res/shaders/shadowing.fs");
+    initializeShader(shadowVolume, "app/res/shaders/shadow_volume.vs", "app/res/shaders/shadow_volume.fs");
     initializeShader(filling, "app/res/shaders/filling.vs", "app/res/shaders/filling.fs");
     initializeShader(geometryBuffer, "app/res/shaders/geometry_buffer.vs", "app/res/shaders/geometry_buffer.fs");
     initializeShader(deferredShading, "app/res/shaders/deferred_shading.vs", "app/res/shaders/deferred_shading.fs");
-
-    renderingShaderTextureUnit = rendering.getLocation("textureUnit");
-    renderingShaderLightColor = rendering.getLocation("light.color");
-    renderingShaderLightAmbientIntensity = rendering.getLocation("light.ambientIntensity");
-    renderingShaderLightDiffuseIntensity = rendering.getLocation("light.diffuseIntensity");
-    renderingShaderLightDirection = rendering.getLocation("light.direction");
-    renderingShaderSpecularIntensity = rendering.getLocation("specularIntensity");
-    renderingShaderSpecularPower = rendering.getLocation("specularPower");
-    renderingShaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
-    shadowingShaderLight = shadowing.getLocation("light");
-    shadowingShaderWVP = shadowing.getLocation("WVP");
 
     // ----
 
@@ -134,13 +122,13 @@ void RenderSystem::initialize()
 
 void RenderSystem::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 {
-    Shader renderingVertexShader(GL_VERTEX_SHADER, &program);
-    renderingVertexShader.read(vertexShaderFilePath);
-    renderingVertexShader.compile();
+    Shader vertexShader(GL_VERTEX_SHADER, &program);
+    vertexShader.read(vertexShaderFilePath);
+    vertexShader.compile();
 
-    Shader renderingFragmentShader(GL_FRAGMENT_SHADER, &program);
-    renderingFragmentShader.read(fragmentShaderFilePath);
-    renderingFragmentShader.compile();
+    Shader fragmentShader(GL_FRAGMENT_SHADER, &program);
+    fragmentShader.read(fragmentShaderFilePath);
+    fragmentShader.compile();
 
     program.link();
 }
@@ -165,21 +153,18 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            // WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
             modelMatrices.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
-            rotations.add(visibility->meshType, rotate(light.direction, count * -1, vec3(0.f, 0.f, 1.f)));
+            modelRotations.add(visibility->meshType, rotate(light.direction, count * -1, vec3(0.f, 0.f, 1.f)));
         }
     }
 
     count += 0.01;
 
     uploadMatrices();
-    // render(eye.getPosition());
-    render2();
+    render();
+    // render2();
 
-    WVPprojections.clear();
-    Wprojections.clear();
-    rotations.clear();
+    modelRotations.clear();
     modelMatrices.clear();
 }
 
@@ -244,7 +229,7 @@ void RenderSystem::render2()
     deferredShading.idle();
 }
 
-void RenderSystem::render(vec3 eyePosition)
+void RenderSystem::render()
 {
     // Settings
     glFrontFace(GL_CW);
@@ -274,8 +259,7 @@ void RenderSystem::render(vec3 eyePosition)
     glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
     glDepthFunc(GL_LEQUAL);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT);
-    colorPass(eyePosition);
+    colorPass();
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -292,45 +276,102 @@ void RenderSystem::uploadMatrices()
 void RenderSystem::depthPass()
 {
     filling.use();
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindIndexes();
-        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t));
+        meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
     }
     filling.idle();
 }
 
 void RenderSystem::shadowPass()
 {
-    shadowing.use();
-    for (unsigned int t = 0; t < rotations.size(); t ++) {
-        for (unsigned int i = 0; i < rotations.size(t); i++) {
-            glUniformMatrix4fv(shadowingShaderWVP, 1, GL_FALSE, &WVPprojections.get(t)->at(i)[0][0]);
-            glUniform4f(shadowingShaderLight, rotations.get(t)->at(i).x, rotations.get(t)->at(i).y, rotations.get(t)->at(i).z, 0.f);
+    shadowVolume.use();
 
-            meshStore->getMesh(MeshType(t))->updateShadowVolume(rotations.get(t)->at(i));
+    glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
+    for (unsigned int t = 0; t < modelRotations.size(); t ++) {
+        for (unsigned int i = 0; i < modelRotations.size(t); i++) {
+            glUniformMatrix4fv(shadowVolume.getLocation("model"), 1, GL_FALSE, &modelMatrices.get(t)->at(i)[0][0]);
+            glUniform4f(shadowVolume.getLocation("light"), modelRotations.get(t)->at(i).x, modelRotations.get(t)->at(i).y, modelRotations.get(t)->at(i).z, 0.f);
+
+            meshStore->getMesh(MeshType(t))->updateShadowVolume(modelRotations.get(t)->at(i));
             meshStore->getMesh(MeshType(t))->bindSilhouette();
             meshStore->getMesh(MeshType(t))->drawShadowVolume();
         }
     }
-    shadowing.idle();
+
+    shadowVolume.idle();
 }
 
-void RenderSystem::colorPass(glm::vec3 eyePosition)
+void RenderSystem::colorPass()
 {
-    rendering.use();
-    glUniform1i(renderingShaderTextureUnit, 0);
-    glUniform3f(renderingShaderLightColor, light.color.x, light.color.y, light.color.z);
-    glUniform3f(renderingShaderLightDirection, light.direction.x, light.direction.y, light.direction.z);
-    glUniform1f(renderingShaderLightAmbientIntensity, light.ambientIntensity);
-    glUniform1f(renderingShaderLightDiffuseIntensity, light.diffuseIntensity);
-    glUniform1f(renderingShaderSpecularIntensity, 4.0);
-    glUniform1f(renderingShaderSpecularPower, 32.0);
-    glUniform3f(renderingShaderEyeWorldPosition, eyePosition.x, eyePosition.y, eyePosition.z);
+    geometryBuffer.use();
 
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
+    glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
+    glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
+    glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
+    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindTexture();
         meshStore->getMesh(MeshType(t))->bindIndexes();
-        meshStore->getMesh(MeshType(t))->draw(WVPprojections.size(t));
+        meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
     }
-    rendering.idle();
+
+    geometryBuffer.idle();
+}
+
+void RenderSystem::geometryPass()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        geometryBuffer.use();
+
+        glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
+        glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
+        glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+        glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
+        for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
+            meshStore->getMesh(MeshType(t))->bindTexture();
+            meshStore->getMesh(MeshType(t))->bindIndexes();
+            meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
+        }
+
+        geometryBuffer.idle();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void RenderSystem::lightingPass()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    deferredShading.use();
+
+    glUniform1i(deferredShading.getLocation("gPosition"), 0);
+    glUniform1i(deferredShading.getLocation("gNormal"), 1);
+    glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
+
+    glUniform3f(deferredShading.getLocation("Light.color"), light.color.x, light.color.y, light.color.z);
+    glUniform3f(deferredShading.getLocation("Light.direction"), light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(deferredShading.getLocation("Light.intensity"), light.intensity);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+
+    glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
+
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+
+    deferredShading.idle();
 }
