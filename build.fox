@@ -1,12 +1,13 @@
-filter toolset: gcc
-    cxxflags = -std=c++11
+cxxflags = -std=c++11
+
+filter debug: true
+    cxxflags += -g
 
 filter toolset: clang
-    cxxflags = -std=c++11 -stdlib=libc++ -Weverything
-    ldflags = -stdlib=libc++
+    cxxflags += -stdlib=libc++ -Weverything
 
     filter debug: true
-        cxxflags += -g -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+        cxxflags += -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
 
     filter release: true
         cxxflags += -g0
@@ -20,8 +21,8 @@ filter toolset: clang
         defines += GLM_COMPILER=0
 
 filter system: Darwin
-    frameworks = CoreVideo Cocoa IOKit OpenGL
     libs = png glfw3 GLEW
+    frameworks = CoreVideo Cocoa IOKit OpenGL
 
 filter system: Linux
     libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi
