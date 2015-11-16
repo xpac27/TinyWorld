@@ -24,7 +24,7 @@ filter system: Darwin
     libs = png glfw3 GLEW
 
 filter system: Linux
-    libs = png glfw3 GL GLEW
+    libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi
 
 includedirs = lib/inc
 
