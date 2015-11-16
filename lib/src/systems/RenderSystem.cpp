@@ -90,8 +90,8 @@ void RenderSystem::initialize()
     GLuint rboDepth;
     glGenRenderbuffers(1, &rboDepth);
     glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCR_WIDTH, SCR_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
     // - Finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -163,9 +163,99 @@ void RenderSystem::update()
     uploadMatrices();
     render();
     // render2();
+    // render3();
 
     modelRotations.clear();
     modelMatrices.clear();
+}
+
+void RenderSystem::render3()
+{
+    glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+
+
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_TRUE);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            glDepthFunc(GL_LEQUAL);
+            depthPass();
+            glDepthMask(GL_FALSE);
+
+            glDisable(GL_CULL_FACE);
+            glEnable(GL_STENCIL_TEST);
+            glClear(GL_STENCIL_BUFFER_BIT);
+            glStencilFunc(GL_ALWAYS, 0, 0xFFFFFFFFL);
+            glStencilOpSeparate(GL_FRONT,GL_KEEP,GL_KEEP,GL_INCR_WRAP);
+            glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
+            glDepthFunc(GL_LESS);
+            shadowPass();
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+            glEnable(GL_CULL_FACE);
+            glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
+            glDepthFunc(GL_LEQUAL);
+            glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+        geometryBuffer.use();
+
+        glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
+        glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
+        glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+        glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
+        for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
+            meshStore->getMesh(MeshType(t))->bindTexture();
+            meshStore->getMesh(MeshType(t))->bindIndexes();
+            meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
+        }
+
+        geometryBuffer.idle();
+
+            glDisable(GL_STENCIL_TEST);
+            // glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+            // glDisable(GL_DEPTH_TEST);
+            // glDisable(GL_CULL_FACE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // ----
+
+    // glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+            glDepthMask(GL_TRUE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    deferredShading.use();
+
+    glUniform1i(deferredShading.getLocation("gPosition"), 0);
+    glUniform1i(deferredShading.getLocation("gNormal"), 1);
+    glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
+
+    glUniform3f(deferredShading.getLocation("Light.color"), light.color.x, light.color.y, light.color.z);
+    glUniform3f(deferredShading.getLocation("Light.direction"), light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(deferredShading.getLocation("Light.intensity"), light.intensity);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+
+    glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
+
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+
+    deferredShading.idle();
+
+            glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
 }
 
 void RenderSystem::render2()
@@ -259,6 +349,7 @@ void RenderSystem::render()
     glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
     glDepthFunc(GL_LEQUAL);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glClear(GL_COLOR_BUFFER_BIT);
     colorPass();
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_STENCIL_TEST);
@@ -276,10 +367,15 @@ void RenderSystem::uploadMatrices()
 void RenderSystem::depthPass()
 {
     filling.use();
+
+    glUniformMatrix4fv(filling.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(filling.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
     for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
         meshStore->getMesh(MeshType(t))->bindIndexes();
         meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
     }
+
     filling.idle();
 }
 

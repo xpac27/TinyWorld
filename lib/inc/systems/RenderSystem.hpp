@@ -34,6 +34,7 @@ private:
     void uploadMatrices();
     void render();
     void render2();
+    void render3();
     void depthPass();
     void shadowPass();
     void geometryPass();
