@@ -17,5 +17,4 @@ private:
     Mesh* plan;
     Mesh* cube;
     Mesh* cacodemon;
-    // Mesh* flan;
 };

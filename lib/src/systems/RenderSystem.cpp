@@ -8,6 +8,7 @@
 #include "graphic/Camera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <math.h>
 
 using namespace std;
@@ -23,12 +24,14 @@ RenderSystem::RenderSystem(
     , visibilityComponents(vc)
     , movementComponents(mc)
     , meshStore(new MeshStore())
+    , camera(new Camera(0.f, -3.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
 {
     // TODO make this date driven
     light.color = vec3(1.0, 0.9, 0.7);
     light.direction = normalize(vec3(1.f, 1.f, -1.f));
     light.ambientIntensity = 0.2f;
     light.diffuseIntensity = 1.0f;
+    light.intensity = 1.0f;
 }
 
 RenderSystem::~RenderSystem()
@@ -44,6 +47,8 @@ void RenderSystem::initialize()
     initializeShader(rendering, "app/res/shaders/rendering.vs", "app/res/shaders/rendering.fs");
     initializeShader(shadowing, "app/res/shaders/shadowing.vs", "app/res/shaders/shadowing.fs");
     initializeShader(filling, "app/res/shaders/filling.vs", "app/res/shaders/filling.fs");
+    initializeShader(geometryBuffer, "app/res/shaders/geometry_buffer.vs", "app/res/shaders/geometry_buffer.fs");
+    initializeShader(deferredShading, "app/res/shaders/deferred_shading.vs", "app/res/shaders/deferred_shading.fs");
 
     renderingShaderTextureUnit = rendering.getLocation("textureUnit");
     renderingShaderLightColor = rendering.getLocation("light.color");
@@ -55,6 +60,76 @@ void RenderSystem::initialize()
     renderingShaderEyeWorldPosition = rendering.getLocation("eyeWorldPosition");
     shadowingShaderLight = shadowing.getLocation("light");
     shadowingShaderWVP = shadowing.getLocation("WVP");
+
+    // ----
+
+    // TODO auto detect screen size
+    int SCR_WIDTH = 800;
+    int SCR_HEIGHT = 600;
+
+    glGenFramebuffers(1, &gBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+    // - Position color buffer
+    glGenTextures(1, &gPosition);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+
+    // - Normal color buffer
+    glGenTextures(1, &gNormal);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+
+    // - Color + Specular color buffer
+    glGenTextures(1, &gAlbedoSpec);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+
+    // - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
+    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+    glDrawBuffers(3, attachments);
+
+    // - Create and attach depth buffer (renderbuffer)
+    GLuint rboDepth;
+    glGenRenderbuffers(1, &rboDepth);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCR_WIDTH, SCR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+
+    // - Finally check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "Framebuffer not complete!" << std::endl; // TODO proper error log
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // ----
+
+    GLfloat quadVertices[] = {
+        // Positions        // Texture Coords
+        -1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+        1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+    };
+    // Setup plane VAO
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 }
 
 void RenderSystem::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
@@ -72,8 +147,6 @@ void RenderSystem::initializeShader(Program &program, const char* vertexShaderFi
 
 void RenderSystem::update()
 {
-    Camera eye(0.f, -3.f, 6.f, float(M_PI) / -5.f, 0.f, 0.f);
-
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         id entity = getEntities()->at(i);
 
@@ -92,8 +165,8 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
-            Wprojections.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
+            // WVPprojections.add(visibility->meshType, eye.getPerspective() * eye.getRotation() * eye.getTranslation() * modelTranslation * modelRotation * modelScale);
+            modelMatrices.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
             rotations.add(visibility->meshType, rotate(light.direction, count * -1, vec3(0.f, 0.f, 1.f)));
         }
     }
@@ -101,7 +174,74 @@ void RenderSystem::update()
     count += 0.01;
 
     uploadMatrices();
-    render(eye.getPosition());
+    // render(eye.getPosition());
+    render2();
+
+    WVPprojections.clear();
+    Wprojections.clear();
+    rotations.clear();
+    modelMatrices.clear();
+}
+
+void RenderSystem::render2()
+{
+    glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glDepthFunc(GL_LEQUAL);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        geometryBuffer.use();
+
+        glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
+        glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
+        glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+        glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+
+        for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
+            meshStore->getMesh(MeshType(t))->bindTexture();
+            meshStore->getMesh(MeshType(t))->bindIndexes();
+            meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
+        }
+
+        geometryBuffer.idle();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // ----
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    deferredShading.use();
+
+    glUniform1i(deferredShading.getLocation("gPosition"), 0);
+    glUniform1i(deferredShading.getLocation("gNormal"), 1);
+    glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
+
+    glUniform3f(deferredShading.getLocation("Light.color"), light.color.x, light.color.y, light.color.z);
+    glUniform3f(deferredShading.getLocation("Light.direction"), light.direction.x, light.direction.y, light.direction.z);
+    glUniform1f(deferredShading.getLocation("Light.intensity"), light.intensity);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+
+    glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
+
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+
+    deferredShading.idle();
 }
 
 void RenderSystem::render(vec3 eyePosition)
@@ -140,16 +280,12 @@ void RenderSystem::render(vec3 eyePosition)
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-
-    WVPprojections.clear();
-    Wprojections.clear();
-    rotations.clear();
 }
 
 void RenderSystem::uploadMatrices()
 {
-    for (unsigned int t = 0; t < WVPprojections.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->updateMatrices(WVPprojections.size(t), WVPprojections.get(t)->data(), Wprojections.get(t)->data());
+    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
+        meshStore->getMesh(MeshType(t))->updateMatrices(modelMatrices.size(t), modelMatrices.get(t)->data());
     }
 }
 

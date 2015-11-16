@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 
 class MeshStore;
+class Camera;
 namespace ECS {
 template <typename T> class ComponentManager;
 }
@@ -32,6 +33,7 @@ private:
 
     void uploadMatrices();
     void render(glm::vec3 eyePosition);
+    void render2();
     void depthPass();
     void shadowPass();
     void colorPass(glm::vec3 eyePosition);
@@ -40,10 +42,15 @@ private:
     Program rendering;
     Program shadowing;
     Program filling;
+    Program geometryBuffer;
+    Program deferredShading;
     DirectionalLight light;
     Aggregator<glm::mat4> WVPprojections;
     Aggregator<glm::mat4> Wprojections;
     Aggregator<glm::vec3> rotations;
+
+    Aggregator<glm::mat4> modelMatrices;
+
 
     // TODO wrap that in a class
     GLint renderingShaderTextureUnit = 0;
@@ -57,6 +64,13 @@ private:
     GLint shadowingShaderLight = 0;
     GLint shadowingShaderWVP = 0;
 
+    GLuint gBuffer;
+    GLuint gPosition;
+    GLuint gNormal;
+    GLuint gAlbedoSpec;
+    GLuint quadVAO = 0;
+    GLuint quadVBO;
+
     float count = 0.f;
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
@@ -64,4 +78,5 @@ private:
 
     // TODO init from outside (systems class?)
     MeshStore* meshStore;
+    Camera *camera;
 };
