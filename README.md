@@ -63,7 +63,7 @@ Optionaly, in order to use Clang Static Analyzer:
 Prerequisits:
 
     apt-get update
-    apt-get install curl unzip python-pip
+    apt-get install curl unzip python-pip cmake
 
 Libs:
 
