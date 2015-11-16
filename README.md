@@ -67,7 +67,7 @@ Prerequisits:
 
 Libs:
 
-    apt-get install libc++-dev libxrandr-dev libxxf86vm-dev libxi-dev libxcursor-dev libglew-dev libpng12-dev
+    apt-get install libc++-dev libglew-dev libpng12-dev
 
 Build system:
 
