@@ -63,7 +63,7 @@ Optionaly, in order to use Clang Static Analyzer:
 Prerequisits:
 
     apt-get update
-    apt-get install curl unzip python-pip
+    apt-get install curl unzip python-pip cmake
 
 Libs:
 
@@ -85,6 +85,7 @@ GLFW3:
 
     curl -LO https://github.com/glfw/glfw/releases/download/3.1.1/glfw-3.1.1.zip
     unzip -q glfw-3.1.1.zip
+    cd glfw-3.1.1
     cmake .
     make
     sudo make install
