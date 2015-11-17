@@ -12,7 +12,7 @@ Todo:
 - [ ] controled camera
 - [ ] physically based shading
 - [ ] gamma correction
-- [ ] deferred shading
+- [x] deferred shading
 - [x] shadow volume
 - [x] batched rendering
 - [x] ambiant, diffuse, specular lighting
