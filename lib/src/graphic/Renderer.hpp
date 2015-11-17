@@ -4,6 +4,7 @@
 #include "graphic/Model.hpp"
 #include "graphic/MeshStore.hpp"
 #include "graphic/GBuffer.hpp"
+#include "graphic/Quad.hpp"
 #include "graphic/DirectionalLight.hpp"
 #include <glm/vec3.hpp>
 
@@ -34,9 +35,7 @@ private:
     Program geometryBuffer;
     Program deferredShading;
 
-    GLuint quadVAO = 0;
-    GLuint quadVBO;
-
+    Quad quad;
     GBuffer gBuffer;
     MeshStore meshStore;
     DirectionalLight directionalLight;

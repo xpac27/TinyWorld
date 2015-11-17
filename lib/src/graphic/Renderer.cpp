@@ -38,25 +38,8 @@ void Renderer::initialize()
     initializeShader(geometryBuffer, "app/res/shaders/geometry_buffer.vs", "app/res/shaders/geometry_buffer.fs");
     initializeShader(deferredShading, "app/res/shaders/deferred_shading.vs", "app/res/shaders/deferred_shading.fs");
 
+    quad.initialize();
     gBuffer.initialize();
-
-    // TODO have that separatly
-    GLfloat quadVertices[] = {
-        // Positions        // Texture Coords
-        -1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
-        1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-    };
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-    glBindVertexArray(quadVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * 3));
 }
 
 void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
@@ -210,9 +193,7 @@ void Renderer::lightingPass()
 
     glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
 
-    glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
+    quad.draw();
 
     deferredShading.idle();
 }
