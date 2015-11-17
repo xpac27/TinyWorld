@@ -16,7 +16,7 @@ void MTL::load(const char *filename)
 
 bool MTL::openFile(const char *filename, ifstream &fin)
 {
-    string filepath = "app/res/";
+    string filepath = "lib/res/materials/";
     filepath += filename;
     fin.open(filepath);
     if (!fin.good()) printl("ERROR - could not open file:", filepath);

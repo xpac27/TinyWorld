@@ -33,10 +33,10 @@ void Renderer::initialize()
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
-    initializeShader(shadowVolume, "app/res/shaders/shadow_volume.vs", "app/res/shaders/shadow_volume.fs");
-    initializeShader(filling, "app/res/shaders/filling.vs", "app/res/shaders/filling.fs");
-    initializeShader(geometryBuffer, "app/res/shaders/geometry_buffer.vs", "app/res/shaders/geometry_buffer.fs");
-    initializeShader(deferredShading, "app/res/shaders/deferred_shading.vs", "app/res/shaders/deferred_shading.fs");
+    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vs", "lib/src/shaders/shadow_volume.fs");
+    initializeShader(filling, "lib/src/shaders/filling.vs", "lib/src/shaders/filling.fs");
+    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vs", "lib/src/shaders/geometry_buffer.fs");
+    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vs", "lib/src/shaders/deferred_shading.fs");
 
     quad.initialize();
     gBuffer.initialize();

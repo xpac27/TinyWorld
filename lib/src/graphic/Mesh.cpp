@@ -212,7 +212,7 @@ void Mesh::updateSilhouette()
 
 GLuint Mesh::loadTexture(const char *filename)
 {
-    string filepath = "app/res/";
+    string filepath = "lib/res/";
     filepath += filename;
     PNG png(filepath.data());
 
