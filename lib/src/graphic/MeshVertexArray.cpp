@@ -41,23 +41,13 @@ void MeshVertexArray::initialize(vector<glm::vec4> &vertexes, vector<glm::vec2> 
         glEnableVertexAttribArray(3 + i);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
-    for (unsigned int i = 0; i < 4 ; i++) {
-        glVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), reinterpret_cast<const GLvoid *>(sizeof(GLfloat) * i * 4));
-        glVertexAttribDivisor(7 + i, 1);
-        glEnableVertexAttribArray(7 + i);
-    }
-
     glBindVertexArray(0);
 }
 
-void MeshVertexArray::uploadMatrices(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws)
+void MeshVertexArray::uploadMatrices(unsigned int instances, const glm::mat4* matrices)
 {
     glBindBuffer(GL_ARRAY_BUFFER, VAB[WVP_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, WVPs, GL_DYNAMIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VAB[W_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, Ws, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instances, matrices, GL_DYNAMIC_DRAW);
 }
 
 void MeshVertexArray::uploadIndexes(vector<unsigned int> &indexes)

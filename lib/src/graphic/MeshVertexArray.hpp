@@ -10,14 +10,13 @@
 #define NOR_VB 2
 #define TEX_VB 3
 #define WVP_VB 4
-#define W_VB 5
 
 class MeshVertexArray
 {
 public:
 
     void initialize(std::vector<glm::vec4> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals);
-    void uploadMatrices(unsigned int instances, const glm::mat4* WVPs, const glm::mat4* Ws);
+    void uploadMatrices(unsigned int instances, const glm::mat4* matrices);
     void uploadIndexes(std::vector<unsigned int> &indexes);
     void bind();
     void idle();
@@ -25,5 +24,5 @@ public:
 private:
 
     GLuint VAO;
-    GLuint VAB[6];
+    GLuint VAB[5];
 };

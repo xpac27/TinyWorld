@@ -26,8 +26,14 @@ Mesh::Mesh(const char *filename)
 
 Mesh::~Mesh()
 {
-    for (auto diffuse : diffuses) {
-        glDeleteTextures(1, &diffuse);
+    for (auto diffuseTexture : diffuseTextures) {
+        glDeleteTextures(1, &diffuseTexture);
+    }
+    for (auto specularTexture : specularTextures) {
+        glDeleteTextures(1, &specularTexture);
+    }
+    for (auto normalTexture : normalTextures) {
+        glDeleteTextures(1, &normalTexture);
     }
     delete vertexArray;
 }
@@ -39,9 +45,17 @@ void Mesh::debug()
 
 void Mesh::bindTexture()
 {
-    if (diffuses.size() > 0) {
+    if (diffuseTextures.size() > 0) {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuses[0]);
+        glBindTexture(GL_TEXTURE_2D, diffuseTextures[0]);
+    }
+    if (specularTextures.size() > 0) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularTextures[0]);
+    }
+    if (normalTextures.size() > 0) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, normalTextures[0]);
     }
 }
 
@@ -55,15 +69,15 @@ void Mesh::bindSilhouette()
     vertexArray->uploadIndexes(silhouette);
 }
 
-void Mesh::updateShadowVolume(const vec3 &lightDirection)
+void Mesh::updateShadowVolume(const vec4 &lightDirection)
 {
     updateTrianglesVisibility(lightDirection);
     updateSilhouette();
 }
 
-void Mesh::updateMatrices(unsigned int instances, const mat4* WVPs, const mat4* Ws)
+void Mesh::updateMatrices(unsigned int instances, const mat4* matrices)
 {
-    vertexArray->uploadMatrices(instances, WVPs, Ws);
+    vertexArray->uploadMatrices(instances, matrices);
 }
 
 void Mesh::draw(unsigned int instances)
@@ -78,7 +92,6 @@ void Mesh::drawShadowVolume()
     if (silhouette.size() == 0) return;
 
     vertexArray->bind();
-    // glDrawElementsInstancedBaseInstance(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0, 1, instance);
     glDrawElements(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0);
     vertexArray->idle();
 }
@@ -86,7 +99,9 @@ void Mesh::drawShadowVolume()
 void Mesh::loadTextures()
 {
     for (auto &m : materials) {
-        diffuses.push_back(loadTexture(m.map_Kd.data()));
+        diffuseTextures.push_back(loadTexture(m.map_Kd.data()));
+        specularTextures.push_back(loadTexture(m.map_Ks.data()));
+        normalTextures.push_back(loadTexture(m.map_Bump.data()));
     }
 }
 
@@ -119,20 +134,20 @@ void Mesh::computeTrianglesPlaneEquations()
         const vec4& v3 = vertexes[triangle[2]];
 
         trianglesPlaneEquations.push_back(fvec4(
-              v1.y * (v2.z - v3.z) 
-            + v2.y * (v3.z - v1.z) 
+              v1.y * (v2.z - v3.z)
+            + v2.y * (v3.z - v1.z)
             + v3.y * (v1.z - v2.z),
-            
-              v1.z * (v2.x - v3.x) 
-            + v2.z * (v3.x - v1.x) 
+
+              v1.z * (v2.x - v3.x)
+            + v2.z * (v3.x - v1.x)
             + v3.z * (v1.x - v2.x),
-            
-              v1.x * (v2.y - v3.y) 
-            + v2.x * (v3.y - v1.y) 
+
+              v1.x * (v2.y - v3.y)
+            + v2.x * (v3.y - v1.y)
             + v3.x * (v1.y - v2.y),
-            
-            -(v1.x * (v2.y * v3.z - v3.y * v2.z) 
-            + v2.x * (v3.y * v1.z - v1.y * v3.z) 
+
+            -(v1.x * (v2.y * v3.z - v3.y * v2.z)
+            + v2.x * (v3.y * v1.z - v1.y * v3.z)
             + v3.x * (v1.y * v2.z - v2.y * v1.z))
         ));
     }
@@ -166,12 +181,11 @@ void Mesh::computeTrianglesNeighbours()
     }
 }
 
-void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
+void Mesh::updateTrianglesVisibility(const vec4 &lightDirection)
 {
 	// TODO optimize
-    vec4 l(lightDirection.x, lightDirection.y, lightDirection.z, 0.f);
     for (unsigned int t = 0; t < triangles.size(); t ++) {
-        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], l) > 0.f;
+        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], lightDirection) > 0.f;
     }
 }
 
@@ -198,7 +212,7 @@ void Mesh::updateSilhouette()
 
 GLuint Mesh::loadTexture(const char *filename)
 {
-    string filepath = "app/res/";
+    string filepath = "lib/res/";
     filepath += filename;
     PNG png(filepath.data());
 
