@@ -47,7 +47,6 @@ void Log::dump(Visibility* c)
         case MeshType::PLAN: printl("  meshType: plan"); break;
         case MeshType::CUBE: printl("  meshType: cube"); break;
         case MeshType::CACODEMON: printl("  meshType: cacodemon"); break;
-        // case MeshType::FLAN: printl("  meshType: flan"); break;
     }
     printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);
 }

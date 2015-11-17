@@ -32,7 +32,7 @@ void OBJ::load(const char *filename)
 
 bool OBJ::openFile(const char *filename, ifstream &fin)
 {
-    string filepath = "app/res/";
+    string filepath = "lib/res/objects/";
     filepath += filename;
     fin.open(filepath);
     if (!fin.good()) printl("ERROR - could not open file:", filepath);
@@ -143,7 +143,7 @@ void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vert
 {
     nl();
     info("printing mesh details");
-    
+
     nl();
     printl("  vertexes:");
     unsigned int index = 0;
