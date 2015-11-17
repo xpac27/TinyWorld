@@ -1,16 +1,12 @@
 #pragma once
-#include "ecs/Id.hpp"
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
-#include "graphic/DirectionalLight.hpp"
-#include "utils/Program.hpp"
 #include "utils/Aggregator.hpp"
+#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
-#include <GL/glew.h>
 
-class MeshStore;
-class Camera;
+class Renderer;
 namespace ECS {
 template <typename T> class ComponentManager;
 }
@@ -31,36 +27,14 @@ public:
 
 private:
 
-    void uploadMatrices();
-    void render();
-    void depthPass();
-    void shadowPass();
-    void geometryPass();
-    void lightingPass();
-    void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
-
-    Program shadowVolume;
-    Program filling;
-    Program geometryBuffer;
-    Program deferredShading;
-    DirectionalLight light;
+    float count = 0.f;
 
     Aggregator<glm::vec3> modelRotations;
     Aggregator<glm::mat4> modelMatrices;
-
-    GLuint gBuffer;
-    GLuint gPosition;
-    GLuint gNormal;
-    GLuint gAlbedoSpec;
-    GLuint quadVAO = 0;
-    GLuint quadVBO;
-
-    float count = 0.f;
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;
 
     // TODO init from outside (systems class?)
-    MeshStore* meshStore;
-    Camera *camera;
+    Renderer *renderer;
 };
