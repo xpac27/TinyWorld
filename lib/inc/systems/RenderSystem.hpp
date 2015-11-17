@@ -33,13 +33,10 @@ private:
 
     void uploadMatrices();
     void render();
-    void render2();
-    void render3();
     void depthPass();
     void shadowPass();
     void geometryPass();
     void lightingPass();
-    void colorPass();
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
     Program shadowVolume;
