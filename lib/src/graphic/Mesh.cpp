@@ -69,7 +69,7 @@ void Mesh::bindSilhouette()
     vertexArray->uploadIndexes(silhouette);
 }
 
-void Mesh::updateShadowVolume(const vec3 &lightDirection)
+void Mesh::updateShadowVolume(const vec4 &lightDirection)
 {
     updateTrianglesVisibility(lightDirection);
     updateSilhouette();
@@ -181,12 +181,11 @@ void Mesh::computeTrianglesNeighbours()
     }
 }
 
-void Mesh::updateTrianglesVisibility(const vec3 &lightDirection)
+void Mesh::updateTrianglesVisibility(const vec4 &lightDirection)
 {
 	// TODO optimize
-    vec4 l(lightDirection.x, lightDirection.y, lightDirection.z, 0.f);
     for (unsigned int t = 0; t < triangles.size(); t ++) {
-        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], l) > 0.f;
+        trianglesVisibility[t] = dot(trianglesPlaneEquations[t], lightDirection) > 0.f;
     }
 }
 

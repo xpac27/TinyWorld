@@ -2,9 +2,9 @@
 #include "ecs/System.hpp"
 #include "components/Visibility.hpp"
 #include "components/Movement.hpp"
+#include "graphic/Model.hpp"
 #include "utils/Aggregator.hpp"
 #include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
 
 class Renderer;
 namespace ECS {
@@ -29,8 +29,7 @@ private:
 
     float count = 0.f;
 
-    Aggregator<glm::vec3> modelRotations;
-    Aggregator<glm::mat4> modelMatrices;
+    Aggregator<Model> models;
 
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;

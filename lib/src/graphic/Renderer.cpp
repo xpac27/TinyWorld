@@ -1,24 +1,21 @@
 #include "graphic/Renderer.hpp"
-#include "graphic/MeshStore.hpp"
 #include "graphic/Mesh.hpp"
 #include "graphic/Camera.hpp"
 #include "utils/Shader.hpp"
-#include "utils/Log.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <GL/glew.h>
 
 using namespace std;
 using namespace glm;
-using namespace Log;
 
 Renderer::Renderer()
-    : meshStore(new MeshStore())
-    , camera(new Camera(0.f, -3.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
+    : camera(new Camera(0.f, -3.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
 {
     // TODO make this date driven
     directionalLight.color = vec3(1.0, 0.9, 0.7);
-    directionalLight.direction = normalize(vec3(1.f, 1.f, -1.f));
+    directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
     directionalLight.ambientIntensity = 0.2f;
     directionalLight.diffuseIntensity = 1.0f;
     directionalLight.intensity = 1.0f;
@@ -26,7 +23,6 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-    delete meshStore;
     delete camera;
 }
 
@@ -42,52 +38,7 @@ void Renderer::initialize()
     initializeShader(geometryBuffer, "app/res/shaders/geometry_buffer.vs", "app/res/shaders/geometry_buffer.fs");
     initializeShader(deferredShading, "app/res/shaders/deferred_shading.vs", "app/res/shaders/deferred_shading.fs");
 
-    // TODO GBuffer class
-    glGenFramebuffers(1, &gBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-
-    // - Position color buffer
-    glGenTextures(1, &gPosition);
-    glBindTexture(GL_TEXTURE_2D, gPosition);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
-
-    // - Normal color buffer
-    glGenTextures(1, &gNormal);
-    glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
-
-    // - Color + Specular color buffer
-    glGenTextures(1, &gAlbedoSpec);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
-
-    // - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
-    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-    glDrawBuffers(3, attachments);
-
-    // - Create and attach depth buffer (renderbuffer)
-    GLuint rboDepth;
-    glGenRenderbuffers(1, &rboDepth);
-    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-
-    // - Finally check if framebuffer is complete
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        error("Framebuffer failed for GBuffer!");
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // ----
+    gBuffer.initialize();
 
     // TODO have that separatly
     GLfloat quadVertices[] = {
@@ -121,20 +72,20 @@ void Renderer::initializeShader(Program &program, const char* vertexShaderFilePa
     program.link();
 }
 
-void Renderer::render(Aggregator<glm::mat4> &modelMatrices, Aggregator<glm::vec3> &modelRotations)
+void Renderer::render(Aggregator<Model> &models)
 {
-    uploadMatrices(modelMatrices);
+    uploadMatrices(models);
 
     // Off screen rendering
-    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+    gBuffer.bind();
 
     // Render depth
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     glClear(GL_DEPTH_BUFFER_BIT);
-
     glDepthFunc(GL_LEQUAL);
-    depthPass(modelMatrices);;
+
+    depthPass(models);;
 
     // Render shadows
     glDepthMask(GL_FALSE);
@@ -146,7 +97,7 @@ void Renderer::render(Aggregator<glm::mat4> &modelMatrices, Aggregator<glm::vec3
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
 
-    shadowPass(modelMatrices, modelRotations);
+    shadowPass(models);
 
     // Render scene
     glEnable(GL_CULL_FACE);
@@ -156,10 +107,10 @@ void Renderer::render(Aggregator<glm::mat4> &modelMatrices, Aggregator<glm::vec3
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    geometryPass(modelMatrices);
+    geometryPass(models);
 
     // On screen rendering
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    gBuffer.idle();
 
     // Render lighting
     glDepthMask(GL_TRUE);
@@ -174,50 +125,59 @@ void Renderer::render(Aggregator<glm::mat4> &modelMatrices, Aggregator<glm::vec3
     glDisable(GL_CULL_FACE);
 }
 
-void Renderer::uploadMatrices(Aggregator<glm::mat4> &modelMatrices)
+void Renderer::uploadMatrices(Aggregator<Model> &models)
 {
-    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->updateMatrices(modelMatrices.size(t), modelMatrices.get(t)->data());
+    for (unsigned int t = 0; t < models.size(); t ++) {
+        unsigned int totalModels = models.size(t);
+        vector<mat4> matrices;
+        matrices.reserve(models.size(t));
+        for (unsigned int i = 0; i < totalModels; i++) {
+            matrices.push_back(models.get(t)->at(i).getProduct());
+        }
+        meshStore.getMesh(MeshType(t))->updateMatrices(totalModels, matrices.data());
     }
 }
 
-void Renderer::depthPass(Aggregator<glm::mat4> &modelMatrices)
+void Renderer::depthPass(Aggregator<Model> &models)
 {
     filling.use();
 
     glUniformMatrix4fv(filling.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
     glUniformMatrix4fv(filling.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
-    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->bindIndexes();
-        meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
+    for (unsigned int t = 0; t < models.size(); t ++) {
+        meshStore.getMesh(MeshType(t))->bindIndexes();
+        meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 
     filling.idle();
 }
 
-void Renderer::shadowPass(Aggregator<glm::mat4> &modelMatrices, Aggregator<glm::vec3> &modelRotations)
+void Renderer::shadowPass(Aggregator<Model> &models)
 {
     shadowVolume.use();
 
     glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
     glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
-    for (unsigned int t = 0; t < modelRotations.size(); t ++) {
-        for (unsigned int i = 0; i < modelRotations.size(t); i++) {
-            glUniformMatrix4fv(shadowVolume.getLocation("model"), 1, GL_FALSE, &modelMatrices.get(t)->at(i)[0][0]);
-            glUniform4f(shadowVolume.getLocation("light"), modelRotations.get(t)->at(i).x, modelRotations.get(t)->at(i).y, modelRotations.get(t)->at(i).z, 0.f);
+    for (unsigned int t = 0; t < models.size(); t ++) {
+        for (unsigned int i = 0; i < models.size(t); i++) {
+            const Model &model = models.get(t)->at(i);
+            vec4 d = directionalLight.direction * model.getRotation();
 
-            meshStore->getMesh(MeshType(t))->updateShadowVolume(modelRotations.get(t)->at(i));
-            meshStore->getMesh(MeshType(t))->bindSilhouette();
-            meshStore->getMesh(MeshType(t))->drawShadowVolume();
+            glUniformMatrix4fv(shadowVolume.getLocation("model"), 1, GL_FALSE, &model.getProduct()[0][0]);
+            glUniform4f(shadowVolume.getLocation("light"), d.x, d.y, d.z, d.w);
+
+            meshStore.getMesh(MeshType(t))->updateShadowVolume(d);
+            meshStore.getMesh(MeshType(t))->bindSilhouette();
+            meshStore.getMesh(MeshType(t))->drawShadowVolume();
         }
     }
 
     shadowVolume.idle();
 }
 
-void Renderer::geometryPass(Aggregator<glm::mat4> &modelMatrices)
+void Renderer::geometryPass(Aggregator<Model> &models)
 {
     geometryBuffer.use();
 
@@ -226,10 +186,10 @@ void Renderer::geometryPass(Aggregator<glm::mat4> &modelMatrices)
     glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
     glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
-    for (unsigned int t = 0; t < modelMatrices.size(); t ++) {
-        meshStore->getMesh(MeshType(t))->bindTexture();
-        meshStore->getMesh(MeshType(t))->bindIndexes();
-        meshStore->getMesh(MeshType(t))->draw(modelMatrices.size(t));
+    for (unsigned int t = 0; t < models.size(); t ++) {
+        meshStore.getMesh(MeshType(t))->bindTexture();
+        meshStore.getMesh(MeshType(t))->bindIndexes();
+        meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 
     geometryBuffer.idle();
@@ -246,12 +206,7 @@ void Renderer::lightingPass()
     glUniform3f(deferredShading.getLocation("Light.direction"), directionalLight.direction.x, directionalLight.direction.y, directionalLight.direction.z);
     glUniform1f(deferredShading.getLocation("Light.intensity"), directionalLight.intensity);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, gPosition);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, gNormal);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    gBuffer.bindTextures();
 
     glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
 

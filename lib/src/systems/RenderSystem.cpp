@@ -5,6 +5,7 @@
 #include "graphic/Renderer.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/mat4x4.hpp>
 #include <math.h>
 
 using namespace std;
@@ -53,14 +54,12 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            modelMatrices.add(visibility->meshType, modelTranslation * modelRotation * modelScale);
-            // modelRotations.add(visibility->meshType, rotate(directionalLight.direction, count * -1, vec3(0.f, 0.f, 1.f)));
+            models.add(visibility->meshType, Model(modelTranslation, modelRotation, modelScale));
         }
     }
 
     count += 0.01;
 
-    renderer->render(modelMatrices, modelRotations);
-    modelRotations.clear();
-    modelMatrices.clear();
+    renderer->render(models);
+    models.clear();
 }

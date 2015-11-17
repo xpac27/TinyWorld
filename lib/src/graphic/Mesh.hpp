@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/glm.hpp>
 #include <vector>
@@ -17,7 +18,7 @@ public:
     Mesh(const char *filename);
     ~Mesh();
 
-    void updateShadowVolume(const glm::vec3 &lightDirection);
+    void updateShadowVolume(const glm::vec4 &lightDirection);
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
     void drawShadowVolume();
@@ -35,7 +36,7 @@ private:
     void initializeTriangleData();
     void computeTrianglesPlaneEquations();
     void computeTrianglesNeighbours();
-    void updateTrianglesVisibility(const glm::vec3 &lightDirection);
+    void updateTrianglesVisibility(const glm::vec4 &lightDirection);
     void updateSilhouette();
 
     GLuint loadTexture(const char *filename);
