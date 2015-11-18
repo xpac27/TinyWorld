@@ -11,7 +11,6 @@ struct directionalLight
 {
     vec3 color;
     vec3 direction;
-    float intensity;
 };
 uniform directionalLight Light;
 
@@ -34,15 +33,14 @@ void main()
     if (visibility > 0.0) {
 
         // Diffuse
-        vec3 diffuse = visibility * Light.intensity * Light.color * Diffuse;
+        vec3 diffuse = Diffuse * Light.color * pow(visibility, 2);
+        lighting += diffuse;
 
         // Specular
-        vec3 halfwayDir = normalize(-Light.direction + viewDir);
-        float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32);
-        vec3 specular = Light.color * spec * Specular;
-
-        // Compose
-        lighting += diffuse + specular;
+        float reflection = dot(Normal, normalize(-Light.direction + viewDir));
+        if (reflection > 0.0) {
+            lighting += Specular * Light.color * pow(reflection, 32);
+        }
     }
 
     // For each spot lights (TODO)

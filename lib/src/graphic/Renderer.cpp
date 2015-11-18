@@ -14,11 +14,8 @@ Renderer::Renderer()
     : camera(new Camera(0.f, -3.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
 {
     // TODO make this date driven
-    directionalLight.color = vec3(1.0, 0.9, 0.7);
+    directionalLight.color = vec3(0.6, 0.6, 0.6);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
-    directionalLight.ambientIntensity = 0.2f;
-    directionalLight.diffuseIntensity = 1.0f;
-    directionalLight.intensity = 1.0f;
 }
 
 Renderer::~Renderer()
@@ -99,6 +96,7 @@ void Renderer::render(Aggregator<Model> &models)
     glDepthMask(GL_TRUE);
     glDisable(GL_STENCIL_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_FRAMEBUFFER_SRGB);
 
     lightingPass();
 
@@ -106,6 +104,7 @@ void Renderer::render(Aggregator<Model> &models)
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+    glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void Renderer::uploadMatrices(Aggregator<Model> &models)
@@ -187,7 +186,6 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
     glUniform3f(deferredShading.getLocation("Light.color"), directionalLight.color.x, directionalLight.color.y, directionalLight.color.z);
     glUniform3f(deferredShading.getLocation("Light.direction"), directionalLight.direction.x, directionalLight.direction.y, directionalLight.direction.z);
-    glUniform1f(deferredShading.getLocation("Light.intensity"), directionalLight.intensity);
 
     gBuffer.bindTextures();
 
