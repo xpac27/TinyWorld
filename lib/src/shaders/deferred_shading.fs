@@ -27,6 +27,7 @@ void main()
     // Setup
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lighting = vec3(0.0, 0.0, 0.0);
+    float gamma = 2.2;
 
     // Directional light
     float visibility = dot(Normal, -Light.direction);
@@ -47,5 +48,9 @@ void main()
     // {
     // }
 
+    // apply gamma correction
+    lighting = pow(lighting, vec3(1.0/gamma));
+
+    // Output result
     FragColor = vec4(lighting, 1.0);
 }
