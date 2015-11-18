@@ -6,8 +6,8 @@ using namespace Log;
 void GBuffer::initialize()
 {
     // TODO get those dimentions from an updated windows object
-    int SCR_WIDTH = 800;
-    int SCR_HEIGHT = 600;
+    int SCR_WIDTH = 1600;
+    int SCR_HEIGHT = 1200;
 
     glGenFramebuffers(1, &gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);

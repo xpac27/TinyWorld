@@ -27,21 +27,23 @@ void main()
 
     // Setup
     vec3 viewDir = normalize(viewPos - FragPos);
-
-    // Hard-coded ambient component
-    vec3 lighting = Diffuse * 0.1;
+    vec3 lighting = vec3(0.0, 0.0, 0.0);
 
     // Directional light
-    // <<
+    float visibility = dot(Normal, -Light.direction);
+    if (visibility > 0.0) {
+
         // Diffuse
-        vec3 diffuse = max(dot(Normal, -Light.direction), 0.0) * Light.intensity * Light.color * Diffuse;
+        vec3 diffuse = visibility * Light.intensity * Light.color * Diffuse;
+
         // Specular
-        vec3 reflectDir = reflect(-Light.direction, Normal);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+        vec3 halfwayDir = normalize(-Light.direction + viewDir);
+        float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32);
         vec3 specular = Light.color * spec * Specular;
-        // Compute
+
+        // Compose
         lighting += diffuse + specular;
-    // >>
+    }
 
     // For each spot lights (TODO)
     // {
