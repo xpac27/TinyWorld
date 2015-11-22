@@ -27,21 +27,22 @@ void main()
     // Setup
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lighting = vec3(0.0, 0.0, 0.0);
+    vec3 lightDir = Light.direction * -1;
     float gamma = 2.2;
 
     // Directional light
-    float visibility = dot(Normal, -Light.direction);
-    if (visibility > 0.0) {
+    float intensity = dot(lightDir, Normal);
+    if (intensity > 0.0) {
 
         // Diffuse
-        vec3 diffuse = Diffuse * Light.color * pow(visibility, 2);
+        vec3 diffuse = Diffuse * Light.color * intensity;
         lighting += diffuse;
 
         // Specular
-        float reflection = dot(Normal, normalize(-Light.direction + viewDir));
-        if (reflection > 0.0) {
-            lighting += Specular * Light.color * pow(reflection, 32);
-        }
+        float spec = 0.0;
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0) / 2.0;
+        lighting += Specular * Light.color * spec * intensity;
     }
 
     // For each spot lights (TODO)

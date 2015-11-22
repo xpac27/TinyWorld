@@ -16,7 +16,7 @@ Game::Game()
     simulationSystems.initialize();
 
     setupWorld();
-    for (int i = 0; i < 10; i ++) {
+    for (int i = 0; i < 100; i ++) {
         addEntity();
     }
 }
@@ -50,12 +50,12 @@ void Game::addEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::CACODEMON;
+    visibilityComponents.getComponent(entity)->meshType = MeshType::SPHERE;
     visibilityComponents.getComponent(entity)->scale = glm::vec3(1, 1, 1);
-    movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
+    movementComponents.getComponent(entity)->velocity = Random::get(0.5f, 2.f);
     movementComponents.getComponent(entity)->direction = {Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f};
     movementComponents.getComponent(entity)->direction = normalize(movementComponents.getComponent(entity)->direction);
-    movementComponents.getComponent(entity)->position.x = Random::get(-6.f, 6.f);
-    movementComponents.getComponent(entity)->position.y = Random::get(-6.f, 6.f);
-    movementComponents.getComponent(entity)->position.z = 0.5f;
+    movementComponents.getComponent(entity)->position.x = Random::get(-8.f, 8.f);
+    movementComponents.getComponent(entity)->position.y = Random::get(-8.f, 8.f);
+    movementComponents.getComponent(entity)->position.z = 1.0f;
 }

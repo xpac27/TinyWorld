@@ -20,5 +20,5 @@ void main()
 
     FragPos = worldPos.xyz;
     TexCoords = texCoords;
-    Normal = transpose(inverse(mat3(model))) * normal;
+    Normal = normalize(transpose(inverse(mat3(model))) * normal);
 }

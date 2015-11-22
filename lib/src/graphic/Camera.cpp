@@ -10,7 +10,7 @@ Camera::Camera(float pos_x, float pos_y, float pos_z, float rot_x, float rot_y, 
     , rotation(mat4(1.0f))
 {
     rotation = rotate(rotation, rot_x, vec3(1.0f, 0.0f, 0.0f));
-    rotation = rotate(rotation, rot_y, vec3(0.0f, 0.0f, 1.0f));
+    rotation = rotate(rotation, rot_y, vec3(0.0f, 1.0f, 0.0f));
     rotation = rotate(rotation, rot_z, vec3(0.0f, 0.0f, 1.0f));
 
 }

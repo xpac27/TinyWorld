@@ -11,7 +11,7 @@ Todo:
 - [ ] terrain height
 - [ ] controled camera
 - [ ] physically based shading
-- [ ] gamma correction
+- [x] gamma correction
 - [x] deferred shading
 - [x] shadow volume
 - [x] batched rendering

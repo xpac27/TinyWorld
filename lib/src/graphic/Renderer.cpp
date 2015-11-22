@@ -11,7 +11,7 @@ using namespace std;
 using namespace glm;
 
 Renderer::Renderer()
-    : camera(new Camera(0.f, -3.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
+    : camera(new Camera(0.f, 0.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
 {
     // TODO make this date driven
     directionalLight.color = vec3(0.9, 0.8, 0.7);
