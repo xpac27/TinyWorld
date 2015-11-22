@@ -42,7 +42,7 @@ void Game::setupWorld()
     ECS::id entity = entities.addEntity();
     visibilityComponents.addComponent(entity);
     visibilityComponents.getComponent(entity)->meshType = MeshType::PLAN;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(25, 25, 1);
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(80, 80, 1);
 }
 
 void Game::addEntity()

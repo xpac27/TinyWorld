@@ -14,7 +14,7 @@ Renderer::Renderer()
     : camera(new Camera(0.f, 0.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
 {
     // TODO make this date driven
-    directionalLight.color = vec3(0.9, 0.8, 0.7);
+    directionalLight.color = vec3(0.7, 0.6, 0.5);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
 }
 
@@ -77,7 +77,7 @@ void Renderer::render(Aggregator<Model> &models)
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
 
-    shadowPass(models);
+    // shadowPass(models);
 
     // Render scene
     glEnable(GL_CULL_FACE);
@@ -182,12 +182,11 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gPosition"), 0);
     glUniform1i(deferredShading.getLocation("gNormal"), 1);
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
-    glUniform3f(deferredShading.getLocation("Light.color"), directionalLight.color.x, directionalLight.color.y, directionalLight.color.z);
-    glUniform3f(deferredShading.getLocation("Light.direction"), directionalLight.direction.x, directionalLight.direction.y, directionalLight.direction.z);
+    glUniform3fv(deferredShading.getLocation("Light.color"), 1, value_ptr(directionalLight.color));
+    glUniform3fv(deferredShading.getLocation("Light.direction"), 1, value_ptr(directionalLight.direction));
+    glUniform3fv(deferredShading.getLocation("viewPos"), 1, value_ptr(camera->getPosition()));
 
     gBuffer.bindTextures();
-
-    glUniformMatrix4fv(deferredShading.getLocation("viewPos"), 1, GL_FALSE, value_ptr(camera->getPosition()));
 
     quad.draw();
 
