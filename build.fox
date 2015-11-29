@@ -36,7 +36,6 @@ build obj(out/objects/tests/*): auto lib/tests/src/*.cpp
     includedirs += lib/tests/src lib/src
 
 build obj(out/objects/app/*): auto app/src/*.cpp
-    includedirs += app/inc
 
 build out/libs/lib(tw): auto obj(out/objects/lib/**/*)
 build app(out/tests): auto obj(out/objects/tests/*) out/libs/lib(tw)
