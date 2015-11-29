@@ -35,12 +35,16 @@ Todo:
 
 Type `make` and the application should configure, compile and run \o/.
 
-Optionaly, you can run `make configure` once and use the commands above.
+Optionaly, you can run:
 
+- `make configure` - generate the project
 - `make compile` - compile the application
 - `make test` - compile and run the tests
-- `make report` - compile the application and run the static code analyzer on it
-- `make coverage` - compile the application and run the code coverage analyzer on it
+- `make clean` - remove all compiled objects
+- `make lint` - run cland tidy static analyzer
+- `make check` - run cppcheck static analyzer
+- `make coverage` - run llvm-cov code coverage analyzer
+- `make analysis` - run scan-build static analyzer
 
 ## Setup
 
@@ -50,13 +54,6 @@ Optionaly, you can run `make configure` once and use the commands above.
 	brew tap homebrew/versions
 	brew install glfw3 glew glm libpng ninja
 	pip install buildfox
-
-Optionaly, in order to use Clang Static Analyzer:
-
-	brew install lcov
-	brew install llvm --with-clang
-	export PATH="$PATH:/usr/local/opt/llvm/share/clang/tools/scan-build"
-	export PATH="$PATH:/usr/local/opt/llvm/bin/"
 
 ### Ubuntu
 
@@ -92,6 +89,22 @@ GLFW3:
     cd ..
     rm glfw-3.1.1.zip
 
-Optionaly, in order to use Clang Static Analyzer and Code Coverage:
+## Static Analyzers
+
+To install CPPCheck:
+
+    git clone git clone git://github.com/danmar/cppcheck.git
+    cd cppcheck
+    cmake .
+    make && make install
+
+To install Clang Static Analyzer, llvm-cov, scan-build and clang-tidy:
+
+	brew install lcov
+	brew install llvm --with-clang
+	export PATH="$PATH:/usr/local/opt/llvm/share/clang/tools/scan-build"
+	export PATH="$PATH:/usr/local/opt/llvm/bin/"
+
+or:
 
     apt-get install llvm lcov

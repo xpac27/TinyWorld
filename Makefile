@@ -20,24 +20,22 @@ test:
 	@ninja out/tests
 	@./out/tests
 
+clean:
+	@ninja -t clean
+
+reset:
+	@echo "Removing all outputs..."
+	@rm -rf out
+	@echo "done!"
+
+lint:
+	clang-tidy -p out/compile_commands.json `find lib/src app/src -name "*.cpp" | xargs`
+
 check:
 	@mkdir -p out/cppcheck
 	@cppcheck --xml --xml-version=2 --enable=all --inconclusive --std=c++11 --quiet -Ilib/inc -Iapp/src -Ilib/src lib/src app/src 2> out/cppcheck/result.xml
 	@./scripts/cppcheck-htmlreport --title="TinnyWorld" --source-dir=. --report-dir=out/cppcheck --file=out/cppcheck/result.xml
 	@open out/cppcheck/index.html
-	@echo "done!"
-
-lint:
-	clang-tidy -p out/compile_commands.json `find lib/src app/src -name "*.cpp" | xargs`
-	@echo "done!"
-
-clean:
-	@ninja -t clean
-	@echo "done!"
-
-reset:
-	@rm -rf out
-	@echo "done!"
 
 coverage:
 	@bf debug=true coverage=true
