@@ -12,38 +12,35 @@ struct directionalLight
     vec3 color;
     vec3 direction;
 };
-uniform directionalLight Light;
+uniform directionalLight light;
 
-uniform vec3 viewPos;
+uniform vec3 view_position;
 
 void main()
 {
     // Retrieve data from gbuffer
-    vec3 FragPos = texture(gPosition, TexCoords).rgb;
-    vec3 Normal = texture(gNormal, TexCoords).rgb;
-    vec3 Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
-    float Specular = texture(gAlbedoSpec, TexCoords).a;
+    vec3 fragment_position = texture(gPosition, TexCoords).rgb;
+    vec3 normal = texture(gNormal, TexCoords).rgb;
+    vec3 diffuse_color = texture(gAlbedoSpec, TexCoords).rgb;
+    float specular_intensity = texture(gAlbedoSpec, TexCoords).a;
 
     // Setup
-    vec3 viewDir = normalize(viewPos - FragPos);
     float gamma = 2.2;
+    vec3 view_direction = normalize(view_position - fragment_position);
 
     // Directional light
-    vec3 lightDir = Light.direction * -1;
-    vec3 lighting = vec3(0.0, 0.0, 0.0);
-
-    // Directional ambient
-    float intensity = max(dot(lightDir, Normal), 0.0);
+    vec3 lighting = vec3(0.0, 0.0, 0.0); // no ambiant color
+    vec3 light_direction = light.direction * -1;
+    vec3 light_color = light.color;
 
     // Directional diffuse
-    vec3 diffuse = Diffuse * Light.color * intensity;
-    lighting += diffuse;
+    float diffuse_intensity = max(dot(light_direction, normal), 0.0);
+    lighting += diffuse_color * diffuse_intensity * light_color;
 
     // Directional specular
-    float spec = 0.0;
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0) / 2.0;
-    lighting += Specular * Light.color * spec * intensity;
+    vec3 halfway = normalize(light_direction + view_direction);
+    float specular_reflection = pow(max(dot(normal, halfway), 0.0), 32.0) / 2.0;
+    lighting += specular_intensity * specular_reflection;
 
     // For each spot lights (TODO)
     // {

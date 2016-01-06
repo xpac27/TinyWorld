@@ -196,9 +196,9 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gPosition"), 0);
     glUniform1i(deferredShading.getLocation("gNormal"), 1);
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
-    glUniform3fv(deferredShading.getLocation("Light.color"), 1, value_ptr(directionalLight.color));
-    glUniform3fv(deferredShading.getLocation("Light.direction"), 1, value_ptr(directionalLight.direction));
-    glUniform3fv(deferredShading.getLocation("viewPos"), 1, value_ptr(camera->getPosition()));
+    glUniform3fv(deferredShading.getLocation("light.color"), 1, value_ptr(directionalLight.color));
+    glUniform3fv(deferredShading.getLocation("light.direction"), 1, value_ptr(directionalLight.direction));
+    glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
 
     gBuffer.bindTextures();
 
