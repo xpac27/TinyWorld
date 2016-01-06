@@ -33,7 +33,7 @@ void main()
     vec3 lighting = vec3(0.0, 0.0, 0.0);
 
     // Directional ambient
-    float intensity = min(max(dot(lightDir, Normal), 0.0) + 0.25, 1.0);
+    float intensity = max(dot(lightDir, Normal), 0.0);
 
     // Directional diffuse
     vec3 diffuse = Diffuse * Light.color * intensity;

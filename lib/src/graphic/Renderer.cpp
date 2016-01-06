@@ -77,7 +77,7 @@ void Renderer::render(Aggregator<Model> &models)
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
 
-    // shadowPass(models);
+    shadowPass(models);
 
     // Render scene
     glEnable(GL_CULL_FACE);

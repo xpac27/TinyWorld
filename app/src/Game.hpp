@@ -22,6 +22,7 @@ private:
 
     void setupWorld();
     void addEntity();
+    void addTestEntity();
 
     ECS::EntityManager entities = {};
 
