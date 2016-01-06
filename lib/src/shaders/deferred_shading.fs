@@ -66,16 +66,16 @@ void main ()
 
     // Settings
     float gamma = 2.2;
-    float roughness = 0.30;
-    float fresnel = 0.2;
-
-    // Temporary
-    vec3 specular_color = vec3 (1.0, 1.0, 1.0);
+    float roughness = 0.25;
+    float fresnel = 0.5 + roughness;
 
     // Extract information from prerendered texture
     vec3 base_color = texture (gAlbedoSpec, TexCoords).rgb;
     vec3 surface_normal = texture (gNormal, TexCoords).rgb;
     vec3 fragment_position = texture (gPosition, TexCoords).rgb;
+
+    // Temporary
+    vec3 specular_color = vec3 (9.0, 7.0, 0.0);
 
     // Compute directions
     vec3 view_direction = normalize (view_position - fragment_position);
@@ -89,6 +89,7 @@ void main ()
     // apply gamma correction
     lighting = pow (lighting, vec3 (1.0 / gamma));
 
+    // output result
     FragColor = vec4 (lighting, 1.0);
 }
 
@@ -131,7 +132,7 @@ float cookTorranceBRDF ( vec3 lightDirection, vec3 viewDirection, vec3 surfaceNo
   //Distribution term
   float D = BeckmannDistribution(NdotH, roughness);
 
-  //Fresnel term
+  //Fresnel term (Schlick's Approximation)
   float F = pow(1.0 - VdotN, fresnel);
 
   //Multiply terms and done

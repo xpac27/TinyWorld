@@ -13,7 +13,7 @@ using namespace glm;
 using namespace Log;
 
 Renderer::Renderer()
-    : camera(new Camera(0.f, 0.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
+    : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
     directionalLight.color = vec3(0.7, 0.6, 0.5);
@@ -136,7 +136,7 @@ void Renderer::depthPass(Aggregator<Model> &models)
 {
     filling.use();
 
-    glUniformMatrix4fv(filling.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(filling.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(filling.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
@@ -151,7 +151,7 @@ void Renderer::shadowPass(Aggregator<Model> &models)
 {
     shadowVolume.use();
 
-    glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
@@ -177,7 +177,7 @@ void Renderer::geometryPass(Aggregator<Model> &models)
 
     glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
     glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
-    glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getTranslation() * camera->getRotation()));
+    glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {

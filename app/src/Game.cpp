@@ -71,10 +71,10 @@ void Game::addTestEntity()
     ECS::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::CACODEMON;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(2.f, 2.f, 2.f);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::SPHERE;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(2.5f, 2.5f, 2.5f);
     movementComponents.getComponent(entity)->direction = glm::vec3(0.f, -1.f, 0.f);
     movementComponents.getComponent(entity)->position.x = 0.0f;
     movementComponents.getComponent(entity)->position.y = 0.0f;
-    movementComponents.getComponent(entity)->position.z = 0.5f;
+    movementComponents.getComponent(entity)->position.z = 1.5f;
 }
