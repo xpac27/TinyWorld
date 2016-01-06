@@ -28,8 +28,9 @@ public:
 private:
 
     void addSystem(System* system);
+    void sleep();
 
-    float latency = 0.f;
+    float latency = 0;
     float previousUpdateCall = 0.f;
     const char* name;
 

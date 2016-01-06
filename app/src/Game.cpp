@@ -12,7 +12,7 @@ Game::Game()
     visualSystems.initialize();
 
     simulationSystems.addMovementSystem(&movementComponents);
-    simulationSystems.setLatency(1.f / 100.f);
+    simulationSystems.setLatency(1.f / 10.f);
     simulationSystems.initialize();
 
     setupWorld();

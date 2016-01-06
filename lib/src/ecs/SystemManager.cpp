@@ -4,6 +4,8 @@
 #include "systems/RenderSystem.hpp"
 #include "systems/MovementSystem.hpp"
 #include "utils/Log.hpp"
+#include <chrono>
+#include <thread>
 
 using namespace Log;
 
@@ -44,18 +46,25 @@ void SystemManager::update()
         system->update();
     }
     statistics.updated();
+    sleep();
 }
 
 void SystemManager::update(float seconds)
 {
-    if (seconds - previousUpdateCall > latency) {
-        float delta = seconds - previousUpdateCall;
-        statistics.updating();
-        previousUpdateCall = seconds;
-        for (auto& system : systems) {
-            system->update(seconds, delta);
-        }
-        statistics.updated();
+    float delta = seconds - previousUpdateCall;
+    statistics.updating();
+    previousUpdateCall = seconds;
+    for (auto& system : systems) {
+        system->update(seconds, delta);
+    }
+    statistics.updated();
+    sleep();
+}
+
+void SystemManager::sleep()
+{
+    if (latency > 0.f) {
+        std::this_thread::sleep_for(std::chrono::duration<float>(latency));
     }
 }
 
