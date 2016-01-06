@@ -20,6 +20,7 @@ public:
 
     void initialize();
     void render(Aggregator<Model> &models);
+    void reload();
 
 private:
 
@@ -28,6 +29,8 @@ private:
     void shadowPass(Aggregator<Model> &models);
     void geometryPass(Aggregator<Model> &models);
     void lightingPass();
+    // TODO put that in a separate class?
+    void initializeShaders();
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
     Program shadowVolume;

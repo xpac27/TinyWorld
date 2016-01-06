@@ -19,7 +19,7 @@ bool MTL::openFile(const char *filename, ifstream &fin)
     string filepath = "lib/res/materials/";
     filepath += filename;
     fin.open(filepath);
-    if (!fin.good()) printl("ERROR - could not open file:", filepath);
+    if (!fin.good()) error("ERROR - could not open file:", filepath);
     return fin.good();
 }
 
@@ -130,7 +130,7 @@ void MTL::parseD(ifstream &fin)
 void MTL::debug()
 {
     for (auto m : materials) {
-        printl("\n---- MTL");
+        info("\n---- MTL");
         printl("  newmtl", m.name);
         printl("  Ns", m.Ns);
         printl("  Ka", m.Ka[0], m.Ka[1], m.Ka[2]);

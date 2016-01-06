@@ -24,13 +24,13 @@ GLint Program::getLocation(const char* variable)
 
 void Program::link()
 {
-    GLint success;
+    GLint result;
     glLinkProgram(reference);
-    glGetProgramiv(reference, GL_LINK_STATUS, &success);
-    if (success == 0) {
+    glGetProgramiv(reference, GL_LINK_STATUS, &result);
+    if (result == 0) {
         GLchar ErrorLog[1024];
         glGetProgramInfoLog(reference, sizeof(ErrorLog), NULL, ErrorLog);
-        printl(ErrorLog);
+        error(ErrorLog);
     } else {
         glValidateProgram(reference);
     }

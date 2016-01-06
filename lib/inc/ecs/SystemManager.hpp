@@ -18,6 +18,7 @@ public:
     void setLatency(float seconds);
     void printStats();
     void initialize();
+    void reload();
     void update();
     void update(float seconds);
 
@@ -30,7 +31,7 @@ private:
 
     float latency = 0.f;
     float previousUpdateCall = 0.f;
-    const char name;
+    const char* name;
 
     SystemStatistics statistics;
 

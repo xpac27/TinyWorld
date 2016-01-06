@@ -38,6 +38,12 @@ void Game::update(float seconds)
     simulationSystems.update(seconds);
 }
 
+void Game::reload()
+{
+    visualSystems.reload();
+    simulationSystems.reload();
+}
+
 void Game::setupWorld()
 {
     ECS::id entity = entities.addEntity();

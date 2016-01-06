@@ -10,7 +10,7 @@ using namespace Log;
 namespace ECS {
 
 SystemManager::SystemManager(const char* _name)
-    : name(*_name)
+    : name(_name)
 {}
 
 void SystemManager::setLatency(float seconds)
@@ -20,13 +20,20 @@ void SystemManager::setLatency(float seconds)
 
 void SystemManager::printStats()
 {
-    statistics.print(&name);
+    statistics.print(name);
 }
 
 void SystemManager::initialize()
 {
     for (auto& system : systems) {
        system->initialize();
+    }
+}
+
+void SystemManager::reload()
+{
+    for (auto& system : systems) {
+       system->reload();
     }
 }
 

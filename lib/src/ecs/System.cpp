@@ -41,6 +41,11 @@ void System::update(float /*seconds*/, float /*delta*/)
     // Nothing to do...
 }
 
+void System::reload()
+{
+    // Nothing to do...
+}
+
 void System::initialize()
 {
     // Nothing to do...

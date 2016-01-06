@@ -2,6 +2,7 @@
 #include "graphic/Mesh.hpp"
 #include "graphic/Camera.hpp"
 #include "utils/Shader.hpp"
+#include "utils/Log.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
@@ -9,6 +10,7 @@
 
 using namespace std;
 using namespace glm;
+using namespace Log;
 
 Renderer::Renderer()
     : camera(new Camera(0.f, 0.f, 8.f, float(M_PI) / -5.f, 0.f, 0.f))
@@ -23,6 +25,11 @@ Renderer::~Renderer()
     delete camera;
 }
 
+void Renderer::reload()
+{
+    initializeShaders();
+}
+
 void Renderer::initialize()
 {
     glShadeModel(GL_SMOOTH);
@@ -30,17 +37,24 @@ void Renderer::initialize()
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 
-    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vs", "lib/src/shaders/shadow_volume.fs");
-    initializeShader(filling, "lib/src/shaders/filling.vs", "lib/src/shaders/filling.fs");
-    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vs", "lib/src/shaders/geometry_buffer.fs");
-    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vs", "lib/src/shaders/deferred_shading.fs");
+    initializeShaders();
 
     quad.initialize();
     gBuffer.initialize();
 }
 
+void Renderer::initializeShaders()
+{
+    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vs", "lib/src/shaders/shadow_volume.fs");
+    initializeShader(filling, "lib/src/shaders/filling.vs", "lib/src/shaders/filling.fs");
+    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vs", "lib/src/shaders/geometry_buffer.fs");
+    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vs", "lib/src/shaders/deferred_shading.fs");
+    success("Shaders loaded");
+}
+
 void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 {
+
     Shader vertexShader(GL_VERTEX_SHADER, &program);
     vertexShader.read(vertexShaderFilePath);
     vertexShader.compile();

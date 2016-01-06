@@ -151,9 +151,6 @@ void Mesh::computeTrianglesPlaneEquations()
             + v3.x * (v1.y * v2.z - v2.y * v1.z))
         ));
     }
-    // for (auto &e : trianglesPlaneEquations) {
-    //     printl(e.x, e.y, e.z, e.w);
-    // }
 }
 
 void Mesh::computeTrianglesNeighbours()

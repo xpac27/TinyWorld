@@ -34,6 +34,11 @@ void RenderSystem::initialize()
     renderer->initialize();
 }
 
+void RenderSystem::reload()
+{
+    renderer->reload();
+}
+
 void RenderSystem::update()
 {
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {

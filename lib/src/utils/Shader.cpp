@@ -30,19 +30,19 @@ void Shader::read(const char* filename)
         GLint l[1] = {GLint(content.size())};
         glShaderSource(reference, 1, p, l);
     } else {
-        printl("ERROR: cannot open", filename);
+        error("ERROR: cannot open", filename);
     }
 }
 
 void Shader::compile()
 {
-    GLint success;
+    GLint result;
     glCompileShader(reference);
-    glGetShaderiv(reference, GL_COMPILE_STATUS, &success);
-    if (success == 0) {
+    glGetShaderiv(reference, GL_COMPILE_STATUS, &result);
+    if (result == 0) {
         GLchar InfoLog[1024];
         glGetShaderInfoLog(reference, sizeof(InfoLog), NULL, InfoLog);
-        printl(InfoLog);
+        error(InfoLog);
     } else {
         glAttachShader(program->getReference(), reference);
     }

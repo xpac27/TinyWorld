@@ -27,7 +27,7 @@ void OBJ::load(const char *filename)
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
-    printl("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
+    success("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
 }
 
 bool OBJ::openFile(const char *filename, ifstream &fin)
@@ -35,7 +35,7 @@ bool OBJ::openFile(const char *filename, ifstream &fin)
     string filepath = "lib/res/objects/";
     filepath += filename;
     fin.open(filepath);
-    if (!fin.good()) printl("ERROR - could not open file:", filepath);
+    if (!fin.good()) error("ERROR - could not open file:", filepath);
     return fin.good();
 }
 
@@ -145,34 +145,34 @@ void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vert
     info("printing mesh details");
 
     nl();
-    printl("  vertexes:");
+    info("  vertexes:");
     unsigned int index = 0;
     for (auto v : vertexes) {
         printl("    ", ++index, "=", v.x, v.y, v.z);
     }
 
     nl();
-    printl("  normals:");
+    info("  normals:");
     index = 0;
     for (auto n : normals) {
         printl("    ", ++index, "=", n.x, n.y, n.z);
     }
 
     nl();
-    printl("  uvs:");
+    info("  uvs:");
     index = 0;
     for (auto u : uvs) {
         printl("    ", ++index, "=", u.x, u.y);
     }
 
     nl();
-    printl("  triangles:");
+    info("  triangles:");
     for (auto t : triangles) {
         printl("    ", t.x + 1, t.y + 1, t.z + 1);
     }
 
     nl();
-    printl("  materials:");
+    info("  materials:");
     for (auto m : materials) {
         printl("    ", "name", "=", m.name);
         printl("    ", "d", "=", m.d);
@@ -186,5 +186,5 @@ void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vert
     }
 
     nl();
-    printl("    Totals indexes:", indexes.size());
+    info("    Totals indexes:", indexes.size());
 }

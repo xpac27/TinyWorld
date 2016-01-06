@@ -16,7 +16,10 @@ public:
 
 private:
 
+    void checkReload();
+
     Game* game;
 
     bool running = true;
+    bool reloadRequested = false;
 };

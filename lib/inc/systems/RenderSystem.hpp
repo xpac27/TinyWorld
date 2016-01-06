@@ -23,6 +23,7 @@ public:
     ~RenderSystem();
 
     void initialize() override;
+    void reload() override;
     void update() override;
 
 private:
