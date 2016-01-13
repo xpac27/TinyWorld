@@ -66,7 +66,7 @@ void main ()
 
     // Settings
     float gamma = 2.2;
-    float roughness = 0.25;
+    float roughness = 0.55;
     float fresnel = 0.5 + roughness;
 
     // Extract information from prerendered texture

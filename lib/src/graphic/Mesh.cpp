@@ -1,10 +1,9 @@
 #include "Mesh.hpp"
 #include "graphic/Material.hpp"
 #include "graphic/MeshVertexArray.hpp"
+#include "utils/Texture.hpp"
 #include "utils/OBJ.hpp"
-#include "utils/PNG.hpp"
 #include "utils/Log.hpp"
-#include <string>
 
 using namespace std;
 using namespace glm;
@@ -12,29 +11,31 @@ using namespace Log;
 
 Mesh::Mesh(const char *filename)
     : vertexArray(new MeshVertexArray())
+    , diffuseTexture(new Texture())
+    , specularTexture(new Texture())
+    , normalTexture(new Texture())
 {
     OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
 
     verifyUVs();
     verifyMeterials();
     vertexArray->initialize(vertexes, uvs, normals);
-    loadTextures();
     initializeTriangleData();
     computeTrianglesPlaneEquations();
     computeTrianglesNeighbours();
+
+    if (materials.size() > 0) {
+        diffuseTexture->load(materials[0].map_Kd.data());
+        specularTexture->load(materials[0].map_Ks.data());
+        normalTexture->load(materials[0].map_Bump.data());
+    }
 }
 
 Mesh::~Mesh()
 {
-    for (auto diffuseTexture : diffuseTextures) {
-        glDeleteTextures(1, &diffuseTexture);
-    }
-    for (auto specularTexture : specularTextures) {
-        glDeleteTextures(1, &specularTexture);
-    }
-    for (auto normalTexture : normalTextures) {
-        glDeleteTextures(1, &normalTexture);
-    }
+    delete diffuseTexture;
+    delete specularTexture;
+    delete normalTexture;
     delete vertexArray;
 }
 
@@ -45,18 +46,9 @@ void Mesh::debug()
 
 void Mesh::bindTexture()
 {
-    if (diffuseTextures.size() > 0) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseTextures[0]);
-    }
-    if (specularTextures.size() > 0) {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularTextures[0]);
-    }
-    if (normalTextures.size() > 0) {
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normalTextures[0]);
-    }
+    diffuseTexture->bind(GL_TEXTURE0);
+    specularTexture->bind(GL_TEXTURE1);
+    normalTexture->bind(GL_TEXTURE2);
 }
 
 void Mesh::bindIndexes()
@@ -94,15 +86,6 @@ void Mesh::drawShadowVolume()
     vertexArray->bind();
     glDrawElements(GL_TRIANGLES, GLsizei(silhouette.size()), GL_UNSIGNED_INT, 0);
     vertexArray->idle();
-}
-
-void Mesh::loadTextures()
-{
-    for (auto &m : materials) {
-        diffuseTextures.push_back(loadTexture(m.map_Kd.data()));
-        specularTextures.push_back(loadTexture(m.map_Ks.data()));
-        normalTextures.push_back(loadTexture(m.map_Bump.data()));
-    }
 }
 
 void Mesh::verifyUVs()
@@ -205,22 +188,4 @@ void Mesh::updateSilhouette()
             }
         }
     }
-}
-
-GLuint Mesh::loadTexture(const char *filename)
-{
-    string filepath = "lib/res/";
-    filepath += filename;
-    PNG png(filepath.data());
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, GLint(png.width()), GLint(png.height()), 0, GL_RGBA, GL_UNSIGNED_BYTE, png.data());
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    return texture;
 }

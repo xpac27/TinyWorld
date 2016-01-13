@@ -9,6 +9,7 @@
 
 struct Material;
 class MeshVertexArray;
+class Texture;
 
 class Mesh
 {
@@ -30,7 +31,6 @@ public:
 private:
 
     void loadVAO();
-    void loadTextures();
     void verifyUVs();
     void verifyMeterials();
     void initializeTriangleData();
@@ -38,8 +38,6 @@ private:
     void computeTrianglesNeighbours();
     void updateTrianglesVisibility(const glm::vec4 &lightDirection);
     void updateSilhouette();
-
-    GLuint loadTexture(const char *filename);
 
     MeshVertexArray* vertexArray;
 
@@ -53,8 +51,9 @@ private:
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     std::vector<Material> materials;
-    std::vector<GLuint> diffuseTextures;
-    std::vector<GLuint> specularTextures;
-    std::vector<GLuint> normalTextures;
+
+    Texture *diffuseTexture;
+    Texture *specularTexture;
+    Texture *normalTexture;
 };
 
