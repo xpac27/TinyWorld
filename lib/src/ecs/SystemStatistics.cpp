@@ -1,5 +1,5 @@
-#include "ecs/SystemStatistics.hpp"
-#include "utils/Log.hpp"
+#include "../../inc/ecs/SystemStatistics.hpp"
+#include "../utils/Log.hpp"
 #include <math.h>
 #include <GLFW/glfw3.h>
 

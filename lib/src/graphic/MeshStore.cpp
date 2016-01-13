@@ -1,5 +1,5 @@
-#include "graphic/MeshStore.hpp"
-#include "graphic/Mesh.hpp"
+#include "MeshStore.hpp"
+#include "Mesh.hpp"
 
 MeshStore::MeshStore()
     : plan(new Mesh("plan.obj"))

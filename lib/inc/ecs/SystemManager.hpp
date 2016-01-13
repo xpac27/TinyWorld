@@ -1,5 +1,5 @@
 #pragma once
-#include "ecs/SystemStatistics.hpp"
+#include <ecs/SystemStatistics.hpp>
 #include <vector>
 
 struct Movement;

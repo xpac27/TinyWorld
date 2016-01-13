@@ -1,7 +1,7 @@
-#include "utils/Log.hpp"
-#include "components/Movement.hpp"
-#include "components/Life.hpp"
-#include "components/Visibility.hpp"
+#include "Log.hpp"
+#include "../../inc/components/Movement.hpp"
+#include "../../inc/components/Life.hpp"
+#include "../../inc/components/Visibility.hpp"
 
 void Log::nl()
 {

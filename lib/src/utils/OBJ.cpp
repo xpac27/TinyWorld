@@ -1,7 +1,7 @@
-#include "utils/OBJ.hpp"
-#include "utils/MTL.hpp"
-#include "graphic/Material.hpp"
-#include "utils/Log.hpp"
+#include "OBJ.hpp"
+#include "MTL.hpp"
+#include "Log.hpp"
+#include "../graphic/Material.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

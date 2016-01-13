@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic/MeshType.hpp"
+#include <graphic/MeshType.hpp>
 #include <glm/vec3.hpp>
 
 struct Visibility

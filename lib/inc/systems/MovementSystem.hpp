@@ -1,6 +1,6 @@
 #pragma once
-#include "ecs/System.hpp"
-#include "components/Movement.hpp"
+#include <ecs/System.hpp>
+#include <components/Movement.hpp>
 
 namespace ECS {
     template <typename T> class ComponentManager;

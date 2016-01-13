@@ -1,4 +1,4 @@
-#include "utils/PNG.hpp"
+#include "PNG.hpp"
 #include <stdio.h>
 #include <assert.h>
 

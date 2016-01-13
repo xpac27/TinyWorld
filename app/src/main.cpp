@@ -1,9 +1,11 @@
 #include "Application.hpp"
+
 #include <cmath>
 #include <ctime>
 #include <thread>
 #include <cstdio>
 #include <stdlib.h>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

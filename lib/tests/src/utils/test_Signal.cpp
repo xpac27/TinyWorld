@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "utils/Signal.hpp"
+#include "../../src/utils/Signal.hpp"
 
 class SignalFixture
 {

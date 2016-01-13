@@ -1,9 +1,9 @@
 #include "Mesh.hpp"
-#include "graphic/Material.hpp"
-#include "graphic/MeshVertexArray.hpp"
-#include "utils/Texture.hpp"
-#include "utils/OBJ.hpp"
-#include "utils/Log.hpp"
+#include "Material.hpp"
+#include "MeshVertexArray.hpp"
+#include "../utils/Texture.hpp"
+#include "../utils/OBJ.hpp"
+#include "../utils/Log.hpp"
 
 using namespace std;
 using namespace glm;

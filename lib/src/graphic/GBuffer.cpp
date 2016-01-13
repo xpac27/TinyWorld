@@ -1,5 +1,5 @@
-#include "graphic/GBuffer.hpp"
-#include "utils/Log.hpp"
+#include "GBuffer.hpp"
+#include "../utils/Log.hpp"
 
 using namespace Log;
 

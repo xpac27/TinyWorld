@@ -1,5 +1,5 @@
-#include "utils/Program.hpp"
-#include "utils/Log.hpp"
+#include "Program.hpp"
+#include "Log.hpp"
 
 using namespace Log;
 

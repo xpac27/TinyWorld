@@ -1,7 +1,7 @@
-#include "systems/MovementSystem.hpp"
-#include "ecs/ComponentManager.hpp"
-#include "ecs/Id.hpp"
-#include "utils/Log.hpp"
+#include "../../inc/systems/MovementSystem.hpp"
+#include "../../inc/ecs/ComponentManager.hpp"
+#include "../../inc/ecs/Id.hpp"
+#include "../utils/Log.hpp"
 #include <math.h>
 
 using namespace ECS;

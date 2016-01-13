@@ -1,6 +1,6 @@
 #pragma once
+#include "../../inc/ecs/Id.hpp"
 #include <iostream>
-#include "ecs/Id.hpp"
 
 struct Movement;
 struct Life;

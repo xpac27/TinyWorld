@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic/MeshType.hpp"
+#include "../../inc/graphic/MeshType.hpp"
 
 class Mesh;
 class MeshStore

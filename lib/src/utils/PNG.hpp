@@ -1,5 +1,5 @@
 #pragma once
-#include <png.h>
+#include "png.h"
 
 class PNG
 {

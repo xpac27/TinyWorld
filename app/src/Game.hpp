@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ecs/EntityManager.hpp"
-#include "ecs/SystemManager.hpp"
-#include "ecs/ComponentManager.hpp"
+#include <ecs/EntityManager.hpp>
+#include <ecs/SystemManager.hpp>
+#include <ecs/ComponentManager.hpp>
 
-#include "components/Life.hpp"
-#include "components/Movement.hpp"
-#include "components/Visibility.hpp"
+#include <components/Life.hpp>
+#include <components/Movement.hpp>
+#include <components/Visibility.hpp>
 
 class Game
 {

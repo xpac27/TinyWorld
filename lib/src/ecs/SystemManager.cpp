@@ -1,9 +1,9 @@
-#include "ecs/SystemManager.hpp"
-#include "ecs/System.hpp"
-#include "ecs/ComponentManager.hpp"
-#include "systems/RenderSystem.hpp"
-#include "systems/MovementSystem.hpp"
-#include "utils/Log.hpp"
+#include "../../inc/ecs/SystemManager.hpp"
+#include "../../inc/ecs/System.hpp"
+#include "../../inc/ecs/ComponentManager.hpp"
+#include "../../inc/systems/RenderSystem.hpp"
+#include "../../inc/systems/MovementSystem.hpp"
+#include "../utils/Log.hpp"
 #include <chrono>
 #include <thread>
 

@@ -1,6 +1,6 @@
-#include "utils/MTL.hpp"
-#include "graphic/Material.hpp"
-#include "utils/Log.hpp"
+#include "MTL.hpp"
+#include "Log.hpp"
+#include "../graphic/Material.hpp"
 #include <cstring>
 
 using namespace std;

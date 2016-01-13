@@ -1,11 +1,11 @@
 #pragma once
-#include "utils/Program.hpp"
-#include "utils/Aggregator.hpp"
-#include "graphic/Model.hpp"
-#include "graphic/MeshStore.hpp"
-#include "graphic/GBuffer.hpp"
-#include "graphic/Quad.hpp"
-#include "graphic/DirectionalLight.hpp"
+#include "../utils/Program.hpp"
+#include "../utils/Aggregator.hpp"
+#include "Model.hpp"
+#include "MeshStore.hpp"
+#include "GBuffer.hpp"
+#include "Quad.hpp"
+#include "DirectionalLight.hpp"
 #include <glm/vec3.hpp>
 
 class Camera;

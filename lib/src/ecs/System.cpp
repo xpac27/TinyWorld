@@ -1,6 +1,7 @@
-#include "ecs/System.hpp"
-#include "ecs/ComponentManagerBase.hpp"
-#include "utils/Log.hpp"
+#include "../../inc/ecs/System.hpp"
+#include "../../inc/ecs/ComponentManagerBase.hpp"
+#include "../utils/Signal.hpp"
+#include "../utils/Log.hpp"
 #include <algorithm>
 
 using namespace Log;

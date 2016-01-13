@@ -1,5 +1,5 @@
 #include "MeshVertexArray.hpp"
-#include "utils/Log.hpp"
+#include "../utils/Log.hpp"
 #include <algorithm>
 
 using namespace glm;

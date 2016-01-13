@@ -1,5 +1,5 @@
-#include "utils/Texture.hpp"
-#include "utils/PNG.hpp"
+#include "Texture.hpp"
+#include "PNG.hpp"
 #include <string>
 
 using namespace std;

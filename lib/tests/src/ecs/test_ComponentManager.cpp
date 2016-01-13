@@ -1,7 +1,8 @@
 #include "catch.hpp"
-#include "ecs/EntityManager.hpp"
-#include "ecs/ComponentManager.hpp"
-#include "components/Life.hpp"
+#include "../../inc/ecs/EntityManager.hpp"
+#include "../../inc/ecs/ComponentManager.hpp"
+#include "../../inc/ecs/Id.hpp"
+#include "../../inc/components/Life.hpp"
 
 namespace
 {

@@ -1,12 +1,12 @@
 #pragma once
-#include "ecs/System.hpp"
-#include "components/Visibility.hpp"
-#include "components/Movement.hpp"
-#include "graphic/Model.hpp"
-#include "utils/Aggregator.hpp"
+#include <ecs/System.hpp>
+#include <components/Visibility.hpp>
+#include <components/Movement.hpp>
 #include <glm/vec3.hpp>
 
 class Renderer;
+class Model;
+template <typename T> class Aggregator;
 namespace ECS {
 template <typename T> class ComponentManager;
 }
@@ -30,10 +30,10 @@ private:
 
     float count = 0.f;
 
-    Aggregator<Model> models;
-
     ECS::ComponentManager<Visibility>* visibilityComponents;
     ECS::ComponentManager<Movement>* movementComponents;
+
+    Aggregator<Model>* models;
 
     // TODO init from outside (systems class?)
     Renderer *renderer;
