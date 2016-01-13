@@ -1,14 +1,15 @@
 #pragma once
 #include <GL/glew.h>
+#include <vector>
 
-class Texture
+class Cubemap
 {
 
 public:
 
-    ~Texture();
+    ~Cubemap();
 
-    void load(const char *filename);
+    void load(const std::vector<const char*> filenames);
     void bind(GLuint textureUnit);
 
 private:

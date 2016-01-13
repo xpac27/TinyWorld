@@ -6,9 +6,8 @@ using namespace std;
 
 void Texture::load(const char *filename)
 {
-    if (filename && !filename[0]) {
-        return;
-    }
+    if (filename && !filename[0]) return;
+    if (loaded) destroy();
 
     string filepath = "lib/res/";
     filepath += filename;
@@ -21,15 +20,24 @@ void Texture::load(const char *filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    loaded = true;
 }
 
 Texture::~Texture()
 {
-    glDeleteTextures(1, &id);
+    destroy();
 }
 
 void Texture::bind(GLuint textureUnit)
 {
-    glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_2D, id);
+    if (loaded) {
+        glActiveTexture(textureUnit);
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+}
+
+void Texture::destroy()
+{
+    glDeleteTextures(1, &id);
 }
