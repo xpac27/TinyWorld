@@ -21,8 +21,8 @@ Renderer::Renderer()
     cubemap.load({
         "textures/skybox/right.png",
         "textures/skybox/left.png",
-        "textures/skybox/top.png",
         "textures/skybox/bottom.png",
+        "textures/skybox/top.png",
         "textures/skybox/back.png",
         "textures/skybox/front.png",
     });
@@ -204,11 +204,13 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gPosition"), 0);
     glUniform1i(deferredShading.getLocation("gNormal"), 1);
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
+    glUniform1i(deferredShading.getLocation("environment"), 3);
     glUniform3fv(deferredShading.getLocation("light.color"), 1, value_ptr(directionalLight.color));
     glUniform3fv(deferredShading.getLocation("light.direction"), 1, value_ptr(directionalLight.direction));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
 
-    gBuffer.bindTextures();
+    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2);
+    cubemap.bind(GL_TEXTURE3);
 
     quad.draw();
 

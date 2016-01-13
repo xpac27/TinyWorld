@@ -14,7 +14,7 @@ void Cubemap::load(const vector<const char*> filenames)
         string filepath = "lib/res/";
         filepath += filenames[i];
         PNG png(filepath.data());
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, GLint(png.width()), GLint(png.height()), 0, GL_RGB, GL_UNSIGNED_BYTE, png.data());
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, GLint(png.width()), GLint(png.height()), 0, GL_RGBA, GL_UNSIGNED_BYTE, png.data());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -35,11 +35,13 @@ void Cubemap::bind(GLuint textureUnit)
 {
     if (loaded) {
         glActiveTexture(textureUnit);
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     }
 }
 
 void Cubemap::destroy()
 {
-    glDeleteTextures(1, &id);
+    if (id) {
+        glDeleteTextures(1, &id);
+    }
 }

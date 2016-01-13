@@ -52,13 +52,13 @@ void GBuffer::initialize()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GBuffer::bindTextures()
+void GBuffer::bindTextures(GLuint textureUnit1, GLuint textureUnit2, GLuint textureUnit3)
 {
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(textureUnit1);
     glBindTexture(GL_TEXTURE_2D, gPosition);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(textureUnit2);
     glBindTexture(GL_TEXTURE_2D, gNormal);
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(textureUnit3);
     glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 }
 

@@ -12,6 +12,7 @@ struct directionalLight
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
+uniform samplerCube environment;
 uniform vec3 view_position;
 uniform directionalLight light;
 
@@ -86,11 +87,16 @@ void main ()
     float specular_factor = cookTorranceBRDF ( light_direction, view_direction, surface_normal, roughness, fresnel );
     vec3 lighting = base_color * diffuse_factor + specular_color * specular_factor;
 
+    // Environment mapping
+    vec3 environment_mapping = texture(environment, reflect(view_direction, normalize(surface_normal))).rgb;
+    lighting = lighting * environment_mapping;
+
     // apply gamma correction
     lighting = pow (lighting, vec3 (1.0 / gamma));
 
     // output result
     FragColor = vec4 (lighting, 1.0);
+    /* FragColor = C; */
 }
 
 

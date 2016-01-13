@@ -7,7 +7,7 @@ class GBuffer
 public:
 
     void initialize();
-    void bindTextures();
+    void bindTextures(GLuint textureUnit1, GLuint textureUnit2, GLuint textureUnit3);
     void bind();
     void idle();
 
