@@ -3,11 +3,10 @@
 #include "MeshVertexArray.hpp"
 #include "../utils/Texture.hpp"
 #include "../utils/OBJ.hpp"
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 
 using namespace std;
 using namespace glm;
-using namespace Log;
 
 Mesh::Mesh(const char *filename)
     : vertexArray(new MeshVertexArray())

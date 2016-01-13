@@ -1,5 +1,5 @@
 #pragma once
 
-namespace ECS {
+namespace ecs {
 typedef unsigned long id;
 }

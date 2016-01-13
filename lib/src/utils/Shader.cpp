@@ -1,10 +1,9 @@
 #include "Shader.hpp"
 #include "Program.hpp"
-#include "Log.hpp"
+#include "log.hpp"
 #include <fstream>
 
 using namespace std;
-using namespace Log;
 
 Shader::Shader(GLuint _type, Program* _program)
     : reference(glCreateShader(_type))
@@ -40,9 +39,9 @@ void Shader::compile()
     glCompileShader(reference);
     glGetShaderiv(reference, GL_COMPILE_STATUS, &result);
     if (result == 0) {
-        GLchar InfoLog[1024];
-        glGetShaderInfoLog(reference, sizeof(InfoLog), NULL, InfoLog);
-        error(InfoLog);
+        GLchar Infolog[1024];
+        glGetShaderInfoLog(reference, sizeof(Infolog), NULL, Infolog);
+        error(Infolog);
     } else {
         glAttachShader(program->getReference(), reference);
     }

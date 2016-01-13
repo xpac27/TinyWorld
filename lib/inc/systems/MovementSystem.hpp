@@ -2,23 +2,23 @@
 #include <ecs/System.hpp>
 #include <components/Movement.hpp>
 
-namespace ECS {
+namespace ecs {
     template <typename T> class ComponentManager;
 }
 
-class MovementSystem : public ECS::System
+class MovementSystem : public ecs::System
 {
 
 public:
 
     MovementSystem(
-        ECS::ComponentManager<Movement>* mc
+        ecs::ComponentManager<Movement>* mc
     );
 
     void update(float seconds, float delta) override;
 
 private:
 
-    ECS::ComponentManager<Movement>* movementComponents;
+    ecs::ComponentManager<Movement>* movementComponents;
 };
 

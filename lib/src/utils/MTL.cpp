@@ -1,10 +1,9 @@
 #include "MTL.hpp"
-#include "Log.hpp"
+#include "log.hpp"
 #include "../graphic/Material.hpp"
 #include <cstring>
 
 using namespace std;
-using namespace Log;
 
 void MTL::load(const char *filename)
 {

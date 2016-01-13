@@ -6,15 +6,14 @@
 #include <glm/mat4x4.hpp>
 #include <math.h>
 
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 #include "../graphic/Renderer.hpp"
 #include <graphic/Model.hpp> // TODO use relative path
 #include <utils/Aggregator.hpp> // TODO use relative path
 
 using namespace std;
 using namespace glm;
-using namespace Log;
-using namespace ECS;
+using namespace ecs;
 
 RenderSystem::RenderSystem(
     ComponentManager<Visibility>* vc,

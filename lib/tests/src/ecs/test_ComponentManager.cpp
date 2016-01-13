@@ -8,11 +8,11 @@ namespace
 {
     SCENARIO("ComponentManager" "[ComponentManager, addComponent, delComponent, hasComponent]") {
         GIVEN("A Life ComponentManager") {
-            ECS::ComponentManager<Life> lifeComponents;
+            ecs::ComponentManager<Life> lifeComponents;
 
             GIVEN("An entity") {
-                ECS::EntityManager entityManager;
-                ECS::id e = entityManager.addEntity();
+                ecs::EntityManager entityManager;
+                ecs::id e = entityManager.addEntity();
 
                 THEN("Entity doesn't have a component") {
                     CHECK(lifeComponents.hasComponent(e) == false);
@@ -43,9 +43,9 @@ namespace
 
     SCENARIO("ComponentManager" "[ComponentManager, getComponent]") {
         GIVEN("A Life ComponentManager and an entity with a Life component") {
-            ECS::ComponentManager<Life> lifeComponents;
-            ECS::EntityManager entityManager;
-            ECS::id e = entityManager.addEntity();
+            ecs::ComponentManager<Life> lifeComponents;
+            ecs::EntityManager entityManager;
+            ecs::id e = entityManager.addEntity();
             lifeComponents.addComponent(e);
 
             WHEN("Calling getComponent") {

@@ -1,7 +1,5 @@
 #include "Program.hpp"
-#include "Log.hpp"
-
-using namespace Log;
+#include "log.hpp"
 
 Program::Program()
     : reference(glCreateProgram())
@@ -28,9 +26,9 @@ void Program::link()
     glLinkProgram(reference);
     glGetProgramiv(reference, GL_LINK_STATUS, &result);
     if (result == 0) {
-        GLchar ErrorLog[1024];
-        glGetProgramInfoLog(reference, sizeof(ErrorLog), NULL, ErrorLog);
-        error(ErrorLog);
+        GLchar Errorlog[1024];
+        glGetProgramInfoLog(reference, sizeof(Errorlog), NULL, Errorlog);
+        error(Errorlog);
     } else {
         glValidateProgram(reference);
     }

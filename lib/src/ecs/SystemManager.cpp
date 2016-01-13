@@ -3,13 +3,11 @@
 #include "../../inc/ecs/ComponentManager.hpp"
 #include "../../inc/systems/RenderSystem.hpp"
 #include "../../inc/systems/MovementSystem.hpp"
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 #include <chrono>
 #include <thread>
 
-using namespace Log;
-
-namespace ECS {
+namespace ecs {
 
 SystemManager::SystemManager(const char* _name)
     : name(_name)
@@ -68,12 +66,12 @@ void SystemManager::sleep()
     }
 }
 
-void SystemManager::addRenderSystem(ECS::ComponentManager<Visibility>* visibilityComponents, ECS::ComponentManager<Movement>* movementComponents)
+void SystemManager::addRenderSystem(ecs::ComponentManager<Visibility>* visibilityComponents, ecs::ComponentManager<Movement>* movementComponents)
 {
     addSystem(new RenderSystem(visibilityComponents, movementComponents));
 }
 
-void SystemManager::addMovementSystem(ECS::ComponentManager<Movement>* movementComponents)
+void SystemManager::addMovementSystem(ecs::ComponentManager<Movement>* movementComponents)
 {
     addSystem(new MovementSystem(movementComponents));
 }

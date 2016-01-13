@@ -1,6 +1,6 @@
 #include "OBJ.hpp"
 #include "MTL.hpp"
-#include "Log.hpp"
+#include "log.hpp"
 #include "../graphic/Material.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -10,7 +10,6 @@
 
 using namespace std;
 using namespace glm;
-using namespace Log;
 
 void OBJ::load(const char *filename)
 {

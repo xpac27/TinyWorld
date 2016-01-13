@@ -1,7 +1,5 @@
 #include "GBuffer.hpp"
-#include "../utils/Log.hpp"
-
-using namespace Log;
+#include "../utils/log.hpp"
 
 void GBuffer::initialize()
 {

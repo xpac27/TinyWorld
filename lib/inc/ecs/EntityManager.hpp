@@ -1,7 +1,7 @@
 #pragma once
 #include <ecs/Id.hpp>
 
-namespace ECS {
+namespace ecs {
 class EntityManager
 {
 public:

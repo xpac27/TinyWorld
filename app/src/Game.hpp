@@ -25,12 +25,12 @@ private:
     void addEntity();
     void addTestEntity();
 
-    ECS::EntityManager entities = {};
+    ecs::EntityManager entities = {};
 
-    ECS::SystemManager visualSystems;
-    ECS::SystemManager simulationSystems;
+    ecs::SystemManager visualSystems;
+    ecs::SystemManager simulationSystems;
 
-    ECS::ComponentManager<Life> lifeComponents = ECS::ComponentManager<Life>();
-    ECS::ComponentManager<Movement> movementComponents = ECS::ComponentManager<Movement>();
-    ECS::ComponentManager<Visibility> visibilityComponents = ECS::ComponentManager<Visibility>();
+    ecs::ComponentManager<Life> lifeComponents = ecs::ComponentManager<Life>();
+    ecs::ComponentManager<Movement> movementComponents = ecs::ComponentManager<Movement>();
+    ecs::ComponentManager<Visibility> visibilityComponents = ecs::ComponentManager<Visibility>();
 };

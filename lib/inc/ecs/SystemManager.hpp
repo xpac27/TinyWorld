@@ -4,7 +4,7 @@
 
 struct Movement;
 struct Visibility;
-namespace ECS {
+namespace ecs {
 class System;
 template <typename T> class ComponentManager;
 
@@ -22,8 +22,8 @@ public:
     void update();
     void update(float seconds);
 
-    void addRenderSystem(ECS::ComponentManager<Visibility>* visibilityComponents, ECS::ComponentManager<Movement>* movementComponents);
-    void addMovementSystem(ECS::ComponentManager<Movement>* movementComponents);
+    void addRenderSystem(ecs::ComponentManager<Visibility>* visibilityComponents, ecs::ComponentManager<Movement>* movementComponents);
+    void addMovementSystem(ecs::ComponentManager<Movement>* movementComponents);
 
 private:
 

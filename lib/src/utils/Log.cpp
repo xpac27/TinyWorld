@@ -1,14 +1,14 @@
-#include "Log.hpp"
+#include "log.hpp"
 #include "../../inc/components/Movement.hpp"
 #include "../../inc/components/Life.hpp"
 #include "../../inc/components/Visibility.hpp"
 
-void Log::nl()
+void nl()
 {
     std::cout << "\033[0m" << std::endl;
 }
 
-void Log::style(Color foreground, Color background, Mode mode)
+void style(Color foreground, Color background, Mode mode)
 {
     std::cout << "\033[" << mode;
     if (foreground != NONE) std::cout << ";" << (foreground + 29);
@@ -16,17 +16,17 @@ void Log::style(Color foreground, Color background, Mode mode)
     std::cout << "m";
 }
 
-void Log::style(Color foreground, Mode mode)
+void style(Color foreground, Mode mode)
 {
     style(foreground, NONE, mode);
 }
 
-void Log::dump(ECS::id entity)
+void dump(ecs::id entity)
 {
     printl("Entity", entity);
 }
 
-void Log::dump(Movement* c)
+void dump(Movement* c)
 {
     printl("Movement");
     printl("  position: ", c->position.x, c->position.y, c->position.z);
@@ -34,18 +34,19 @@ void Log::dump(Movement* c)
     printl("  velocity: ", c->velocity);
 }
 
-void Log::dump(Life* c)
+void dump(Life* c)
 {
     printl("Life");
     printl("  amount:", c->amount);
 }
 
-void Log::dump(Visibility* c)
+void dump(Visibility* c)
 {
     printl("Visibility");
     switch (c->meshType) {
         case MeshType::PLAN: printl("  meshType: plan"); break;
         case MeshType::CUBE: printl("  meshType: cube"); break;
+        case MeshType::SPHERE: printl("  meshType: sphere"); break;
         case MeshType::CACODEMON: printl("  meshType: cacodemon"); break;
     }
     printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);

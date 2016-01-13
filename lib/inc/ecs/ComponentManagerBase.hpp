@@ -4,7 +4,7 @@
 template<typename C, typename T>
 class Signal;
 
-namespace ECS {
+namespace ecs {
 class System;
 
 class ComponentManagerBase

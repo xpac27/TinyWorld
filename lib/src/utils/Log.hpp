@@ -6,9 +6,6 @@ struct Movement;
 struct Life;
 struct Visibility;
 
-namespace Log
-{
-
 enum Color {
 	NONE, BLACK, RED, GREEN, YELLOW,
 	BLUE, MAGENTA, CYAN, WHITE
@@ -21,7 +18,7 @@ enum Mode {
 void nl();
 void style(Color foreground, Color background = NONE, Mode mode = NORMAL);
 void style(Color foreground, Mode mode);
-void dump(ECS::id entity);
+void dump(ecs::id entity);
 void dump(Movement* p);
 void dump(Life* p);
 void dump(Visibility* p);
@@ -131,5 +128,4 @@ void info(T const& f, Tail const&... tail)
     print(f, tail...);
 	style(NONE);
     std::cout << std::endl;
-}
 }

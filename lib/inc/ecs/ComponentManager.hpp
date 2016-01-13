@@ -4,7 +4,7 @@
 #include <vector>
 #include <assert.h>
 
-namespace ECS {
+namespace ecs {
 template <typename T>
 class ComponentManager : public ComponentManagerBase
 {

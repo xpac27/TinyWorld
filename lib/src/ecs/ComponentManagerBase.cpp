@@ -1,7 +1,7 @@
 #include "../../inc/ecs/ComponentManagerBase.hpp"
 #include "../utils/Signal.hpp"
 
-namespace ECS {
+namespace ecs {
 
 ComponentManagerBase::ComponentManagerBase()
     : entityAddedSignal(new Signal<System, id>())

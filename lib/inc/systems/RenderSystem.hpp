@@ -7,18 +7,18 @@
 class Renderer;
 class Model;
 template <typename T> class Aggregator;
-namespace ECS {
+namespace ecs {
 template <typename T> class ComponentManager;
 }
 
-class RenderSystem : public ECS::System
+class RenderSystem : public ecs::System
 {
 
 public:
 
     RenderSystem(
-        ECS::ComponentManager<Visibility>* vc,
-        ECS::ComponentManager<Movement>* mc
+        ecs::ComponentManager<Visibility>* vc,
+        ecs::ComponentManager<Movement>* mc
     );
     ~RenderSystem();
 
@@ -30,8 +30,8 @@ private:
 
     float count = 0.f;
 
-    ECS::ComponentManager<Visibility>* visibilityComponents;
-    ECS::ComponentManager<Movement>* movementComponents;
+    ecs::ComponentManager<Visibility>* visibilityComponents;
+    ecs::ComponentManager<Movement>* movementComponents;
 
     Aggregator<Model>* models;
 

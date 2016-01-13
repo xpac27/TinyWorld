@@ -48,7 +48,7 @@ void Game::reload()
 
 void Game::setupWorld()
 {
-    ECS::id entity = entities.addEntity();
+    ecs::id entity = entities.addEntity();
     visibilityComponents.addComponent(entity);
     visibilityComponents.getComponent(entity)->meshType = MeshType::PLAN;
     visibilityComponents.getComponent(entity)->scale = glm::vec3(80, 80, 1);
@@ -56,7 +56,7 @@ void Game::setupWorld()
 
 void Game::addEntity()
 {
-    ECS::id entity = entities.addEntity();
+    ecs::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
     visibilityComponents.getComponent(entity)->meshType = MeshType::CACODEMON;
@@ -70,7 +70,7 @@ void Game::addEntity()
 
 void Game::addTestEntity()
 {
-    ECS::id entity = entities.addEntity();
+    ecs::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
     visibilityComponents.getComponent(entity)->meshType = MeshType::SPHERE;

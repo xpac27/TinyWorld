@@ -9,13 +9,13 @@ namespace
 {
     SCENARIO("System" "[getEntities]") {
         GIVEN("An EntityManager and a ComponentManager") {
-            ECS::EntityManager entities {};
-            ECS::ComponentManager<Life> lifeComponents {};
+            ecs::EntityManager entities {};
+            ecs::ComponentManager<Life> lifeComponents {};
 
             WHEN("Creating a System 2 entities and 2 components") {
-                ECS::System system({&lifeComponents});
-                ECS::id e1 = entities.addEntity();
-                ECS::id e2 = entities.addEntity();
+                ecs::System system({&lifeComponents});
+                ecs::id e1 = entities.addEntity();
+                ecs::id e2 = entities.addEntity();
 
                 THEN("The system has no entities") {
                     CHECK(system.getEntities()->size() == 0);

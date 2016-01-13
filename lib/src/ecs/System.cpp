@@ -1,12 +1,10 @@
 #include "../../inc/ecs/System.hpp"
 #include "../../inc/ecs/ComponentManagerBase.hpp"
 #include "../utils/Signal.hpp"
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 #include <algorithm>
 
-using namespace Log;
-
-namespace ECS {
+namespace ecs {
 
 System::System(std::initializer_list<ComponentManagerBase*> c)
 {

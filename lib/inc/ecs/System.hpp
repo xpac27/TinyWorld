@@ -3,7 +3,7 @@
 #include <vector>
 #include <initializer_list>
 
-namespace ECS {
+namespace ecs {
 class ComponentManagerBase;
 class System
 {

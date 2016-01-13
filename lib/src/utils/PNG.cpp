@@ -1,9 +1,7 @@
 #include "PNG.hpp"
-#include "Log.hpp"
+#include "log.hpp"
 #include <stdio.h>
 #include <assert.h>
-
-using namespace Log;
 
 PNG::PNG(const char *filename)
 {

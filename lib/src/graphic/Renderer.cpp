@@ -2,7 +2,7 @@
 #include "Mesh.hpp"
 #include "Camera.hpp"
 #include "../utils/Shader.hpp"
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
@@ -10,7 +10,6 @@
 
 using namespace std;
 using namespace glm;
-using namespace Log;
 
 Renderer::Renderer()
     : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))

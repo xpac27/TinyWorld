@@ -1,6 +1,6 @@
 #include "../../inc/ecs/EntityManager.hpp"
 
-namespace ECS {
+namespace ecs {
 
 id EntityManager::addEntity()
 {

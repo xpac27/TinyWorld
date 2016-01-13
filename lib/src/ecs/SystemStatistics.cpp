@@ -1,12 +1,11 @@
 #include "../../inc/ecs/SystemStatistics.hpp"
-#include "../utils/Log.hpp"
+#include "../utils/log.hpp"
 #include <math.h>
 #include <GLFW/glfw3.h>
 
 using namespace std;
-using namespace Log;
 
-namespace ECS {
+namespace ecs {
 
 void SystemStatistics::print(const char* name)
 {
