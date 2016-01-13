@@ -15,9 +15,13 @@ using namespace Log;
 void OBJ::load(const char *filename)
 {
     ifstream fin;
+
     if (openFile(filename, fin)) {
         parseLines(fin);
+    } else {
+        error("OBJ not found:", filename);
     }
+
     triangles.shrink_to_fit();
     vertexes.shrink_to_fit();
     uvs.shrink_to_fit();
@@ -27,7 +31,8 @@ void OBJ::load(const char *filename)
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
-    success("obj loaded with ", triangles.size(), "triangles", vertexes.size(), "vertexes ", indexes.size(), "indexes");
+
+    success("OBJ loaded:", filename);
 }
 
 bool OBJ::openFile(const char *filename, ifstream &fin)
@@ -35,7 +40,6 @@ bool OBJ::openFile(const char *filename, ifstream &fin)
     string filepath = "lib/res/objects/";
     filepath += filename;
     fin.open(filepath);
-    if (!fin.good()) error("ERROR - could not open file:", filepath);
     return fin.good();
 }
 

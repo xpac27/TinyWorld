@@ -18,6 +18,15 @@ Renderer::Renderer()
     // TODO make this date driven
     directionalLight.color = vec3(0.7, 0.6, 0.5);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
+
+    cubemap.load({
+        "textures/skybox/right.png",
+        "textures/skybox/left.png",
+        "textures/skybox/top.png",
+        "textures/skybox/bottom.png",
+        "textures/skybox/back.png",
+        "textures/skybox/front.png",
+    });
 }
 
 Renderer::~Renderer()

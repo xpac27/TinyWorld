@@ -1,6 +1,7 @@
 #pragma once
 #include "../utils/Program.hpp"
 #include "../utils/Aggregator.hpp"
+#include "../utils/Cubemap.hpp"
 #include "Model.hpp"
 #include "MeshStore.hpp"
 #include "GBuffer.hpp"
@@ -40,6 +41,7 @@ private:
 
     Quad quad;
     GBuffer gBuffer;
+    Cubemap cubemap;
     MeshStore meshStore;
     DirectionalLight directionalLight;
 

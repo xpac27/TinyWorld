@@ -1,12 +1,17 @@
 #include "PNG.hpp"
+#include "Log.hpp"
 #include <stdio.h>
 #include <assert.h>
 
-PNG::PNG(const char *filepath)
+using namespace Log;
+
+PNG::PNG(const char *filename)
 {
     //open file as binary
-    FILE *fp = fopen(filepath, "r");
-    assert(fp);
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        error("PNG not found:", filename);
+    }
 
     //read the header
     png_byte header[8];
@@ -71,6 +76,8 @@ PNG::PNG(const char *filepath)
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
     delete[] row_pointers;
     fclose(fp);
+
+    success("PNG loaded:", filename);
 }
 
 PNG::~PNG()
