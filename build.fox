@@ -29,14 +29,20 @@ filter system: Linux
 
 includedirs = lib/inc
 
-build obj(out/objects/lib/**/*): auto lib/src/**/*.cpp
+# BUILD LIBRARY TW
+build objects(out/objects/lib/**/*): auto lib/src/**/*.cpp
     includedirs += lib/src
+build library(out/lib/tw): auto objects(out/objects/lib/**/*)
 
-build obj(out/objects/tests/*): auto lib/tests/src/*.cpp
+# BUILD TESTS EXECUTABLE
+build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
     includedirs += lib/tests/src lib/src
+build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/lib/tw)
+    libdirs += out/lib
+    libs += tw
 
-build obj(out/objects/app/*): auto app/src/*.cpp
-
-build out/libs/lib(tw): auto obj(out/objects/lib/**/*)
-build app(out/tests): auto obj(out/objects/tests/*) out/libs/lib(tw)
-build app(out/tinyworld): auto obj(out/objects/app/*) out/libs/lib(tw)
+# BUILD TINYWORLD EXECUTABLE
+build objects(out/objects/app/*): auto app/src/*.cpp
+build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/lib/tw)
+    libdirs += out/lib
+    libs += tw
