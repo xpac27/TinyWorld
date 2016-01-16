@@ -53,10 +53,10 @@ void Renderer::initialize()
 
 void Renderer::initializeShaders()
 {
-    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vs", "lib/src/shaders/shadow_volume.fs");
-    initializeShader(filling, "lib/src/shaders/filling.vs", "lib/src/shaders/filling.fs");
-    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vs", "lib/src/shaders/geometry_buffer.fs");
-    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vs", "lib/src/shaders/deferred_shading.fs");
+    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.frag");
+    initializeShader(filling, "lib/src/shaders/filling.vert", "lib/src/shaders/filling.frag");
+    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vert", "lib/src/shaders/geometry_buffer.frag");
+    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vert", "lib/src/shaders/deferred_shading.frag");
     success("Shaders loaded");
 }
 
