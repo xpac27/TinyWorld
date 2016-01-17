@@ -34,6 +34,9 @@ void Texture::bind(GLuint textureUnit)
     if (loaded) {
         glActiveTexture(textureUnit);
         glBindTexture(GL_TEXTURE_2D, id);
+    } else {
+        glActiveTexture(textureUnit);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 }
 

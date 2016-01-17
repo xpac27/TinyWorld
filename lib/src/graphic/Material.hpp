@@ -12,7 +12,7 @@ struct Material
 
     std::string name {""};
     std::string map_Kd {"textures/default.png"};
-    std::string map_Ks {""};
+    std::string map_Ks {"textures/default.png"};
     std::string map_Bump {""};
 
     Material(std::string _name)

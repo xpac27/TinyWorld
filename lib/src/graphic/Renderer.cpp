@@ -15,7 +15,7 @@ Renderer::Renderer()
     : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
-    directionalLight.color = vec3(0.7, 0.6, 0.5);
+    directionalLight.color = vec3(0.90, 0.90, 0.95);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
 
     environment.load({
@@ -35,6 +35,8 @@ Renderer::Renderer()
         "textures/irradiance-map/back.png",
         "textures/irradiance-map/front.png",
     });
+
+    BRDFIntegrationMap.load("textures/integrateBrdf.png");
 }
 
 Renderer::~Renderer()
@@ -215,6 +217,7 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
     glUniform1i(deferredShading.getLocation("environment"), 3);
     glUniform1i(deferredShading.getLocation("irradianceMap"), 4);
+    glUniform1i(deferredShading.getLocation("BRDFIntegrationMap"), 5);
     glUniform3fv(deferredShading.getLocation("light.color"), 1, value_ptr(directionalLight.color));
     glUniform3fv(deferredShading.getLocation("light.direction"), 1, value_ptr(directionalLight.direction));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
@@ -222,6 +225,7 @@ void Renderer::lightingPass()
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2);
     environment.bind(GL_TEXTURE3);
     irradianceMap.bind(GL_TEXTURE4);
+    BRDFIntegrationMap.bind(GL_TEXTURE5);
 
     quad.draw();
 

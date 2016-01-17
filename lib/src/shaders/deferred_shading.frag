@@ -14,14 +14,16 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform samplerCube environment;
 uniform samplerCube irradianceMap;
+uniform sampler2D BRDFIntegrationMap;
 uniform vec3 view_position;
 uniform directionalLight light;
 
 float LambertBRDF ( vec3 lightDirection, vec3 surfaceNormal );
 float BeckmannDistribution ( float x, float roughness );
 float cookTorranceBRDF ( vec3 lightDirection, vec3 viewDirection, vec3 surfaceNormal, float roughness, float fresnel );
-vec3 RomBinDaHouseToneMapping(vec3 color, float gamma);
-vec3 filmicToneMapping(vec3 color);
+vec3 linearToneMapping(vec3 color, float gamma);
+vec3 simpleReinhardToneMapping(vec3 color, float gamma);
+vec3 whitePreservingLumaBasedReinhardToneMapping(vec3 color, float gamma);
 
 // ================ MAIN
 
@@ -29,54 +31,47 @@ void main ()
 {
     // Setup
     float gamma = 2.2;
-    float roughness = 0.85;
-    float metallicness = 0.55;
+    float roughness = 0.25;
+    float metallicness = 0.20;
 
     // Retrieve data from gbuffer
-    vec3 fragment_position = texture (gPosition, TexCoords).rgb;
-    vec3 surface_normal = texture (gNormal, TexCoords).rgb;
-    vec3 diffuse_color = texture (gAlbedoSpec, TexCoords).rgb;
-    float specular_intensity = texture (gAlbedoSpec, TexCoords).a;
+    vec3 fragment_position = texture(gPosition, TexCoords).rgb;
+    vec3 surface_normal = texture(gNormal, TexCoords).rgb;
+    vec3 diffuse_color = texture(gAlbedoSpec, TexCoords).rgb;
+    float specular_intensity = texture(gAlbedoSpec, TexCoords).a;
 
     // Compute view direction
     vec3 view_direction = normalize (view_position - fragment_position);
 
     // Directional light
-    vec3 light_direction = light.direction * -1;
-    /* vec3 light_color = light.color; */
-    vec3 light_color = vec3(0.8, 0.8, 0.8);
+    vec3 light_direction = light.direction * -1.0;
+    vec3 specular_color = light.color;
+
+    // Reflection
+    vec3 reflection = reflect(view_direction, normalize(surface_normal));
 
     // Fresnel
-    float NdotV = clamp(dot(surface_normal,view_direction),0.0,1.0);
-    NdotV = pow(1.0-NdotV,5.0);
-    float Fresnel = metallicness + (1.0-metallicness)*(NdotV);
+    float NdotV = pow(1.0 - clamp(dot(surface_normal, view_direction), 0.0, 1.0), 5.0);
+    float fresnel = metallicness + ((1.0 - metallicness) * NdotV);
 
-    // Directional specular
-    float specular_factor = cookTorranceBRDF ( light_direction, view_direction, surface_normal, roughness, Fresnel );
-    vec3 SpecColor = specular_factor * light_color;
+    // Direct lighting
+    float direct_diffuse_factor = LambertBRDF(light_direction, surface_normal);
+    float direct_specular_factor = cookTorranceBRDF(light_direction, view_direction, surface_normal, roughness, fresnel);
+    vec3 direct_lighting = (diffuse_color * direct_diffuse_factor) + (specular_color * direct_specular_factor * specular_intensity);
 
-    // Directional diffuse
-    float diffuse_factor = LambertBRDF(light_direction, surface_normal);
-    vec3 DiffColor = diffuse_color * diffuse_factor * light_color  * (1.0 - Fresnel);
+    // Indirect lighting
+    vec3 R0 = texture(environment, reflection).rgb;
+    vec3 R1 = texture(irradianceMap, reflection).rgb;
+    vec2 envBRDF = texture(BRDFIntegrationMap, vec2(roughness, NdotV)).xy;
+    vec3 indirect_lighting = (R1 + mix(R0, R1, roughness) * (specular_color * envBRDF.x + envBRDF.y) * fresnel) * specular_intensity;
 
-    // Global Illumination
-    vec3 R = reflect(view_direction, normalize(surface_normal));
-    vec3 R0 = texture(environment, R).rgb;
-    vec3 R1 = texture(irradianceMap, R).rgb;
-    vec3 global_illumination = mix(R0, R1, roughness);
-
-    // Ambient
-    vec3 Ambient = vec3(0.0, 0.0, 0.0);
-
-    // Final color
-    vec3 final_color = DiffColor + SpecColor + Ambient + (Fresnel * global_illumination);
-
-    // tone map
-    /* final_color = RomBinDaHouseToneMapping(final_color, gamma); */
-    /* final_color = filmicToneMapping(final_color); */
+    // Combine lighting
+    vec3 color = (direct_lighting + indirect_lighting) * direct_diffuse_factor;
 
     // Gamma correction
-    final_color = pow (final_color, vec3 (1.0 / gamma));
+    /* vec3 final_color = linearToneMapping(color, gamma); */
+    vec3 final_color = simpleReinhardToneMapping(color, gamma);
+    /* vec3 final_color = whitePreservingLumaBasedReinhardToneMapping(color, gamma); */
 
     // Output
     FragColor = vec4(final_color, 1.0);
@@ -86,18 +81,30 @@ void main ()
 // https://www.shadertoy.com/view/lslGzl
 // ================================
 
-vec3 RomBinDaHouseToneMapping(vec3 color, float gamma)
+vec3 linearToneMapping(vec3 color, float gamma)
 {
-    color = exp( -1.0 / ( 2.72*color + 0.15 ) );
+	float exposure = 1.;
+	color = clamp(exposure * color, 0., 1.);
 	color = pow(color, vec3(1. / gamma));
 	return color;
 }
 
-vec3 filmicToneMapping(vec3 color)
+vec3 simpleReinhardToneMapping(vec3 color, float gamma)
 {
-    color = max(vec3(0.), color - vec3(0.004));
-    color = (color * (6.2 * color + .5)) / (color * (6.2 * color + 1.7) + 0.06);
-    return color;
+	float exposure = 1.5;
+	color *= exposure/(1. + color / exposure);
+	color = pow(color, vec3(1. / gamma));
+	return color;
+}
+
+vec3 whitePreservingLumaBasedReinhardToneMapping(vec3 color, float gamma)
+{
+	float white = 2.;
+	float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float toneMappedLuma = luma * (1. + luma / (white*white)) / (1. + luma);
+	color *= toneMappedLuma / luma;
+	color = pow(color, vec3(1. / gamma));
+	return color;
 }
 
 // ================================

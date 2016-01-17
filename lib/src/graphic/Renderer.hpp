@@ -2,6 +2,7 @@
 #include "../utils/Program.hpp"
 #include "../utils/Aggregator.hpp"
 #include "../utils/Cubemap.hpp"
+#include "../utils/Texture.hpp"
 #include "Model.hpp"
 #include "MeshStore.hpp"
 #include "GBuffer.hpp"
@@ -43,6 +44,7 @@ private:
     GBuffer gBuffer;
     Cubemap environment;
     Cubemap irradianceMap;
+    Texture BRDFIntegrationMap;
     MeshStore meshStore;
     DirectionalLight directionalLight;
 

@@ -36,6 +36,9 @@ void Cubemap::bind(GLuint textureUnit)
     if (loaded) {
         glActiveTexture(textureUnit);
         glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+    } else {
+        glActiveTexture(textureUnit);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 }
 
