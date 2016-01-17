@@ -18,13 +18,22 @@ Renderer::Renderer()
     directionalLight.color = vec3(0.7, 0.6, 0.5);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
 
-    cubemap.load({
-        "textures/skybox/right.png",
-        "textures/skybox/left.png",
-        "textures/skybox/bottom.png",
-        "textures/skybox/top.png",
-        "textures/skybox/back.png",
-        "textures/skybox/front.png",
+    environment.load({
+        "textures/environment/right.png",
+        "textures/environment/left.png",
+        "textures/environment/bottom.png",
+        "textures/environment/top.png",
+        "textures/environment/back.png",
+        "textures/environment/front.png",
+    });
+
+    irradianceMap.load({
+        "textures/irradiance-map/right.png",
+        "textures/irradiance-map/left.png",
+        "textures/irradiance-map/bottom.png",
+        "textures/irradiance-map/top.png",
+        "textures/irradiance-map/back.png",
+        "textures/irradiance-map/front.png",
     });
 }
 
@@ -205,12 +214,14 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("gNormal"), 1);
     glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
     glUniform1i(deferredShading.getLocation("environment"), 3);
+    glUniform1i(deferredShading.getLocation("irradianceMap"), 4);
     glUniform3fv(deferredShading.getLocation("light.color"), 1, value_ptr(directionalLight.color));
     glUniform3fv(deferredShading.getLocation("light.direction"), 1, value_ptr(directionalLight.direction));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
 
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2);
-    cubemap.bind(GL_TEXTURE3);
+    environment.bind(GL_TEXTURE3);
+    irradianceMap.bind(GL_TEXTURE4);
 
     quad.draw();
 

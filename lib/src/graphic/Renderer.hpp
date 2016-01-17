@@ -41,7 +41,8 @@ private:
 
     Quad quad;
     GBuffer gBuffer;
-    Cubemap cubemap;
+    Cubemap environment;
+    Cubemap irradianceMap;
     MeshStore meshStore;
     DirectionalLight directionalLight;
 

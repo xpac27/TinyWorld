@@ -108,3 +108,20 @@ To install Clang Static Analyzer, llvm-cov, scan-build and clang-tidy:
 or:
 
     apt-get install llvm lcov
+
+## Generate irradiance map
+
+You need to install rlk's [envtools](https://github.com/rlk/envtools), [util3d](https://github.com/rlk/util3d), and [sht](https://github.com/rlk/sht).
+
+	git clone git@github.com:rlk/util3d.git
+    git clone git@github.com:rlk/sht.git
+    git clone git@github.com:rlk/envtools.git
+    cd sht && make && cd ..
+    cd envtools && make && cd ..
+    sudo cp sht/shtrans /usr/lib/
+    sudo cp envtools/envremap /usr/lib/
+
+You also need to install [ImageMagick](http://www.imagemagick.org/script/index.php). If you'are on mac you can type `brew install imagemagick`.
+
+Then simply place your cubemap's png images in the resource's environement folder (named front.png, back.png, left.png, right.png, top.png, bottom.png) and run `make irradiance-map`.
+
