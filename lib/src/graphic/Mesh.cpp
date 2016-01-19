@@ -16,10 +16,13 @@ Mesh::Mesh(const char *filename)
 {
     OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
 
+
     verifyUVs();
     verifyMeterials();
     vertexArray->initialize(vertexes, uvs, normals);
+
     initializeTriangleData();
+
     computeTrianglesPlaneEquations();
     computeTrianglesNeighbours();
 
@@ -138,21 +141,21 @@ void Mesh::computeTrianglesPlaneEquations()
 void Mesh::computeTrianglesNeighbours()
 {
     for (unsigned int t1 = 0; t1 < triangles.size(); t1++) {
+        if (trianglesNeighbours[t1][0] != -1 && trianglesNeighbours[t1][1] != -1 && trianglesNeighbours[t1][2] != -1) continue;
         for (unsigned int t2 = t1 + 1; t2 < triangles.size(); t2++) {
             for (int a = 0; a < 3; a++) {
-                if (trianglesNeighbours[t1][a] == -1) {
-                    for (int b = 0; b < 3; b++) {
-                        unsigned int triangle_1_indexA = triangles[t1][a];
-                        unsigned int triangle_1_indexB = triangles[t1][(a + 1) % 3];
-                        unsigned int triangle_2_indexA = triangles[t2][b];
-                        unsigned int triangle_2_indexB = triangles[t2][(b + 1) % 3];
+                if (trianglesNeighbours[t1][a] != -1) continue;
+                for (int b = 0; b < 3; b++) {
+                    unsigned int triangle_1_indexA = triangles[t1][a];
+                    unsigned int triangle_1_indexB = triangles[t1][(a + 1) % 3];
+                    unsigned int triangle_2_indexA = triangles[t2][b];
+                    unsigned int triangle_2_indexB = triangles[t2][(b + 1) % 3];
 
-                        if ((triangle_1_indexA == triangle_2_indexA && triangle_1_indexB == triangle_2_indexB)
-                        || (triangle_1_indexA == triangle_2_indexB && triangle_1_indexB == triangle_2_indexA)) {
-                            trianglesNeighbours[t1][a] = int(t2);
-                            trianglesNeighbours[t2][b] = int(t1);
-                            break;
-                        }
+                    if ((triangle_1_indexA == triangle_2_indexA && triangle_1_indexB == triangle_2_indexB)
+                            || (triangle_1_indexA == triangle_2_indexB && triangle_1_indexB == triangle_2_indexA)) {
+                        trianglesNeighbours[t1][a] = int(t2);
+                        trianglesNeighbours[t2][b] = int(t1);
+                        break;
                     }
                 }
             }

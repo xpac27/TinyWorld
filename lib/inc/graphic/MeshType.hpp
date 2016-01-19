@@ -2,5 +2,5 @@
 
 enum MeshType
 {
-    PLAN, CUBE, CACODEMON, SPHERE
+    PLAN, CUBE, WINGED_VICTORY, SPHERE
 };

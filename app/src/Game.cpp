@@ -59,7 +59,7 @@ void Game::addEntity()
     ecs::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::CACODEMON;
+    visibilityComponents.getComponent(entity)->meshType = MeshType::CUBE;
     visibilityComponents.getComponent(entity)->scale = glm::vec3(1.f, 1.f, 1.f);
     movementComponents.getComponent(entity)->velocity = Random::get(2.f, 5.f);
     movementComponents.getComponent(entity)->direction = normalize(glm::vec3(Random::get(-1.f, 1.f), Random::get(-1.f, 1.f), 0.f));
@@ -73,10 +73,10 @@ void Game::addTestEntity()
     ecs::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::SPHERE;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(2.5f, 2.5f, 2.5f);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::WINGED_VICTORY;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(0.5f, 0.5f, 0.5f);
     movementComponents.getComponent(entity)->direction = glm::vec3(0.f, -1.f, 0.f);
     movementComponents.getComponent(entity)->position.x = 0.0f;
-    movementComponents.getComponent(entity)->position.y = 0.0f;
-    movementComponents.getComponent(entity)->position.z = 1.5f;
+    movementComponents.getComponent(entity)->position.y = -3.0f;
+    movementComponents.getComponent(entity)->position.z = 0.0f;
 }

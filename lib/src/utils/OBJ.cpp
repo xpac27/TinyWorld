@@ -27,6 +27,7 @@ void OBJ::load(const char *filename)
     normals.shrink_to_fit();
     indexes.shrink_to_fit();
     materials.shrink_to_fit();
+
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
@@ -36,6 +37,7 @@ void OBJ::load(const char *filename)
 
 bool OBJ::openFile(const char *filename, ifstream &fin)
 {
+    // TODO stop assuming paths
     string filepath = "lib/res/objects/";
     filepath += filename;
     fin.open(filepath);

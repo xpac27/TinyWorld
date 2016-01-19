@@ -31,8 +31,8 @@ void main ()
 {
     // Setup
     float gamma = 2.2;
-    float roughness = 0.25;
-    float metallicness = 0.20;
+    float roughness = 0.05;
+    float metallicness = 0.99;
 
     // Retrieve data from gbuffer
     vec3 fragment_position = texture(gPosition, TexCoords).rgb;
@@ -63,7 +63,7 @@ void main ()
     vec3 R0 = texture(environment, reflection).rgb;
     vec3 R1 = texture(irradianceMap, reflection).rgb;
     vec2 envBRDF = texture(BRDFIntegrationMap, vec2(roughness, NdotV)).xy;
-    vec3 indirect_lighting = (R1 + mix(R0, R1, roughness) * (specular_color * envBRDF.x + envBRDF.y) * fresnel) * specular_intensity;
+    vec3 indirect_lighting = (R1 + mix(R0, R1, roughness) * (specular_color * envBRDF.x + envBRDF.y) * fresnel);
 
     // Combine lighting
     vec3 color = (direct_lighting + indirect_lighting) * direct_diffuse_factor;
