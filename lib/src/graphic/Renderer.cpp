@@ -15,7 +15,8 @@ Renderer::Renderer()
     : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
-    directionalLight.color = vec3(0.90, 0.90, 0.95);
+    directionalLight.color = vec3(0.9, 0.8, 0.7);
+    directionalLight.ambiant = vec3(0.44, 0.24, 0.04);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
 
     environment.load({
@@ -35,8 +36,6 @@ Renderer::Renderer()
         "textures/irradiance-map/back.png",
         "textures/irradiance-map/front.png",
     });
-
-    BRDFIntegrationMap.load("textures/integrateBrdf.png");
 }
 
 Renderer::~Renderer()
@@ -110,7 +109,7 @@ void Renderer::render(Aggregator<Model> &models)
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
 
-    shadowPass(models);
+    // shadowPass(models);
 
     // Render scene
     glEnable(GL_CULL_FACE);
@@ -212,20 +211,20 @@ void Renderer::lightingPass()
 {
     deferredShading.use();
 
-    glUniform1i(deferredShading.getLocation("gPosition"), 0);
-    glUniform1i(deferredShading.getLocation("gNormal"), 1);
-    glUniform1i(deferredShading.getLocation("gAlbedoSpec"), 2);
+    glUniform1i(deferredShading.getLocation("g_position"), 0);
+    glUniform1i(deferredShading.getLocation("g_normal"), 1);
+    glUniform1i(deferredShading.getLocation("g_albedo_spec"), 2);
     glUniform1i(deferredShading.getLocation("environment"), 3);
-    glUniform1i(deferredShading.getLocation("irradianceMap"), 4);
-    glUniform1i(deferredShading.getLocation("BRDFIntegrationMap"), 5);
-    glUniform3fv(deferredShading.getLocation("light.color"), 1, value_ptr(directionalLight.color));
-    glUniform3fv(deferredShading.getLocation("light.direction"), 1, value_ptr(directionalLight.direction));
+    glUniform1i(deferredShading.getLocation("irradiance_map"), 4);
+    glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));
+    glUniform3fv(deferredShading.getLocation("direct_light_color"), 1, value_ptr(directionalLight.color));
+    glUniform3fv(deferredShading.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
+    glUniform1f(deferredShading.getLocation("gamma"), 2.2);
 
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2);
     environment.bind(GL_TEXTURE3);
     irradianceMap.bind(GL_TEXTURE4);
-    BRDFIntegrationMap.bind(GL_TEXTURE5);
 
     quad.draw();
 

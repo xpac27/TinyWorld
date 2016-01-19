@@ -24,7 +24,7 @@ Mesh::Mesh(const char *filename)
     initializeTriangleData();
 
     computeTrianglesPlaneEquations();
-    computeTrianglesNeighbours();
+    // computeTrianglesNeighbours();
 
     if (materials.size() > 0) {
         diffuseTexture->load(materials[0].map_Kd.data());

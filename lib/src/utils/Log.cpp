@@ -47,7 +47,7 @@ void dump(Visibility* c)
         case MeshType::PLAN: printl("  meshType: plan"); break;
         case MeshType::CUBE: printl("  meshType: cube"); break;
         case MeshType::SPHERE: printl("  meshType: sphere"); break;
-        case MeshType::WINGED_VICTORY: printl("  meshType: winged_victory"); break;
+        case MeshType::TORUS: printl("  meshType: torus"); break;
     }
     printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);
 }

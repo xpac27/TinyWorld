@@ -17,7 +17,7 @@ Game::Game()
     simulationSystems.setLatency(1.f / 10.f);
     simulationSystems.initialize();
 
-    setupWorld();
+    // setupWorld();
     addTestEntity();
     // for (int i = 0; i < 10; i ++) {
     //     addEntity();
@@ -73,10 +73,10 @@ void Game::addTestEntity()
     ecs::id entity = entities.addEntity();
     movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
-    visibilityComponents.getComponent(entity)->meshType = MeshType::WINGED_VICTORY;
-    visibilityComponents.getComponent(entity)->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+    visibilityComponents.getComponent(entity)->meshType = MeshType::TORUS;
+    visibilityComponents.getComponent(entity)->scale = glm::vec3(4.0f, 4.0f, 4.0f);
     movementComponents.getComponent(entity)->direction = glm::vec3(0.f, -1.f, 0.f);
     movementComponents.getComponent(entity)->position.x = 0.0f;
-    movementComponents.getComponent(entity)->position.y = -3.0f;
-    movementComponents.getComponent(entity)->position.z = 0.0f;
+    movementComponents.getComponent(entity)->position.y = -2.0f;
+    movementComponents.getComponent(entity)->position.z = 2.0f;
 }

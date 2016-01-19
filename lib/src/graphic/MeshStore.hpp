@@ -16,6 +16,6 @@ private:
 
     Mesh* plan;
     Mesh* cube;
-    Mesh* wingedVictory;
+    Mesh* torus;
     Mesh* sphere;
 };
