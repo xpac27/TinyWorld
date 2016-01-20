@@ -10,6 +10,8 @@ Todo:
 - [ ] continus formated statistics
 - [ ] terrain height
 - [ ] controled camera
+- [ ] screen space occlusion
+- [ ] normal mapping
 - [ ] physically based shading
 - [x] gamma correction
 - [x] deferred shading
