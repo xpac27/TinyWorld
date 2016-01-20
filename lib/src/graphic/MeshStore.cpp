@@ -6,6 +6,7 @@ MeshStore::MeshStore()
     , cube(new Mesh("cube.obj"))
     , torus(new Mesh("torus.obj"))
     , sphere(new Mesh("sphere.obj"))
+    , teapot(new Mesh("teapot.obj"))
 {
 }
 
@@ -15,6 +16,7 @@ MeshStore::~MeshStore()
     delete cube;
     delete torus;
     delete sphere;
+    delete teapot;
 }
 
 Mesh* MeshStore::getMesh(MeshType type)
@@ -24,5 +26,6 @@ Mesh* MeshStore::getMesh(MeshType type)
         case MeshType::CUBE: return cube;
         case MeshType::TORUS: return torus;
         case MeshType::SPHERE: return sphere;
+        case MeshType::TEAPOT: return teapot;
     }
 }

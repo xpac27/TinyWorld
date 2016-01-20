@@ -18,4 +18,5 @@ private:
     Mesh* cube;
     Mesh* torus;
     Mesh* sphere;
+    Mesh* teapot;
 };

@@ -2,5 +2,5 @@
 
 enum MeshType
 {
-    PLAN, CUBE, TORUS, SPHERE
+    PLAN, CUBE, TORUS, SPHERE, TEAPOT
 };
