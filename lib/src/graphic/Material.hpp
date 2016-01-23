@@ -11,9 +11,10 @@ struct Material
     GLfloat Ks[3] {0.f, 0.f, 0.f};
 
     std::string name {""};
-    std::string map_Kd {"textures/default.png"};
-    std::string map_Ks {"textures/default.png"};
-    std::string map_Bump {""};
+    std::string map_diffuse {"textures/default.png"};
+    std::string map_metallic {"textures/default.png"};
+    std::string map_rough {"textures/default.png"};
+    std::string map_normal {""};
 
     Material(std::string _name)
         : name(_name)

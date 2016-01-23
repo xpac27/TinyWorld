@@ -11,7 +11,8 @@ using namespace glm;
 Mesh::Mesh(const char *filename)
     : vertexArray(new MeshVertexArray())
     , diffuseTexture(new Texture())
-    , specularTexture(new Texture())
+    , metallicTexture(new Texture())
+    , roughTexture(new Texture())
     , normalTexture(new Texture())
 {
     OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
@@ -32,7 +33,8 @@ Mesh::Mesh(const char *filename)
 Mesh::~Mesh()
 {
     delete diffuseTexture;
-    delete specularTexture;
+    delete metallicTexture;
+    delete roughTexture;
     delete normalTexture;
     delete vertexArray;
 }
@@ -50,17 +52,19 @@ void Mesh::debug()
 void Mesh::loadTextures()
 {
     if (materials.size() > 0) {
-        diffuseTexture->load(materials[0].map_Kd.data());
-        specularTexture->load(materials[0].map_Ks.data());
-        normalTexture->load(materials[0].map_Bump.data());
+        diffuseTexture->load(materials[0].map_diffuse.data());
+        metallicTexture->load(materials[0].map_metallic.data());
+        roughTexture->load(materials[0].map_rough.data());
+        normalTexture->load(materials[0].map_normal.data());
     }
 }
 
-void Mesh::bindTexture()
+void Mesh::bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal)
 {
-    diffuseTexture->bind(GL_TEXTURE0);
-    specularTexture->bind(GL_TEXTURE1);
-    normalTexture->bind(GL_TEXTURE2);
+    diffuseTexture->bind(diffuse);
+    metallicTexture->bind(metallic);
+    roughTexture->bind(rough);
+    normalTexture->bind(normal);
 }
 
 void Mesh::bindIndexes()

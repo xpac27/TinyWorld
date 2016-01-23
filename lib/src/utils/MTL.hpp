@@ -14,7 +14,6 @@ public:
     {}
 
     void load(const char *filename);
-    void debug();
 
 private:
 
@@ -24,6 +23,7 @@ private:
     void parseMapBump(std::ifstream &fin);
     void parseMapKd(std::ifstream &fin);
     void parseMapKs(std::ifstream &fin);
+    void parseMapNs(std::ifstream &fin);
     void parseNs(std::ifstream &fin);
     void parseKa(std::ifstream &fin);
     void parseKd(std::ifstream &fin);
@@ -35,6 +35,7 @@ private:
     const char * MAP_BUMP = "map_Bump";
     const char * MAP_KD = "map_Kd";
     const char * MAP_KS = "map_Ks";
+    const char * MAP_NS = "map_Ns";
     const char * NEWMTL = "newmtl";
     const char * NS = "Ns";
     const char * KA = "Ka";

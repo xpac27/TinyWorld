@@ -5,7 +5,7 @@ in vec2 text_coords;
 
 uniform sampler2D g_position;
 uniform sampler2D g_normal;
-uniform sampler2D g_albedo_spec;
+uniform sampler2D g_albedo_metallic;
 
 uniform samplerCube environment;
 uniform samplerCube irradiance_map;
@@ -39,8 +39,8 @@ void main ()
 
     vec3  fragment_position  = texture(g_position, text_coords).rgb;
     vec3  surface_normal     = texture(g_normal, text_coords).rgb;
-    vec3  diffuse_color      = texture(g_albedo_spec, text_coords).rgb;
-    float specular_intensity = texture(g_albedo_spec, text_coords).a;
+    vec3  diffuse_color      = texture(g_albedo_metallic, text_coords).rgb;
+    /* float metallicness       = texture(g_albedo_metallic, text_coords).a; */
 
 // ---- pre-compute data
 

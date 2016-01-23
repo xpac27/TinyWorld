@@ -24,7 +24,7 @@ public:
     void draw(unsigned int instances);
     void drawShadowVolume();
     void reloadTextures();
-    void bindTexture();
+    void bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal);
     void bindIndexes();
     void bindSilhouette();
     void debug();
@@ -54,7 +54,8 @@ private:
     std::vector<Material> materials;
 
     Texture *diffuseTexture;
-    Texture *specularTexture;
+    Texture *metallicTexture;
+    Texture *roughTexture;
     Texture *normalTexture;
 };
 

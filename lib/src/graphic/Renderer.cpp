@@ -194,13 +194,15 @@ void Renderer::geometryPass(Aggregator<Model> &models)
 {
     geometryBuffer.use();
 
-    glUniform1i(geometryBuffer.getLocation("texture_diffuse1"), 0);
-    glUniform1i(geometryBuffer.getLocation("texture_specular1"), 1);
+    glUniform1i(geometryBuffer.getLocation("texture_diffuse"), 0);
+    glUniform1i(geometryBuffer.getLocation("texture_metallic"), 1);
+    // glUniform1i(geometryBuffer.getLocation("texture_rough"), 2);
+    // glUniform1i(geometryBuffer.getLocation("texture_normal"), 3);
     glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->bindTexture();
+        meshStore.getMesh(MeshType(t))->bindTexture(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
         meshStore.getMesh(MeshType(t))->bindIndexes();
         meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
@@ -214,7 +216,7 @@ void Renderer::lightingPass()
 
     glUniform1i(deferredShading.getLocation("g_position"), 0);
     glUniform1i(deferredShading.getLocation("g_normal"), 1);
-    glUniform1i(deferredShading.getLocation("g_albedo_spec"), 2);
+    glUniform1i(deferredShading.getLocation("g_albedo_metallic"), 2);
     glUniform1i(deferredShading.getLocation("environment"), 3);
     glUniform1i(deferredShading.getLocation("irradiance_map"), 4);
     glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));

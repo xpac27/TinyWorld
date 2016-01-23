@@ -39,6 +39,8 @@ void MTL::parseLines(ifstream &fin)
                 parseMapKd(fin);
             } else if (strncmp(k, MAP_KS, 6) == 0) {
                 parseMapKs(fin);
+            } else if (strncmp(k, MAP_NS, 6) == 0) {
+                parseMapNs(fin);
             } else if (strncmp(k, NEWMTL, 7) == 0) {
                 parseNewmtl(fin);
             } else if (strncmp(k, NS, 3) == 0) {
@@ -68,21 +70,28 @@ void MTL::parseMapBump(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    materials.back().map_Bump = c;
+    materials.back().map_normal = c;
 }
 
 void MTL::parseMapKd(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    materials.back().map_Kd = c;
+    materials.back().map_diffuse = c;
 }
 
 void MTL::parseMapKs(ifstream &fin)
 {
     char c[80] {' '};
     fin >> c;
-    materials.back().map_Ks = c;
+    materials.back().map_metallic = c;
+}
+
+void MTL::parseMapNs(ifstream &fin)
+{
+    char c[80] {' '};
+    fin >> c;
+    materials.back().map_rough = c;
 }
 
 void MTL::parseNs(ifstream &fin)
@@ -124,20 +133,4 @@ void MTL::parseD(ifstream &fin)
     GLfloat f1;
     fin >> f1;
     materials.back().d = f1;
-}
-
-void MTL::debug()
-{
-    for (auto m : materials) {
-        info("\n---- MTL");
-        printl("  newmtl", m.name);
-        printl("  Ns", m.Ns);
-        printl("  Ka", m.Ka[0], m.Ka[1], m.Ka[2]);
-        printl("  Kd", m.Kd[0], m.Kd[1], m.Kd[2]);
-        printl("  Ks", m.Ks[0], m.Ks[1], m.Ks[2]);
-        printl("  d", m.d);
-        printl("  map_Kd", m.map_Kd);
-        printl("  map_Ks", m.map_Ks);
-        printl("  map_Bump", m.map_Bump);
-    }
 }

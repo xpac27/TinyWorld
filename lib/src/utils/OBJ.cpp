@@ -185,9 +185,10 @@ void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vert
         printl("    ", "Ka", "=", m.Ka[0], m.Ka[1], m.Ka[2]);
         printl("    ", "Kd", "=", m.Kd[0], m.Kd[1], m.Kd[2]);
         printl("    ", "Ks", "=", m.Ks[0], m.Ks[1], m.Ks[2]);
-        printl("    ", "Kd", "=", m.map_Kd);
-        printl("    ", "Ks", "=", m.map_Ks);
-        printl("    ", "Bump", "=", m.map_Bump);
+        printl("    ", "map_diffuse",  "=", m.map_diffuse);
+        printl("    ", "map_metallic", "=", m.map_metallic);
+        printl("    ", "map_rough",    "=", m.map_normal);
+        printl("    ", "map_normal",   "=", m.map_normal);
     }
 
     nl();
