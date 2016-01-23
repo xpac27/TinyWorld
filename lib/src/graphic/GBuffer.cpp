@@ -26,17 +26,25 @@ void GBuffer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
 
-    // - Color + Specular color buffer
-    glGenTextures(1, &gAlbedoSpec);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    // - Color color buffer
+    glGenTextures(1, &gDiffuse);
+    glBindTexture(GL_TEXTURE_2D, gDiffuse);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gDiffuse, 0);
+
+    // - Metallic, Rough and AO buffer
+    glGenTextures(1, &gMRAO);
+    glBindTexture(GL_TEXTURE_2D, gMRAO);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gMRAO, 0);
 
     // - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
-    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-    glDrawBuffers(3, attachments);
+    GLuint attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+    glDrawBuffers(4, attachments);
 
     // - Create and attach depth buffer (renderbuffer)
     GLuint rboDepth;
@@ -52,14 +60,16 @@ void GBuffer::initialize()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GBuffer::bindTextures(GLuint textureUnit1, GLuint textureUnit2, GLuint textureUnit3)
+void GBuffer::bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuint MRAO)
 {
-    glActiveTexture(textureUnit1);
+    glActiveTexture(position);
     glBindTexture(GL_TEXTURE_2D, gPosition);
-    glActiveTexture(textureUnit2);
+    glActiveTexture(normal);
     glBindTexture(GL_TEXTURE_2D, gNormal);
-    glActiveTexture(textureUnit3);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    glActiveTexture(diffuse);
+    glBindTexture(GL_TEXTURE_2D, gDiffuse);
+    glActiveTexture(MRAO);
+    glBindTexture(GL_TEXTURE_2D, gMRAO);
 }
 
 void GBuffer::bind()

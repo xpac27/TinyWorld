@@ -1,0 +1,4 @@
+newmtl Teapot
+map_Kd textures/Teapot_Col.png
+map_Ks textures/Teapot_Met.png
+map_Ns textures/Teapot_Rou.png

@@ -5,7 +5,8 @@ in vec2 text_coords;
 
 uniform sampler2D g_position;
 uniform sampler2D g_normal;
-uniform sampler2D g_albedo_metallic;
+uniform sampler2D g_diffuse;
+uniform sampler2D g_mrao;
 
 uniform samplerCube environment;
 uniform samplerCube irradiance_map;
@@ -21,6 +22,9 @@ float fresnel(vec3 light_direction, vec3 view_direction, float metallicness);
 float lambertBRDF(vec3 light_direction, vec3 surface_normal);
 float beckmannDistribution(float x, float roughness);
 float cookTorranceBRDF(vec3 light_direction, vec3 view_direction, vec3 surface_normal, float roughness, float fresnel);
+vec3 hsv2rgb(in vec3 c);
+vec3 rgb2hsv(vec3 c);
+vec3 artisticShading(vec3 diffuse_color, vec3 light_direction, vec3 surface_normal);
 vec3 globalIllumination(vec3 reflection, float roughness);
 vec3 simpleReinhardToneMapping(vec3 color, float gamma);
 
@@ -30,17 +34,14 @@ vec3 simpleReinhardToneMapping(vec3 color, float gamma);
 
 void main ()
 {
-    // TODO: Retrieve those info from the app
-    float roughness     = 0.15;
-    float metallicness  = 0.05;
-    // >>>>
 
 // ---- retrieve data from gbuffer
 
-    vec3  fragment_position  = texture(g_position, text_coords).rgb;
-    vec3  surface_normal     = texture(g_normal, text_coords).rgb;
-    vec3  diffuse_color      = texture(g_albedo_metallic, text_coords).rgb;
-    /* float metallicness       = texture(g_albedo_metallic, text_coords).a; */
+    vec3  fragment_position = texture(g_position, text_coords).rgb;
+    vec3  surface_normal    = texture(g_normal, text_coords).rgb;
+    vec3  diffuse_color     = texture(g_diffuse, text_coords).rgb;
+    float metallicness      = texture(g_mrao, text_coords).r;
+    float roughness         = texture(g_mrao, text_coords).g;
 
 // ---- pre-compute data
 
@@ -61,8 +62,12 @@ void main ()
 
 // ---- combine lighting
 
-    vec3 direct_lighting = max(((direct_diffuse_color + direct_specular_color) * (1.0 - ambiant_color)), vec3(0.0,0.0,0.0));
+    vec3 direct_lighting = (direct_diffuse_color + direct_specular_color) * (1.0 - ambiant_color);
     vec3 lighting        = direct_lighting + (indirect_lighting_color * ambiant_color) + (fresnel * indirect_lighting_color);
+
+// ---- Artistic shading
+
+    diffuse_color = artisticShading(diffuse_color, direct_light_direction, surface_normal);
 
 // ---- gamma correction
 
@@ -88,16 +93,50 @@ vec3 globalIllumination(vec3 reflection, float roughness)
     return mix(R0, R1, roughness);
 }
 
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+vec3 hsv2rgb(vec3 c)
+{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+// ================================
+// https://www.shadertoy.com/view/Xtj3Dm
+// ================================
+
+vec3 artisticShading(vec3 diffuse_color, vec3 light_direction, vec3 surface_normal)
+{
+    vec3  hsv = rgb2hsv(diffuse_color);
+    float nl = clamp(dot(surface_normal, direct_light_direction), 0., 1.);
+    float vari = sin(nl * 6.28 * 0.5 - 1.5708);
+    hsv.x += (nl - 0.7) * 0.08; //Hue variation
+    hsv.y += vari * 0.1;        //Saturation variation
+    hsv.z += vari * 0.12 * nl;  //Value variation
+    /* hsv.z += sin(nl * 6.28 * 1. + 3.14159) * 0.13; //Can be higher freqency */
+    return hsv2rgb(hsv);
+}
+
 // ================================
 // https://www.shadertoy.com/view/lslGzl
 // ================================
 
 vec3 simpleReinhardToneMapping(vec3 color, float gamma)
 {
-	float exposure = 1.5;
-	color *= exposure/(1. + color / exposure);
-	color = pow(color, vec3(1. / gamma));
-	return color;
+    float exposure = 1.5;
+    color *= exposure/(1. + color / exposure);
+    color = pow(color, vec3(1. / gamma));
+    return color;
 }
 
 // ================================

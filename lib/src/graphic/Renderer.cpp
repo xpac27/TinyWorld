@@ -17,7 +17,7 @@ Renderer::Renderer()
     // TODO make this date driven
     directionalLight.color = vec3(0.9, 0.8, 0.7);
     directionalLight.ambiant = vec3(0.44, 0.24, 0.04);
-    directionalLight.direction = normalize(vec4(1.f, 1.f, -1.f, 0.f));
+    directionalLight.direction = normalize(vec4(1.f, 1.f, -0.3f, 0.f));
 
     environment.load({
         "textures/environment/right.png",
@@ -196,8 +196,8 @@ void Renderer::geometryPass(Aggregator<Model> &models)
 
     glUniform1i(geometryBuffer.getLocation("texture_diffuse"), 0);
     glUniform1i(geometryBuffer.getLocation("texture_metallic"), 1);
-    // glUniform1i(geometryBuffer.getLocation("texture_rough"), 2);
-    // glUniform1i(geometryBuffer.getLocation("texture_normal"), 3);
+    glUniform1i(geometryBuffer.getLocation("texture_rough"), 2);
+    glUniform1i(geometryBuffer.getLocation("texture_normal"), 3);
     glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
@@ -216,18 +216,19 @@ void Renderer::lightingPass()
 
     glUniform1i(deferredShading.getLocation("g_position"), 0);
     glUniform1i(deferredShading.getLocation("g_normal"), 1);
-    glUniform1i(deferredShading.getLocation("g_albedo_metallic"), 2);
-    glUniform1i(deferredShading.getLocation("environment"), 3);
-    glUniform1i(deferredShading.getLocation("irradiance_map"), 4);
+    glUniform1i(deferredShading.getLocation("g_diffuse"), 2);
+    glUniform1i(deferredShading.getLocation("g_mrao"), 3);
+    glUniform1i(deferredShading.getLocation("environment"), 4);
+    glUniform1i(deferredShading.getLocation("irradiance_map"), 5);
     glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));
     glUniform3fv(deferredShading.getLocation("direct_light_color"), 1, value_ptr(directionalLight.color));
     glUniform3fv(deferredShading.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
     glUniform1f(deferredShading.getLocation("gamma"), 2.2);
 
-    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2);
-    environment.bind(GL_TEXTURE3);
-    irradianceMap.bind(GL_TEXTURE4);
+    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
+    environment.bind(GL_TEXTURE4);
+    irradianceMap.bind(GL_TEXTURE5);
 
     quad.draw();
 

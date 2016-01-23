@@ -7,7 +7,7 @@ class GBuffer
 public:
 
     void initialize();
-    void bindTextures(GLuint textureUnit1, GLuint textureUnit2, GLuint textureUnit3);
+    void bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuint MRAO);
     void bind();
     void idle();
 
@@ -16,5 +16,6 @@ private:
     GLuint gBuffer;
     GLuint gPosition;
     GLuint gNormal;
-    GLuint gAlbedoSpec;
+    GLuint gDiffuse;
+    GLuint gMRAO;
 };
