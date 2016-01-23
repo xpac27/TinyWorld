@@ -23,6 +23,7 @@ public:
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
     void drawShadowVolume();
+    void reloadTextures();
     void bindTexture();
     void bindIndexes();
     void bindSilhouette();
@@ -30,7 +31,7 @@ public:
 
 private:
 
-    void loadVAO();
+    void loadTextures();
     void verifyUVs();
     void verifyMeterials();
     void initializeTriangleData();

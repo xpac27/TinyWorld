@@ -46,6 +46,7 @@ Renderer::~Renderer()
 void Renderer::reload()
 {
     initializeShaders();
+    meshStore.reloadMeshesTextures();
 }
 
 void Renderer::initialize()

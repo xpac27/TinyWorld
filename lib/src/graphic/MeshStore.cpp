@@ -29,3 +29,12 @@ Mesh* MeshStore::getMesh(MeshType type)
         case MeshType::TEAPOT: return teapot;
     }
 }
+
+void MeshStore::reloadMeshesTextures()
+{
+    plan->reloadTextures();
+    cube->reloadTextures();
+    torus->reloadTextures();
+    sphere->reloadTextures();
+    teapot->reloadTextures();
+}

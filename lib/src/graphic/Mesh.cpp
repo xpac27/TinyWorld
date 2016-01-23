@@ -26,11 +26,7 @@ Mesh::Mesh(const char *filename)
     computeTrianglesPlaneEquations();
     // computeTrianglesNeighbours();
 
-    if (materials.size() > 0) {
-        diffuseTexture->load(materials[0].map_Kd.data());
-        specularTexture->load(materials[0].map_Ks.data());
-        normalTexture->load(materials[0].map_Bump.data());
-    }
+    loadTextures();
 }
 
 Mesh::~Mesh()
@@ -41,9 +37,23 @@ Mesh::~Mesh()
     delete vertexArray;
 }
 
+void Mesh::reloadTextures()
+{
+    loadTextures();
+}
+
 void Mesh::debug()
 {
     OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
+}
+
+void Mesh::loadTextures()
+{
+    if (materials.size() > 0) {
+        diffuseTexture->load(materials[0].map_Kd.data());
+        specularTexture->load(materials[0].map_Ks.data());
+        normalTexture->load(materials[0].map_Bump.data());
+    }
 }
 
 void Mesh::bindTexture()

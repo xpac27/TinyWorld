@@ -12,6 +12,8 @@ public:
 
     Mesh* getMesh(MeshType type);
 
+    void reloadMeshesTextures();
+
 private:
 
     Mesh* plan;
