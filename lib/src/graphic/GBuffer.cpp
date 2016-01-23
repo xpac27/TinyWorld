@@ -3,7 +3,7 @@
 
 void GBuffer::initialize()
 {
-    // TODO get those dimentions from an updated windows object
+    // TODO get windows size from conf
     int SCR_WIDTH = 800;
     int SCR_HEIGHT = 600;
 

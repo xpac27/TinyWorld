@@ -12,7 +12,7 @@ Todo:
 - [ ] controled camera
 - [ ] screen space occlusion
 - [ ] normal mapping
-- [ ] physically based shading
+- [x] physically based shading
 - [x] gamma correction
 - [x] deferred shading
 - [x] shadow volume
