@@ -15,26 +15,26 @@ Renderer::Renderer()
     : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
-    directionalLight.color = vec3(0.9, 0.8, 0.7);
+    directionalLight.color = vec3(1.0, 0.9, 0.8);
     directionalLight.ambiant = vec3(0.44, 0.24, 0.04);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -0.3f, 0.f));
 
     environment.load({
-        "textures/environment/right.png",
-        "textures/environment/left.png",
-        "textures/environment/bottom.png",
-        "textures/environment/top.png",
-        "textures/environment/back.png",
-        "textures/environment/front.png",
+        "textures/environments/archipelago/cubemap/right.png",
+        "textures/environments/archipelago/cubemap/left.png",
+        "textures/environments/archipelago/cubemap/bottom.png",
+        "textures/environments/archipelago/cubemap/top.png",
+        "textures/environments/archipelago/cubemap/back.png",
+        "textures/environments/archipelago/cubemap/front.png",
     });
 
     irradianceMap.load({
-        "textures/irradiance-map/right.png",
-        "textures/irradiance-map/left.png",
-        "textures/irradiance-map/bottom.png",
-        "textures/irradiance-map/top.png",
-        "textures/irradiance-map/back.png",
-        "textures/irradiance-map/front.png",
+        "textures/environments/archipelago/irradiance-map/right.png",
+        "textures/environments/archipelago/irradiance-map/left.png",
+        "textures/environments/archipelago/irradiance-map/bottom.png",
+        "textures/environments/archipelago/irradiance-map/top.png",
+        "textures/environments/archipelago/irradiance-map/back.png",
+        "textures/environments/archipelago/irradiance-map/front.png",
     });
 }
 
