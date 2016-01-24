@@ -8,6 +8,8 @@ layout (location = 3) out vec3 gMRAO;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in vec3 Tangent;
+in vec3 Bitangent;
 
 uniform sampler2D texture_diffuse;
 uniform sampler2D texture_metallic;
@@ -16,16 +18,23 @@ uniform sampler2D texture_normal;
 
 void main()
 {
-    // Store the fragment position vector in the first gbuffer texture
+	mat3 TBN = mat3(Tangent, Bitangent, Normal);
+
+    // Store the fragment position
     gPosition = FragPos;
-    // Also store the per-fragment normals into the gbuffer
-    gNormal.rgb = normalize(Normal).xyz;
-    // And the diffuse per-fragment color
+
+    // Store the per-fragment normals
+    gNormal.rgb = TBN * normalize(texture(texture_normal, TexCoords).rgb);
+
+    // Store the per-fragment diffuse color
     gDiffuse.rgb = texture(texture_diffuse, TexCoords).rgb;
-    // Store metallicness
+
+    // Store the per-fragment metallicness
     gMRAO.r = texture(texture_metallic, TexCoords).r;
-    // Store roughness
+
+    // Store the per-fragment roughness
     gMRAO.g = texture(texture_rough, TexCoords).r;
+
     // Store AO
     /* gMRAO.b = TODO ambiant oclusion */
 }

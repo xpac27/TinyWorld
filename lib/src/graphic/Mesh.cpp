@@ -17,15 +17,15 @@ Mesh::Mesh(const char *filename)
 {
     OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
 
-
     verifyUVs();
     verifyMeterials();
-    vertexArray->initialize(vertexes, uvs, normals);
 
     initializeTriangleData();
-
     computeTrianglesPlaneEquations();
     // computeTrianglesNeighbours();
+    computeTrianglesTangents();
+
+    vertexArray->initialize(vertexes, uvs, normals, trianglesTangents, trianglesBitangents);
 
     loadTextures();
 }
@@ -122,7 +122,55 @@ void Mesh::initializeTriangleData()
 {
     trianglesVisibility.resize(triangles.size(), false);
     trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
+    trianglesTangents.resize(vertexes.size(), ivec3(0, 0, 0));
+    trianglesBitangents.resize(vertexes.size(), ivec3(0, 0, 0));
     trianglesPlaneEquations.reserve(triangles.size());
+}
+
+void Mesh::computeTrianglesTangents()
+{
+    std::vector<glm::vec3> tan1;
+    std::vector<glm::vec3> tan2;
+
+    tan1.reserve(vertexes.size() * 2);
+    tan2.reserve(vertexes.size() * 2);
+
+    for (auto &triangle : triangles) {
+        unsigned int i1 = triangle[0];
+        unsigned int i2 = triangle[1];
+        unsigned int i3 = triangle[2];
+
+        const vec4& v1 = vertexes[i1];
+        const vec4& v2 = vertexes[i2];
+        const vec4& v3 = vertexes[i3];
+
+        const vec3 edge1 = vec3(v2 - v1);
+        const vec3 edge2 = vec3(v3 - v1);
+
+        const vec2& uv1 = uvs[i1];
+        const vec2& uv2 = uvs[i2];
+        const vec2& uv3 = uvs[i3];
+
+        const vec2 deltaUV1 = uv2 - uv1;
+        const vec2 deltaUV2 = uv3 - uv1;
+
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        vec3 tangent = normalize(vec3(
+            f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x),
+            f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y),
+            f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z)
+        ));
+
+        vec3 bitangent = normalize(vec3(
+            f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x),
+            f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y),
+            f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z)
+        ));
+
+        trianglesTangents[i1] = trianglesTangents[i2] = trianglesTangents[i3] = tangent;
+        trianglesBitangents[i1] = trianglesBitangents[i2] = trianglesBitangents[i3] = bitangent;
+    }
 }
 
 void Mesh::computeTrianglesPlaneEquations()

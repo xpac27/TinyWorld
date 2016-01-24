@@ -1,7 +1,7 @@
 #version 330
 
 layout (location = 0) in vec4 position;
-layout (location = 3) in mat4 model;  // 3-6
+layout (location = 5) in mat4 model;  // 4-7
 
 uniform mat4 view;
 uniform mat4 projection;
