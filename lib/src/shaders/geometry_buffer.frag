@@ -3,7 +3,7 @@
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec3 gDiffuse;
-layout (location = 3) out vec3 gMRAO;
+layout (location = 3) out vec3 gMRS;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -30,11 +30,11 @@ void main()
     gDiffuse.rgb = texture(texture_diffuse, TexCoords).rgb;
 
     // Store the per-fragment metallicness
-    gMRAO.r = texture(texture_metallic, TexCoords).r;
+    gMRS.r = texture(texture_metallic, TexCoords).r;
 
     // Store the per-fragment roughness
-    gMRAO.g = texture(texture_rough, TexCoords).r;
+    gMRS.g = texture(texture_rough, TexCoords).r;
 
-    // Store AO
-    /* gMRAO.b = TODO ambiant oclusion */
+    // Store shadow mask
+    /* gMRS.b = TODO ambiant oclusion */
 }

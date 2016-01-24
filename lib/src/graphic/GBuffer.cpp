@@ -34,13 +34,13 @@ void GBuffer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gDiffuse, 0);
 
-    // - Metallic, Rough and AO buffer
-    glGenTextures(1, &gMRAO);
-    glBindTexture(GL_TEXTURE_2D, gMRAO);
+    // - Metallic, Rough and Shadows
+    glGenTextures(1, &gMRS);
+    glBindTexture(GL_TEXTURE_2D, gMRS);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gMRAO, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gMRS, 0);
 
     // - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
     GLuint attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
@@ -60,7 +60,7 @@ void GBuffer::initialize()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GBuffer::bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuint MRAO)
+void GBuffer::bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuint MRS)
 {
     glActiveTexture(position);
     glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -68,8 +68,8 @@ void GBuffer::bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuin
     glBindTexture(GL_TEXTURE_2D, gNormal);
     glActiveTexture(diffuse);
     glBindTexture(GL_TEXTURE_2D, gDiffuse);
-    glActiveTexture(MRAO);
-    glBindTexture(GL_TEXTURE_2D, gMRAO);
+    glActiveTexture(MRS);
+    glBindTexture(GL_TEXTURE_2D, gMRS);
 }
 
 void GBuffer::bind()
