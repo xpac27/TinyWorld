@@ -35,7 +35,7 @@ build library(out/lib/tw): auto objects(out/objects/lib/**/*)
 
 # BUILD TESTS EXECUTABLE
 build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
-    includedirs += lib/tests/src lib/src
+    includedirs += lib/tests/inc lib/src
 build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/lib/tw)
     libdirs += out/lib
     libs += tw

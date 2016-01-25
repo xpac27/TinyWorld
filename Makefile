@@ -68,3 +68,7 @@ coverage:
 analysis:
 	@bf debug=true analysis=true
 	@scan-build -V ninja out/tinyworld
+
+ctags:
+	rm -f ./.git/tags
+	find `pwd`/app `pwd`/lib/src `pwd`/lib/inc `pwd`/lib/tests/src \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" \) -exec ctags --append=yes -f ./.git/tags {} \;
