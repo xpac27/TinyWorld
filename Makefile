@@ -1,6 +1,6 @@
 all: configure compile run
 
-.PHONY: all configure run debug test analysis coverage clean reset
+.PHONY: all configure run debug test analysis coverage clean reset tags
 
 configure:
 	@mkdir -p out
@@ -68,3 +68,10 @@ coverage:
 analysis:
 	@bf debug=true analysis=true
 	@scan-build -V ninja out/tinyworld
+
+tags:
+	rm -f .git/tags .git/cscope.out
+	find `pwd`/packages/bottom-layer `pwd`/packages/data-sources `pwd`/packages/ff-presentation \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" \) > srcfiles.txt
+	ctags -L srcfiles.txt -f ./.git/tags
+	cscope -i srcfiles.txt -Rbqvf .git/cscope.out
+	rm srcfiles.txt
