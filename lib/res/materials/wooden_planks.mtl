@@ -1,0 +1,5 @@
+newmtl wooden_planks
+map_Kd textures/surfaces/wooden_planks/diffuse.png
+map_Ks textures/surfaces/wooden_planks/metallicness.png
+map_Ns textures/surfaces/wooden_planks/roughness.png
+map_Bump textures/surfaces/wooden_planks/normal.png

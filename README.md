@@ -1,6 +1,6 @@
 # TinyWorld [![Build Status](https://travis-ci.org/xpac27/TinyWorld.svg?branch=master)](https://travis-ci.org/xpac27/TinyWorld)
 
-![alt text](https://github.com/xpac27/TinyWorld/raw/master/screenshots/Screen-Shot-2015-11-17-at-22.39.20.png)
+![alt text](https://github.com/xpac27/TinyWorld/raw/master/screenshots/Screen-Shot-2016-01-25-at-20.42.22.png)
 
 This is a work in progress which purpose is for me to learn C++.
 

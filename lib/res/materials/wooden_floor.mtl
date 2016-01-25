@@ -1,0 +1,5 @@
+newmtl wooden_floor
+map_Kd textures/surfaces/wooden_floor/diffuse.png
+map_Ks textures/surfaces/wooden_floor/metallicness.png
+map_Ns textures/surfaces/wooden_floor/roughness.png
+map_Bump textures/surfaces/wooden_floor/normal.png

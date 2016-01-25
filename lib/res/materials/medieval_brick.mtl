@@ -1,0 +1,5 @@
+newmtl medieval_brick
+map_Kd textures/surfaces/medieval_brick/diffuse.png
+map_Ks textures/surfaces/medieval_brick/metallicness.png
+map_Ns textures/surfaces/medieval_brick/roughness.png
+map_Bump textures/surfaces/medieval_brick/normal.png

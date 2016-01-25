@@ -1,0 +1,5 @@
+newmtl clay_brick
+map_Kd textures/surfaces/clay_brick/diffuse.png
+map_Ks textures/surfaces/clay_brick/metallicness.png
+map_Ns textures/surfaces/clay_brick/roughness.png
+map_Bump textures/surfaces/clay_brick/normal.png
