@@ -1,0 +1,5 @@
+newmtl Teapot
+map_Kd textures/surfaces/worn_plaster/diffuse.png
+map_Ks textures/surfaces/worn_plaster/metallicness.png
+map_Ns textures/surfaces/worn_plaster/roughness.png
+map_Bump textures/surfaces/worn_plaster/normal.png
