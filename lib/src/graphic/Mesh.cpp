@@ -122,8 +122,8 @@ void Mesh::initializeTriangleData()
 {
     trianglesVisibility.resize(triangles.size(), false);
     trianglesNeighbours.resize(triangles.size(), ivec3(-1, -1, -1));
-    trianglesTangents.resize(vertexes.size(), ivec3(0, 0, 0));
-    trianglesBitangents.resize(vertexes.size(), ivec3(0, 0, 0));
+    trianglesTangents.resize(vertexes.size(), fvec3(0.f, 0.f, 0.f));
+    trianglesBitangents.resize(vertexes.size(), fvec3(0.f, 0.f, 0.f));
     trianglesPlaneEquations.reserve(triangles.size());
 }
 
