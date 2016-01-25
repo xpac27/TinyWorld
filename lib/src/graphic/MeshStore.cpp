@@ -7,6 +7,7 @@ MeshStore::MeshStore()
     , torus(new Mesh("torus.obj"))
     , sphere(new Mesh("sphere.obj"))
     , teapot(new Mesh("teapot.obj"))
+    , twistedTorus(new Mesh("twisted-torus.obj"))
 {
 }
 
@@ -27,6 +28,7 @@ Mesh* MeshStore::getMesh(MeshType type)
         case MeshType::TORUS: return torus;
         case MeshType::SPHERE: return sphere;
         case MeshType::TEAPOT: return teapot;
+        case MeshType::TWISTED_TORUS: return twistedTorus;
     }
 }
 
@@ -37,4 +39,5 @@ void MeshStore::reloadMeshesTextures()
     torus->reloadTextures();
     sphere->reloadTextures();
     teapot->reloadTextures();
+    twistedTorus->reloadTextures();
 }

@@ -21,4 +21,5 @@ private:
     Mesh* torus;
     Mesh* sphere;
     Mesh* teapot;
+    Mesh* twistedTorus;
 };

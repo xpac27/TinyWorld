@@ -49,6 +49,7 @@ void dump(Visibility* c)
         case MeshType::SPHERE: printl("  meshType: sphere"); break;
         case MeshType::TORUS: printl("  meshType: torus"); break;
         case MeshType::TEAPOT: printl("  meshType: teapot"); break;
+        case MeshType::TWISTED_TORUS: printl("  meshType: twisted-torus"); break;
     }
     printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);
 }
