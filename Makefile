@@ -71,7 +71,7 @@ analysis:
 
 tags:
 	rm -f .git/tags .git/cscope.out
-	find `pwd`/packages/bottom-layer `pwd`/packages/data-sources `pwd`/packages/ff-presentation \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" \) > srcfiles.txt
+	find `pwd`/app/src `pwd`/lib/src `pwd`/lib/inc `pwd`/lib/tests/src \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" \) > srcfiles.txt
 	ctags -L srcfiles.txt -f ./.git/tags
 	cscope -i srcfiles.txt -Rbqvf .git/cscope.out
 	rm srcfiles.txt
