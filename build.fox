@@ -20,7 +20,7 @@ filter toolset: clang
         defines += GLM_COMPILER=0
 
 filter system: Darwin
-    libs = png glfw3 GLEW
+    libs = png glfw3 GLEW c++ 
     frameworks = CoreVideo Cocoa IOKit OpenGL
 
 filter system: Linux
