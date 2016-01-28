@@ -4,8 +4,8 @@
 void GBuffer::initialize()
 {
     // TODO get windows size from conf
-    int SCR_WIDTH = 1600;
-    int SCR_HEIGHT = 1200;
+    int SCR_WIDTH = 1024;
+    int SCR_HEIGHT = 768;
 
     glGenFramebuffers(1, &gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);

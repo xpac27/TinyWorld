@@ -33,6 +33,7 @@ private:
     // TODO put that in a separate class?
     void initializeShaders();
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
+    void initializeShader(Program &program, const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath);
 
     Program shadowVolume;
     Program filling;

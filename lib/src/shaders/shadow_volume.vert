@@ -1,13 +1,12 @@
 #version 330
 
 layout (location = 0) in vec4 position;
+layout (location = 5) in mat4 model;  // 4-7
 
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 model;
-uniform vec4 light;
 
 void main(void)
 {
-    gl_Position = projection * view * model * (position.w == 0 ? light : position);
+    gl_Position = projection * view * model * position;
 }

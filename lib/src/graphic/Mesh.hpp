@@ -22,6 +22,7 @@ public:
     void updateShadowVolume(const glm::vec4 &lightDirection);
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
+    void drawAdjacency(unsigned int instances);
     void drawShadowVolume();
     void reloadTextures();
     void bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal);

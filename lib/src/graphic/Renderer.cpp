@@ -64,16 +64,24 @@ void Renderer::initialize()
 
 void Renderer::initializeShaders()
 {
-    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.frag");
+    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.geom", "lib/src/shaders/shadow_volume.frag");
     initializeShader(filling, "lib/src/shaders/filling.vert", "lib/src/shaders/filling.frag");
     initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vert", "lib/src/shaders/geometry_buffer.frag");
     initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vert", "lib/src/shaders/deferred_shading.frag");
     success("Shaders loaded");
 }
 
+void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath)
+{
+    Shader geometryShader(GL_GEOMETRY_SHADER, &program);
+    geometryShader.read(geometryShaderFilePath);
+    geometryShader.compile();
+
+    initializeShader(program, vertexShaderFilePath, fragmentShaderFilePath);
+}
+
 void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 {
-
     Shader vertexShader(GL_VERTEX_SHADER, &program);
     vertexShader.read(vertexShaderFilePath);
     vertexShader.compile();
@@ -130,7 +138,8 @@ void Renderer::render(Aggregator<Model> &models)
     glDisable(GL_STENCIL_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    lightingPass();
+    // lightingPass();
+    shadowPass(models);
 
     // Reset states
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
@@ -172,19 +181,11 @@ void Renderer::shadowPass(Aggregator<Model> &models)
 
     glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+    glUniform3fv(shadowVolume.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        for (unsigned int i = 0; i < models.size(t); i++) {
-            const Model &model = models.get(t)->at(i);
-            vec4 d = directionalLight.direction * model.getRotation();
-
-            glUniformMatrix4fv(shadowVolume.getLocation("model"), 1, GL_FALSE, &model.getProduct()[0][0]);
-            glUniform4f(shadowVolume.getLocation("light"), d.x, d.y, d.z, d.w);
-
-            meshStore.getMesh(MeshType(t))->updateShadowVolume(d);
-            meshStore.getMesh(MeshType(t))->bindSilhouette();
-            meshStore.getMesh(MeshType(t))->drawShadowVolume();
-        }
+        meshStore.getMesh(MeshType(t))->bindIndexes();
+        meshStore.getMesh(MeshType(t))->drawAdjacency(models.size(t));
     }
 
     shadowVolume.idle();

@@ -38,7 +38,7 @@ int main()
 
     // GLFW create context window
     // TODO get windows size from conf
-    GLFWwindow* window = glfwCreateWindow(1600, 1200, "TinyWorld", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, "TinyWorld", NULL, NULL);
     if (window) {
         glfwMakeContextCurrent(window);
         glfwSetKeyCallback(window, glfwKeyCallback);

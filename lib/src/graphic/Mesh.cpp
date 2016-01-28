@@ -95,6 +95,13 @@ void Mesh::draw(unsigned int instances)
     vertexArray->idle();
 }
 
+void Mesh::drawAdjacency(unsigned int instances)
+{
+    vertexArray->bind();
+    glDrawElementsInstanced(GL_TRIANGLES_ADJACENCY, GLsizei(indexes.size()), GL_UNSIGNED_INT, 0, instances);
+    vertexArray->idle();
+}
+
 void Mesh::drawShadowVolume()
 {
     if (silhouette.size() == 0) return;
