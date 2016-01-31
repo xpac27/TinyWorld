@@ -17,7 +17,7 @@ Game::Game()
     simulationSystems.setLatency(1.f / 10.f);
     simulationSystems.initialize();
 
-    // setupWorld();
+    setupWorld();
     addTestEntity();
     // for (int i = 0; i < 10; i ++) {
     //     addEntity();

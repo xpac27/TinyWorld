@@ -32,7 +32,7 @@ void OBJ::load(const char *filename)
     assert(vertexes.size() == normals.size());
     assert(vertexes.size() <= indexes.size());
 
-    success("OBJ loaded:", filename);
+    success("OBJ loaded:", vertexes.size(), "vertexes,", triangles.size(), "triangles,", indexes.size(), "indexes,", filename);
 }
 
 bool OBJ::openFile(const char *filename, ifstream &fin)

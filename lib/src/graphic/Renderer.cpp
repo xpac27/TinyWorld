@@ -118,7 +118,7 @@ void Renderer::render(Aggregator<Model> &models)
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
 
-    // shadowPass(models);
+    shadowPass(models);
 
     // Render scene
     glEnable(GL_CULL_FACE);
@@ -129,6 +129,7 @@ void Renderer::render(Aggregator<Model> &models)
     glClear(GL_COLOR_BUFFER_BIT);
 
     geometryPass(models);
+    // shadowPass(models);
 
     // On screen rendering
     gBuffer.idle();
@@ -138,8 +139,8 @@ void Renderer::render(Aggregator<Model> &models)
     glDisable(GL_STENCIL_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // lightingPass();
-    shadowPass(models);
+    lightingPass();
+    // shadowPass(models);
 
     // Reset states
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
@@ -168,7 +169,6 @@ void Renderer::depthPass(Aggregator<Model> &models)
     glUniformMatrix4fv(filling.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->bindIndexes();
         meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 
@@ -181,10 +181,9 @@ void Renderer::shadowPass(Aggregator<Model> &models)
 
     glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
     glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
-    glUniform3fv(shadowVolume.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
+    glUniform4fv(shadowVolume.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->bindIndexes();
         meshStore.getMesh(MeshType(t))->drawAdjacency(models.size(t));
     }
 
@@ -204,7 +203,6 @@ void Renderer::geometryPass(Aggregator<Model> &models)
 
     for (unsigned int t = 0; t < models.size(); t ++) {
         meshStore.getMesh(MeshType(t))->bindTexture(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
-        meshStore.getMesh(MeshType(t))->bindIndexes();
         meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 

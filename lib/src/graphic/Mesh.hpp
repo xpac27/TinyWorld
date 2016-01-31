@@ -19,15 +19,11 @@ public:
     Mesh(const char *filename);
     ~Mesh();
 
-    void updateShadowVolume(const glm::vec4 &lightDirection);
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
     void drawAdjacency(unsigned int instances);
-    void drawShadowVolume();
     void reloadTextures();
     void bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal);
-    void bindIndexes();
-    void bindSilhouette();
     void debug();
 
 private:
@@ -38,16 +34,11 @@ private:
     void initializeTriangleData();
     void computeTrianglesPlaneEquations();
     void computeTrianglesTangents();
-    void computeTrianglesNeighbours();
-    void updateTrianglesVisibility(const glm::vec4 &lightDirection);
-    void updateSilhouette();
 
     MeshVertexArray* vertexArray;
 
     std::vector<unsigned int> indexes;
-    std::vector<unsigned int> silhouette;
-    std::vector<bool> trianglesVisibility;
-    std::vector<glm::ivec3> trianglesNeighbours;
+    std::vector<unsigned int> adjacencyIndexes;
     std::vector<glm::fvec3> trianglesTangents;
     std::vector<glm::fvec3> trianglesBitangents;
     std::vector<glm::fvec4> trianglesPlaneEquations;
