@@ -35,6 +35,5 @@ void main()
     // Store the per-fragment roughness
     gMRS.g = texture(texture_rough, TexCoords).r;
 
-    // Store shadow mask
-    /* gMRS.b = TODO ambiant oclusion */
+    // gMRS.b = ...?
 }

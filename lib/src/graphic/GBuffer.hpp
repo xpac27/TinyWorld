@@ -17,5 +17,5 @@ private:
     GLuint gPosition;
     GLuint gNormal;
     GLuint gDiffuse;
-    GLuint gMRS;
+    GLuint gMR;
 };

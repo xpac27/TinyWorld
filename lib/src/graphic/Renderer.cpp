@@ -60,11 +60,13 @@ void Renderer::initialize()
 
     quad.initialize();
     gBuffer.initialize();
+    sBuffer.initialize();
 }
 
 void Renderer::initializeShaders()
 {
     initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.geom", "lib/src/shaders/shadow_volume.frag");
+    initializeShader(shadowImprint, "lib/src/shaders/shadow_imprint.vert", "lib/src/shaders/shadow_imprint.frag");
     initializeShader(filling, "lib/src/shaders/filling.vert", "lib/src/shaders/filling.frag");
     initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vert", "lib/src/shaders/geometry_buffer.frag");
     initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vert", "lib/src/shaders/deferred_shading.frag");
@@ -105,8 +107,7 @@ void Renderer::render(Aggregator<Model> &models)
     glDepthMask(GL_TRUE);
     glClear(GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
-
-    depthPass(models);;
+    depthPass(models);
 
     // Render shadows
     glDepthMask(GL_FALSE);
@@ -117,30 +118,28 @@ void Renderer::render(Aggregator<Model> &models)
     glStencilOpSeparate(GL_FRONT,GL_KEEP,GL_KEEP,GL_INCR_WRAP);
     glStencilOpSeparate(GL_BACK ,GL_KEEP,GL_KEEP,GL_DECR_WRAP);
     glDepthFunc(GL_LESS);
+    shadowVolumePass(models);
 
-    shadowPass(models);
-
-    // Render scene
+    // Imprint shadows
     glEnable(GL_CULL_FACE);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
     glDepthFunc(GL_LEQUAL);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glClear(GL_COLOR_BUFFER_BIT);
+    shadowImprintPass();
 
+    // Render scene
+    glDisable(GL_STENCIL_TEST);
     geometryPass(models);
-    // shadowPass(models);
 
     // On screen rendering
     gBuffer.idle();
 
     // Render lighting
     glDepthMask(GL_TRUE);
-    glDisable(GL_STENCIL_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     lightingPass();
-    // shadowPass(models);
 
     // Reset states
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
@@ -175,7 +174,7 @@ void Renderer::depthPass(Aggregator<Model> &models)
     filling.idle();
 }
 
-void Renderer::shadowPass(Aggregator<Model> &models)
+void Renderer::shadowVolumePass(Aggregator<Model> &models)
 {
     shadowVolume.use();
 
@@ -188,6 +187,15 @@ void Renderer::shadowPass(Aggregator<Model> &models)
     }
 
     shadowVolume.idle();
+}
+
+void Renderer::shadowImprintPass()
+{
+    shadowImprint.use();
+
+    quad.draw();
+
+    shadowImprint.idle();
 }
 
 void Renderer::geometryPass(Aggregator<Model> &models)
@@ -216,7 +224,7 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("g_position"), 0);
     glUniform1i(deferredShading.getLocation("g_normal"), 1);
     glUniform1i(deferredShading.getLocation("g_diffuse"), 2);
-    glUniform1i(deferredShading.getLocation("g_mrao"), 3);
+    glUniform1i(deferredShading.getLocation("g_mr"), 3);
     glUniform1i(deferredShading.getLocation("environment"), 4);
     glUniform1i(deferredShading.getLocation("irradiance_map"), 5);
     glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));

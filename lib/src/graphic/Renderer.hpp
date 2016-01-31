@@ -5,6 +5,7 @@
 #include "Model.hpp"
 #include "MeshStore.hpp"
 #include "GBuffer.hpp"
+#include "SBuffer.hpp"
 #include "Quad.hpp"
 #include "DirectionalLight.hpp"
 #include <glm/vec3.hpp>
@@ -27,21 +28,24 @@ private:
 
     void uploadMatrices(Aggregator<Model> &models);
     void depthPass(Aggregator<Model> &models);
-    void shadowPass(Aggregator<Model> &models);
+    void shadowVolumePass(Aggregator<Model> &models);
     void geometryPass(Aggregator<Model> &models);
     void lightingPass();
+    void shadowImprintPass();
     // TODO put that in a separate class?
     void initializeShaders();
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
     void initializeShader(Program &program, const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath);
 
     Program shadowVolume;
+    Program shadowImprint;
     Program filling;
     Program geometryBuffer;
     Program deferredShading;
 
     Quad quad;
     GBuffer gBuffer;
+    SBuffer sBuffer;
     Cubemap environment;
     Cubemap irradianceMap;
     MeshStore meshStore;

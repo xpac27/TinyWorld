@@ -16,7 +16,7 @@ vec3 GetNormal(int v1, int v2, int v3)
 
 bool FacesLight(int v1, int v2, int v3, vec3 light_direction) {
     vec3 normal = GetNormal(v1, v2, v3);
-    return !(dot(normal, light_direction) > 0);
+    return !(dot(normal, light_direction) > 0.);
 }
 
 void main()

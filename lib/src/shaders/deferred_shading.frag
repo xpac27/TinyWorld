@@ -6,7 +6,7 @@ in vec2 text_coords;
 uniform sampler2D g_position;
 uniform sampler2D g_normal;
 uniform sampler2D g_diffuse;
-uniform sampler2D g_mrao;
+uniform sampler2D g_mr;
 
 uniform samplerCube environment;
 uniform samplerCube irradiance_map;
@@ -40,8 +40,8 @@ void main ()
     vec3  fragment_position = texture(g_position, text_coords).rgb;
     vec3  surface_normal    = texture(g_normal, text_coords).rgb;
     vec3  diffuse_color     = texture(g_diffuse, text_coords).rgb;
-    float metallicness      = texture(g_mrao, text_coords).r;
-    float roughness         = texture(g_mrao, text_coords).g;
+    float metallicness      = texture(g_mr, text_coords).r;
+    float roughness         = texture(g_mr, text_coords).g;
 
 // ---- pre-compute data
 
