@@ -42,7 +42,7 @@ void main ()
     vec3  surface_normal    = texture(g_normal, text_coords).rgb;
     vec3  diffuse_color     = texture(g_diffuse, text_coords).rgb;
     float metallicness      = texture(g_mr, text_coords).r;
-    float roughness         = texture(g_mr, text_coords).g;
+    float roughness         = max(texture(g_mr, text_coords).g, 0.0001);
     float shadow            = texture(g_shadow, text_coords).r;
 
 // ---- pre-compute data

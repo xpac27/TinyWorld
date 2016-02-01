@@ -12,8 +12,8 @@ struct Material
 
     std::string name {""};
     std::string map_diffuse {"textures/default.png"};
-    std::string map_metallic {"textures/default.png"};
-    std::string map_rough {"textures/default.png"};
+    std::string map_metallic {};
+    std::string map_rough {};
     std::string map_normal {""};
 
     Material(std::string _name)
