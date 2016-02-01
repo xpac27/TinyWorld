@@ -1,9 +1,12 @@
 #version 330 core
 
-layout (location = 3) out vec3 gMRS;
+layout (location = 4) out vec3 gShadow;
 
 void main()
 {
     // Store shadow mask
-    gMRS.b = 0.5;
+    gShadow.r = 1.;
+
+    // gShadow.g = ...?
+    // gShadow.b = ...?
 }

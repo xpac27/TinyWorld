@@ -5,7 +5,6 @@
 #include "Model.hpp"
 #include "MeshStore.hpp"
 #include "GBuffer.hpp"
-#include "SBuffer.hpp"
 #include "Quad.hpp"
 #include "DirectionalLight.hpp"
 #include <glm/vec3.hpp>
@@ -45,7 +44,6 @@ private:
 
     Quad quad;
     GBuffer gBuffer;
-    SBuffer sBuffer;
     Cubemap environment;
     Cubemap irradianceMap;
     MeshStore meshStore;

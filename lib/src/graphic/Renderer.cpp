@@ -60,7 +60,6 @@ void Renderer::initialize()
 
     quad.initialize();
     gBuffer.initialize();
-    sBuffer.initialize();
 }
 
 void Renderer::initializeShaders()
@@ -225,17 +224,18 @@ void Renderer::lightingPass()
     glUniform1i(deferredShading.getLocation("g_normal"), 1);
     glUniform1i(deferredShading.getLocation("g_diffuse"), 2);
     glUniform1i(deferredShading.getLocation("g_mr"), 3);
-    glUniform1i(deferredShading.getLocation("environment"), 4);
-    glUniform1i(deferredShading.getLocation("irradiance_map"), 5);
+    glUniform1i(deferredShading.getLocation("g_shadow"), 4);
+    glUniform1i(deferredShading.getLocation("environment"), 5);
+    glUniform1i(deferredShading.getLocation("irradiance_map"), 6);
     glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));
     glUniform3fv(deferredShading.getLocation("direct_light_color"), 1, value_ptr(directionalLight.color));
     glUniform3fv(deferredShading.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
     glUniform1f(deferredShading.getLocation("gamma"), 2.2);
 
-    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
-    environment.bind(GL_TEXTURE4);
-    irradianceMap.bind(GL_TEXTURE5);
+    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
+    environment.bind(GL_TEXTURE5);
+    irradianceMap.bind(GL_TEXTURE6);
 
     quad.draw();
 

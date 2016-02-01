@@ -7,6 +7,7 @@ uniform sampler2D g_position;
 uniform sampler2D g_normal;
 uniform sampler2D g_diffuse;
 uniform sampler2D g_mr;
+uniform sampler2D g_shadow;
 
 uniform samplerCube environment;
 uniform samplerCube irradiance_map;
@@ -42,6 +43,7 @@ void main ()
     vec3  diffuse_color     = texture(g_diffuse, text_coords).rgb;
     float metallicness      = texture(g_mr, text_coords).r;
     float roughness         = texture(g_mr, text_coords).g;
+    float shadow            = texture(g_shadow, text_coords).r;
 
 // ---- pre-compute data
 
@@ -75,7 +77,7 @@ void main ()
 
 // ---- output
 
-    frag_coords = vec4(final_color, 1.0);
+    frag_coords = vec4(final_color * shadow, 1.0);
 }
 
 // ================================
