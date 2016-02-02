@@ -124,5 +124,5 @@ You need to install rlk's [envtools](https://github.com/rlk/envtools), [util3d](
 
 You also need to install [ImageMagick](http://www.imagemagick.org/script/index.php). If you'are on mac you can type `brew install imagemagick`.
 
-Then simply place your cubemap's png images in the resource's environement folder (named front.png, back.png, left.png, right.png, top.png, bottom.png) and run `make irradiance-map`.
+Then simply place your cubemap's png images in the resource's environement folder (named front.png, back.png, left.png, right.png, top.png, bottom.png) and run `./scripts/cubemap2irrmap.sh -i lib/res/textures/environments/stormyday`.
 
