@@ -20,21 +20,21 @@ Renderer::Renderer()
     directionalLight.direction = normalize(vec4(1.f, 1.f, -0.3f, 0.f));
 
     environment.load({
-        "textures/environments/archipelago/cubemap/right.png",
-        "textures/environments/archipelago/cubemap/left.png",
-        "textures/environments/archipelago/cubemap/bottom.png",
-        "textures/environments/archipelago/cubemap/top.png",
-        "textures/environments/archipelago/cubemap/back.png",
-        "textures/environments/archipelago/cubemap/front.png",
+        "textures/environments/stormyday/cubemap/right.png",
+        "textures/environments/stormyday/cubemap/left.png",
+        "textures/environments/stormyday/cubemap/bottom.png",
+        "textures/environments/stormyday/cubemap/top.png",
+        "textures/environments/stormyday/cubemap/back.png",
+        "textures/environments/stormyday/cubemap/front.png",
     });
 
     irradianceMap.load({
-        "textures/environments/archipelago/irradiance-map/right.png",
-        "textures/environments/archipelago/irradiance-map/left.png",
-        "textures/environments/archipelago/irradiance-map/bottom.png",
-        "textures/environments/archipelago/irradiance-map/top.png",
-        "textures/environments/archipelago/irradiance-map/back.png",
-        "textures/environments/archipelago/irradiance-map/front.png",
+        "textures/environments/stormyday/irradiance-map/right.png",
+        "textures/environments/stormyday/irradiance-map/left.png",
+        "textures/environments/stormyday/irradiance-map/bottom.png",
+        "textures/environments/stormyday/irradiance-map/top.png",
+        "textures/environments/stormyday/irradiance-map/back.png",
+        "textures/environments/stormyday/irradiance-map/front.png",
     });
 }
 

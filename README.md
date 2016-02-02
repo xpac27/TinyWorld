@@ -1,6 +1,6 @@
 # TinyWorld [![Build Status](https://travis-ci.org/xpac27/TinyWorld.svg?branch=master)](https://travis-ci.org/xpac27/TinyWorld)
 
-![alt text](https://github.com/xpac27/TinyWorld/raw/master/screenshots/Screen-Shot-2016-01-25-at-20.42.22.png)
+![alt text](https://github.com/xpac27/TinyWorld/raw/master/screenshots/Screen-Shot-2016-02-02-at-23.29.12.gif)
 
 This is a work in progress which purpose is for me to learn C++.
 
@@ -14,7 +14,7 @@ Todo:
 - [x] physically based shading
 - [x] gamma correction
 - [x] deferred shading
-- [x] shadow volume
+- [x] robust shadow volume
 - [x] batched rendering
 - [x] ambiant, diffuse, specular lighting
 - [x] png textures

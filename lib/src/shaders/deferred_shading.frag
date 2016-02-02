@@ -40,7 +40,7 @@ void main ()
 
     vec3  fragment_position = texture(g_position, text_coords).rgb;
     vec3  surface_normal    = texture(g_normal, text_coords).rgb;
-    vec3  diffuse_color     = texture(g_diffuse, text_coords).rgb;
+    vec3  diffuse           = texture(g_diffuse, text_coords).rgb;
     float metallicness      = texture(g_mr, text_coords).r;
     float roughness         = max(texture(g_mr, text_coords).g, 0.0001);
     float shadow            = texture(g_shadow, text_coords).r;
@@ -50,6 +50,7 @@ void main ()
     vec3  view_direction = normalize (view_position - fragment_position);
     vec3  reflection     = reflect(-surface_normal, view_direction);
     float fresnel        = fresnel(surface_normal, view_direction, metallicness);
+    float drop_shadow    = 1. + (1. - (shadow - fresnel));
 
 // ---- direct lighting
 
@@ -57,27 +58,27 @@ void main ()
     float direct_specular_factor = cookTorranceBRDF(direct_light_direction, view_direction, surface_normal, roughness, fresnel);
     vec3  direct_specular_color  = direct_specular_factor * direct_light_color;
     vec3  direct_diffuse_color   = direct_diffuse_factor * direct_light_color * (1.0 - fresnel);
+    vec3  direct_lighting        = direct_diffuse_color + direct_specular_color;
 
 // ---- indirect lighting
 
-    vec3 indirect_lighting_color = globalIllumination(reflection, roughness) * direct_light_color;
+    vec3 indirect_lighting = globalIllumination(reflection, roughness) * direct_light_color * fresnel;
 
 // ---- combine lighting
 
-    vec3 direct_lighting = (direct_diffuse_color + direct_specular_color) * (1.0 - ambiant_color);
-    vec3 lighting        = direct_lighting + (indirect_lighting_color * ambiant_color) + (fresnel * indirect_lighting_color);
+    vec3 lighting = direct_lighting + indirect_lighting;
 
 // ---- Artistic shading
 
-    diffuse_color = artisticShading(diffuse_color, direct_light_direction, surface_normal);
+    vec3 diffuse_color = artisticShading(diffuse, direct_light_direction, surface_normal);
 
 // ---- gamma correction
 
-    vec3 final_color = simpleReinhardToneMapping(diffuse_color * lighting, gamma);
+    vec3 final_color = simpleReinhardToneMapping(diffuse_color * lighting / drop_shadow, gamma);
 
 // ---- output
 
-    frag_coords = vec4(final_color * shadow, 1.0);
+    frag_coords = vec4(final_color, 1.0);
 }
 
 // ================================

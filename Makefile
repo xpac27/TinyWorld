@@ -30,22 +30,6 @@ reset:
 	@rm -rf out
 	@echo "done!"
 
-irradiance-map:
-	$(MAKE) SRC=lib/res/textures/environment DST=lib/res/textures/irradiance-map irradiance-map-compute
-irradiance-map-compute:
-	convert $(SRC)/right.png $(SRC)/left.png $(SRC)/top.png $(SRC)/bottom.png $(SRC)/back.png $(SRC)/front.png -adjoin /tmp/cube.tif
-	envremap -i cube -o rect -n 512 /tmp/cube.tif /tmp/rect.tif
-	shtrans -g32 -o /tmp/g32.tif /tmp/rect.tif
-	shtrans -i -o /tmp/irr.tif /tmp/g32.tif
-	envremap -i rect -o cube -n 512 /tmp/irr.tif /tmp/cube-irr.tif
-	convert /tmp/cube-irr.tif -scene 0 /tmp/cube-irr-%d.tif
-	convert /tmp/cube-irr-0.tif $(DST)/right.png
-	convert /tmp/cube-irr-1.tif $(DST)/left.png
-	convert /tmp/cube-irr-2.tif $(DST)/top.png
-	convert /tmp/cube-irr-3.tif $(DST)/bottom.png
-	convert /tmp/cube-irr-4.tif $(DST)/back.png
-	convert /tmp/cube-irr-5.tif $(DST)/front.png
-
 lint:
 	clang-tidy -p out/compile_commands.json `find lib/src app/src -name "*.cpp" | xargs`
 
