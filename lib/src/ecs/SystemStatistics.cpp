@@ -1,7 +1,6 @@
 #include "../../inc/ecs/SystemStatistics.hpp"
 #include "../utils/log.hpp"
 #include <math.h>
-#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -29,6 +28,7 @@ void SystemStatistics::updated()
 
 float SystemStatistics::getTime()
 {
-    return float(glfwGetTime());
+    return 0.f;
+    // return float(glfwGetTime());
 }
 }
