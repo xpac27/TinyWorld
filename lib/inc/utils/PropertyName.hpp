@@ -12,8 +12,8 @@ public:
 
     operator const int() const;
 
-    bool operator <(PropertyName const& b);
-    bool operator >(PropertyName const& b);
+    // bool operator <(PropertyName const& b);
+    // bool operator >(PropertyName const& b);
 
 private:
 

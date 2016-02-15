@@ -9,12 +9,12 @@ PropertyName::operator const int() const
     return type;
 }
 
-bool PropertyName::operator <(PropertyName const& b)
-{
-    return type < static_cast<int>(b);
-}
-
-bool PropertyName::operator >(PropertyName const& b)
-{
-    return type > static_cast<int>(b);
-}
+// bool PropertyName::operator <(PropertyName const& b)
+// {
+//     return type < static_cast<int>(b);
+// }
+//
+// bool PropertyName::operator >(PropertyName const& b)
+// {
+//     return type > static_cast<int>(b);
+// }

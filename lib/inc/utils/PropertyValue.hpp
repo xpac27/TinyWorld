@@ -1,22 +1,31 @@
 #pragma once
 
-class PropertyValue
+class PropertyValueBase {
+};
+
+template <typename T>
+class PropertyValue : public PropertyValueBase
 {
 
 public:
 
-    PropertyValue();
-    PropertyValue(int payload);
-    PropertyValue(float payload);
-    PropertyValue(const char* payload);
+    PropertyValue() = delete;
+    PropertyValue(T value);
 
-    operator const int() const;
-    operator const float() const;
-    operator const char*() const;
+    operator const T() const;
 
 private:
 
-    int i_payload {0};
-    float f_payload {0.f};
-    const char* c_payload {""};
+    T value;
 };
+
+template <typename T>
+PropertyValue<T>::PropertyValue(T _value) : value(_value)
+{
+}
+
+template <typename T>
+PropertyValue<T>::operator const T() const
+{
+    return value;
+}

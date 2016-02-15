@@ -8,11 +8,18 @@ class PropertyList
 
 public:
 
-    void put(PropertyName& key, PropertyValue& value);
+    void put(const PropertyName& key, const PropertyValueBase& value);
 
-    const PropertyValue& get(PropertyName& key) const;
+    template <typename T>
+    const PropertyValue<T>& get(const PropertyName& key) const;
 
 private:
 
-    std::map<PropertyName, PropertyValue> properties;
+    std::map<int, PropertyValueBase> properties;
 };
+
+template <typename T>
+const PropertyValue<T>& PropertyList::get(const PropertyName& key) const
+{
+    return static_cast<T>(properties.at(key));
+}
