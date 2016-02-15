@@ -2,6 +2,7 @@
 #include <ecs/SystemStatistics.hpp>
 #include <vector>
 
+// TODO indent classes and separate namespaces from forward declarations
 struct Movement;
 struct Visibility;
 namespace ecs {
