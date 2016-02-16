@@ -1,6 +1,7 @@
 #pragma once
 #include "../utils/Cubemap.hpp"
 #include "MeshStore.hpp"
+#include "ProgramStore.hpp"
 #include "DirectionalLight.hpp"
 #include <glm/vec3.hpp>
 
@@ -39,16 +40,9 @@ private:
     Cubemap environment;
     Cubemap irradianceMap;
     MeshStore meshStore;
+    ProgramStore programStore;
 
     // This should be passed as arguments to the render method
     DirectionalLight directionalLight; // Could be entity component
     Camera *camera; // Could be entity component
-
-    // TODO put that in a separate class?
-    // ProgramStore?
-    Program* shadowVolume;
-    Program* shadowImprint;
-    Program* filling;
-    Program* geometryBuffer;
-    Program* deferredShading;
 };

@@ -1,6 +1,6 @@
 #include "Program.hpp"
 #include "Shader.hpp"
-#include "log.hpp"
+#include "../utils/log.hpp"
 
 Program::Program()
     : reference(glCreateProgram())

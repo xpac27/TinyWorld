@@ -1,5 +1,5 @@
 #include "Shader.hpp"
-#include "log.hpp"
+#include "../utils/log.hpp"
 #include <fstream>
 
 using namespace std;
