@@ -1,4 +1,4 @@
-#include "MeshStore.hpp"
+#include "../../inc/graphic/MeshStore.hpp"
 #include "Mesh.hpp"
 
 MeshStore::MeshStore()

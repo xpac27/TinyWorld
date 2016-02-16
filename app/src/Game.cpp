@@ -2,48 +2,36 @@
 
 #include <systems/RenderSystem.hpp>
 #include <systems/MovementSystem.hpp>
+
 #include <utils/Random.hpp>
 
 #include <glm/detail/func_geometric.hpp>
 
 Game::Game()
-    : visualSystems("VIS")
-    , simulationSystems("SIM")
+    : renderSystem(&visibilityComponents, &movementComponents)
+    , movementSystem(&movementComponents)
 {
-    visualSystems.addRenderSystem(&visibilityComponents, &movementComponents);
-    visualSystems.initialize();
-
-    simulationSystems.addMovementSystem(&movementComponents);
-    simulationSystems.setLatency(1.f / 10.f);
-    simulationSystems.initialize();
+    renderer.initialize();
 
     setupWorld();
     addTestEntity();
-    // for (int i = 0; i < 10; i ++) {
-    //     addEntity();
-    // }
+    for (auto i(0u); i < 10; i ++) addEntity();
 }
 
 void Game::draw()
 {
-    visualSystems.update();
-}
-
-void Game::printStats()
-{
-    visualSystems.printStats();
-    simulationSystems.printStats();
+    renderSystem.update(renderer);
 }
 
 void Game::update(float seconds)
 {
-    simulationSystems.update(seconds);
+    movementSystem.update(seconds - previousUpdateSeconds);
+    previousUpdateSeconds = seconds;
 }
 
 void Game::reload()
 {
-    visualSystems.reload();
-    simulationSystems.reload();
+    renderer.reload();
 }
 
 void Game::setupWorld()

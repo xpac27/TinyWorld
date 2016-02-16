@@ -6,7 +6,7 @@ filter toolset: r"clang|gcc"
 
 filter toolset: clang
     filter debug: true
-        cxxflags += -g -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors
+        cxxflags += -g -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors -Wno-weak-vtables
 
     filter release: true
         cxxflags += -g0

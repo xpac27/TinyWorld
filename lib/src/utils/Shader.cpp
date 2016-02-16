@@ -1,6 +1,6 @@
 #include "Shader.hpp"
-#include "Program.hpp"
 #include "log.hpp"
+#include "../../inc/utils/Program.hpp"
 #include <fstream>
 
 using namespace std;

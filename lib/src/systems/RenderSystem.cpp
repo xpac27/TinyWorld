@@ -1,15 +1,15 @@
 #include "../../inc/systems/RenderSystem.hpp"
 #include "../../inc/ecs/ComponentManager.hpp"
 #include "../../inc/ecs/Id.hpp"
+#include "../../inc/graphic/Renderer.hpp"
+#include "../../inc/graphic/Model.hpp"
+#include "../../inc/utils/Aggregator.hpp"
+#include "../utils/log.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/mat4x4.hpp>
 #include <math.h>
-
-#include "../utils/log.hpp"
-#include "../graphic/Renderer.hpp"
-#include <graphic/Model.hpp> // TODO use relative path
-#include <utils/Aggregator.hpp> // TODO use relative path
 
 using namespace std;
 using namespace glm;
@@ -22,29 +22,13 @@ RenderSystem::RenderSystem(
     : System({vc, mc})
     , visibilityComponents(vc)
     , movementComponents(mc)
-    , models(new Aggregator<Model>())
-    , renderer(new Renderer())
 {
 }
 
-RenderSystem::~RenderSystem()
+void RenderSystem::update(Renderer& renderer)
 {
-    delete models;
-    delete renderer;
-}
+    Aggregator<Model> models;
 
-void RenderSystem::initialize()
-{
-    renderer->initialize();
-}
-
-void RenderSystem::reload()
-{
-    renderer->reload();
-}
-
-void RenderSystem::update()
-{
     for (unsigned int i = 0; i < getEntities()->size(); i ++) {
         id entity = getEntities()->at(i);
 
@@ -63,12 +47,11 @@ void RenderSystem::update()
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            models->add(visibility->meshType, Model(modelTranslation, modelRotation, modelScale));
+            models.add(visibility->meshType, Model(modelTranslation, modelRotation, modelScale));
         }
     }
 
     count += 0.01;
 
-    renderer->render(*models);
-    models->clear();
+    renderer.render(models);
 }

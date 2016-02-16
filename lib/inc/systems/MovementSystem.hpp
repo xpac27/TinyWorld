@@ -15,7 +15,7 @@ public:
         ecs::ComponentManager<Movement>* mc
     );
 
-    void update(float seconds, float delta) override;
+    void update(float delta);
 
 private:
 

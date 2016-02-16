@@ -27,7 +27,6 @@ void Application::keyCallback(int key, int /*scancode*/, int action, int /*mods*
     if (action == GLFW_PRESS) {
         switch (key) {
             case GLFW_KEY_ESCAPE: running = false; break;
-            case GLFW_KEY_SPACE: game->printStats(); break;
             case GLFW_KEY_R: reloadRequested = true; break;
         }
     }

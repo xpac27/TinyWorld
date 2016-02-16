@@ -13,7 +13,7 @@ MovementSystem::MovementSystem(
     , movementComponents(mc)
 {}
 
-void MovementSystem::update(float /*seconds*/, float delta)
+void MovementSystem::update(float delta)
 {
     id entity;
     Movement* movement;

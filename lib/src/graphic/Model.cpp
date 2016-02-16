@@ -1,4 +1,4 @@
-#include "Model.hpp"
+#include "../../inc/graphic/Model.hpp"
 
 using namespace glm;
 

@@ -1,4 +1,4 @@
-#include "Cubemap.hpp"
+#include "../../inc/utils/Cubemap.hpp"
 #include "PNG.hpp"
 #include <string>
 

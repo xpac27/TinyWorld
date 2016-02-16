@@ -1,8 +1,8 @@
-#include "Renderer.hpp"
-#include "Mesh.hpp"
-#include "Camera.hpp"
+#include "../../inc/graphic/Renderer.hpp"
 #include "../utils/Shader.hpp"
 #include "../utils/log.hpp"
+#include "Mesh.hpp"
+#include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>

@@ -30,26 +30,6 @@ void System::onEntityRemoved(id entity)
     }
 }
 
-void System::update()
-{
-    // Nothing to do...
-}
-
-void System::update(float /*seconds*/, float /*delta*/)
-{
-    // Nothing to do...
-}
-
-void System::reload()
-{
-    // Nothing to do...
-}
-
-void System::initialize()
-{
-    // Nothing to do...
-}
-
 void System::entityAdded(id /*entity*/)
 {
     // Nothing to do...

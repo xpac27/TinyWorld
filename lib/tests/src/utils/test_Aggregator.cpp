@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../src/utils/Aggregator.hpp"
+#include "../../inc/utils/Aggregator.hpp"
 
 namespace
 {

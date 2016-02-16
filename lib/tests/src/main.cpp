@@ -3,6 +3,5 @@
 
 // TODO test:
 // - ComponentManagerBase
-// - SystemManager
 // - utils/...
 // - MovementSystem
