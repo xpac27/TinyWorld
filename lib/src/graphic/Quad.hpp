@@ -6,7 +6,8 @@ class Quad
 
 public:
 
-    void initialize();
+    Quad();
+
     void draw();
 
 private:

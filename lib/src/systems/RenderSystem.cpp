@@ -2,8 +2,8 @@
 #include "../../inc/ecs/ComponentManager.hpp"
 #include "../../inc/ecs/Id.hpp"
 #include "../../inc/graphic/Renderer.hpp"
-#include "../../inc/graphic/Model.hpp"
 #include "../../inc/utils/Aggregator.hpp"
+#include "../graphic/Model.hpp"
 #include "../utils/log.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>

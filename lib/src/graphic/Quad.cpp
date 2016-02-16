@@ -1,9 +1,9 @@
-#include "../../inc/graphic/Quad.hpp"
+#include "Quad.hpp"
 
-void Quad::initialize()
+Quad::Quad()
 {
     GLfloat quadVertices[] = {
-    //   Positions           UV
+    //   Positions          UV
         -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
          1.0f,  1.0f, 0.0f, 1.0f, 1.0f,

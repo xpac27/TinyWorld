@@ -11,11 +11,9 @@ Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
     , movementSystem(&movementComponents)
 {
-    renderer.initialize();
-
     setupWorld();
     addTestEntity();
-    for (auto i(0u); i < 10; i ++) addEntity();
+    // for (auto i(0u); i < 10; i ++) addEntity();
 }
 
 void Game::draw()

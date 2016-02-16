@@ -1,7 +1,7 @@
-#include "../../inc/graphic/GBuffer.hpp"
+#include "GBuffer.hpp"
 #include "../utils/log.hpp"
 
-void GBuffer::initialize()
+GBuffer::GBuffer()
 {
     // TODO get windows size from conf
     int SCR_WIDTH = 800;

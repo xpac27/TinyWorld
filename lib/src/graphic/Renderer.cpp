@@ -2,6 +2,9 @@
 #include "../utils/Shader.hpp"
 #include "../utils/log.hpp"
 #include "Mesh.hpp"
+#include "Quad.hpp"
+#include "Model.hpp"
+#include "GBuffer.hpp"
 #include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
@@ -12,7 +15,9 @@ using namespace std;
 using namespace glm;
 
 Renderer::Renderer()
-    : camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
+    : quad(new Quad())
+    , gBuffer(new GBuffer())
+    , camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
     directionalLight.color = vec3(1.0, 0.9, 0.8);
@@ -36,6 +41,13 @@ Renderer::Renderer()
         "textures/environments/stormyday/irradiance-map/back.png",
         "textures/environments/stormyday/irradiance-map/front.png",
     });
+
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+
+    initializeShaders();
 }
 
 Renderer::~Renderer()
@@ -47,19 +59,6 @@ void Renderer::reload()
 {
     initializeShaders();
     meshStore.reloadMeshesTextures();
-}
-
-void Renderer::initialize()
-{
-    glShadeModel(GL_SMOOTH);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glFrontFace(GL_CW);
-    glCullFace(GL_FRONT);
-
-    initializeShaders();
-
-    quad.initialize();
-    gBuffer.initialize();
 }
 
 void Renderer::initializeShaders()
@@ -99,7 +98,7 @@ void Renderer::render(Aggregator<Model> &models)
     uploadMatrices(models);
 
     // Off screen rendering
-    gBuffer.bind();
+    gBuffer->bind();
 
     // Render depth
     glEnable(GL_DEPTH_TEST);
@@ -133,7 +132,7 @@ void Renderer::render(Aggregator<Model> &models)
     geometryPass(models);
 
     // On screen rendering
-    gBuffer.idle();
+    gBuffer->idle();
 
     // Render lighting
     glDepthMask(GL_TRUE);
@@ -192,7 +191,7 @@ void Renderer::shadowImprintPass()
 {
     shadowImprint.use();
 
-    quad.draw();
+    quad->draw();
 
     shadowImprint.idle();
 }
@@ -233,11 +232,11 @@ void Renderer::lightingPass()
     glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
     glUniform1f(deferredShading.getLocation("gamma"), 2.2);
 
-    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
+    gBuffer->bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
     environment.bind(GL_TEXTURE5);
     irradianceMap.bind(GL_TEXTURE6);
 
-    quad.draw();
+    quad->draw();
 
     deferredShading.idle();
 }
