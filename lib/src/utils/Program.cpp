@@ -1,26 +1,47 @@
-#include "../../inc/utils/Program.hpp"
+#include "Program.hpp"
+#include "Shader.hpp"
 #include "log.hpp"
 
 Program::Program()
     : reference(glCreateProgram())
 {}
 
+Program::Program(const char* vertexShaderFilePath, const char* fragmentShaderFilePath) : Program()
+{
+    Shader vs(GL_VERTEX_SHADER, reference, vertexShaderFilePath);
+    Shader fs(GL_FRAGMENT_SHADER, reference, fragmentShaderFilePath);
+    link();
+}
+
+Program::Program(const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath) : Program()
+{
+    Shader vs(GL_VERTEX_SHADER, reference, vertexShaderFilePath);
+    Shader gs(GL_GEOMETRY_SHADER, reference, geometryShaderFilePath);
+    Shader fs(GL_FRAGMENT_SHADER, reference, fragmentShaderFilePath);
+    link();
+}
+
 Program::~Program()
 {
     glDeleteProgram(reference);
 }
 
-GLuint Program::getReference()
+void Program::use() const
 {
-    return reference;
+    glUseProgram(reference);
 }
 
-GLint Program::getLocation(const char* variable)
+void Program::idle() const
+{
+    glUseProgram(0);
+}
+
+GLint Program::getLocation(const char* variable) const
 {
     return glGetUniformLocation(reference, variable);
 }
 
-void Program::link()
+void Program::link() const
 {
     GLint result;
     glLinkProgram(reference);
@@ -32,14 +53,4 @@ void Program::link()
     } else {
         glValidateProgram(reference);
     }
-}
-
-void Program::use()
-{
-    glUseProgram(reference);
-}
-
-void Program::idle()
-{
-    glUseProgram(0);
 }

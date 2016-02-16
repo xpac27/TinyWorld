@@ -1,23 +1,14 @@
 #include "Shader.hpp"
 #include "log.hpp"
-#include "../../inc/utils/Program.hpp"
 #include <fstream>
 
 using namespace std;
 
-Shader::Shader(GLuint _type, Program* _program)
+Shader::Shader(GLuint _type, GLuint _programReference, const char* filename)
     : reference(glCreateShader(_type))
-    , program(_program)
-{}
-
-Shader::~Shader()
+    , programReference(_programReference)
 {
-    glDetachShader(program->getReference(), reference);
-    glDeleteShader(reference);
-}
-
-void Shader::read(const char* filename)
-{
+    // Read
     ifstream file(filename, ifstream::in);
     if (file.is_open()) {
         string content, line = "";
@@ -28,21 +19,26 @@ void Shader::read(const char* filename)
         const GLchar* p[1] = {content.data()};
         GLint l[1] = {GLint(content.size())};
         glShaderSource(reference, 1, p, l);
+
+        // Compile
+        GLint result;
+        glCompileShader(reference);
+        glGetShaderiv(reference, GL_COMPILE_STATUS, &result);
+        if (result == 0) {
+            GLchar Infolog[1024];
+            glGetShaderInfoLog(reference, sizeof(Infolog), NULL, Infolog);
+            error(Infolog);
+        } else {
+            glAttachShader(programReference, reference);
+            success("Shader loaded:", filename);
+        }
     } else {
-        error("ERROR: cannot open", filename);
+        error("Cannot open", filename);
     }
 }
 
-void Shader::compile()
+Shader::~Shader()
 {
-    GLint result;
-    glCompileShader(reference);
-    glGetShaderiv(reference, GL_COMPILE_STATUS, &result);
-    if (result == 0) {
-        GLchar Infolog[1024];
-        glGetShaderInfoLog(reference, sizeof(Infolog), NULL, Infolog);
-        error(Infolog);
-    } else {
-        glAttachShader(program->getReference(), reference);
-    }
+    glDetachShader(programReference, reference);
+    glDeleteShader(reference);
 }

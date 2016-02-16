@@ -1,6 +1,7 @@
 #include "../../inc/graphic/Renderer.hpp"
-#include "../utils/Shader.hpp"
 #include "../utils/log.hpp"
+#include "../utils/Aggregator.hpp"
+#include "../utils/Program.hpp"
 #include "Mesh.hpp"
 #include "Quad.hpp"
 #include "Model.hpp"
@@ -18,6 +19,11 @@ Renderer::Renderer()
     : quad(new Quad())
     , gBuffer(new GBuffer())
     , camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
+    , shadowVolume(new Program("lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.geom", "lib/src/shaders/shadow_volume.frag"))
+    , shadowImprint(new Program("lib/src/shaders/shadow_imprint.vert", "lib/src/shaders/shadow_imprint.frag"))
+    , filling(new Program("lib/src/shaders/filling.vert", "lib/src/shaders/filling.frag"))
+    , geometryBuffer(new Program("lib/src/shaders/geometry_buffer.vert", "lib/src/shaders/geometry_buffer.frag"))
+    , deferredShading(new Program("lib/src/shaders/deferred_shading.vert", "lib/src/shaders/deferred_shading.frag"))
 {
     // TODO make this date driven
     directionalLight.color = vec3(1.0, 0.9, 0.8);
@@ -46,8 +52,6 @@ Renderer::Renderer()
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
-
-    initializeShaders();
 }
 
 Renderer::~Renderer()
@@ -57,40 +61,12 @@ Renderer::~Renderer()
 
 void Renderer::reload()
 {
-    initializeShaders();
     meshStore.reloadMeshesTextures();
-}
-
-void Renderer::initializeShaders()
-{
-    initializeShader(shadowVolume, "lib/src/shaders/shadow_volume.vert", "lib/src/shaders/shadow_volume.geom", "lib/src/shaders/shadow_volume.frag");
-    initializeShader(shadowImprint, "lib/src/shaders/shadow_imprint.vert", "lib/src/shaders/shadow_imprint.frag");
-    initializeShader(filling, "lib/src/shaders/filling.vert", "lib/src/shaders/filling.frag");
-    initializeShader(geometryBuffer, "lib/src/shaders/geometry_buffer.vert", "lib/src/shaders/geometry_buffer.frag");
-    initializeShader(deferredShading, "lib/src/shaders/deferred_shading.vert", "lib/src/shaders/deferred_shading.frag");
-    success("Shaders loaded");
-}
-
-void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath)
-{
-    Shader geometryShader(GL_GEOMETRY_SHADER, &program);
-    geometryShader.read(geometryShaderFilePath);
-    geometryShader.compile();
-
-    initializeShader(program, vertexShaderFilePath, fragmentShaderFilePath);
-}
-
-void Renderer::initializeShader(Program &program, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
-{
-    Shader vertexShader(GL_VERTEX_SHADER, &program);
-    vertexShader.read(vertexShaderFilePath);
-    vertexShader.compile();
-
-    Shader fragmentShader(GL_FRAGMENT_SHADER, &program);
-    fragmentShader.read(fragmentShaderFilePath);
-    fragmentShader.compile();
-
-    program.link();
+    // shadowVolume->reloadShaders();
+    // shadowImprint->reloadShaders();
+    // filling->reloadShaders();
+    // geometryBuffer->reloadShaders();
+    // deferredShading->reloadShaders();
 }
 
 void Renderer::render(Aggregator<Model> &models)
@@ -160,77 +136,77 @@ void Renderer::uploadMatrices(Aggregator<Model> &models)
 
 void Renderer::depthPass(Aggregator<Model> &models)
 {
-    filling.use();
+    filling->use();
 
-    glUniformMatrix4fv(filling.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
-    glUniformMatrix4fv(filling.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+    glUniformMatrix4fv(filling->getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
+    glUniformMatrix4fv(filling->getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
         meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 
-    filling.idle();
+    filling->idle();
 }
 
 void Renderer::shadowVolumePass(Aggregator<Model> &models)
 {
-    shadowVolume.use();
+    shadowVolume->use();
 
-    glUniformMatrix4fv(shadowVolume.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
-    glUniformMatrix4fv(shadowVolume.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
-    glUniform4fv(shadowVolume.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction));
+    glUniformMatrix4fv(shadowVolume->getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
+    glUniformMatrix4fv(shadowVolume->getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+    glUniform4fv(shadowVolume->getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
         meshStore.getMesh(MeshType(t))->drawAdjacency(models.size(t));
     }
 
-    shadowVolume.idle();
+    shadowVolume->idle();
 }
 
 void Renderer::shadowImprintPass()
 {
-    shadowImprint.use();
+    shadowImprint->use();
 
     quad->draw();
 
-    shadowImprint.idle();
+    shadowImprint->idle();
 }
 
 void Renderer::geometryPass(Aggregator<Model> &models)
 {
-    geometryBuffer.use();
+    geometryBuffer->use();
 
-    glUniform1i(geometryBuffer.getLocation("texture_diffuse"), 0);
-    glUniform1i(geometryBuffer.getLocation("texture_metallic"), 1);
-    glUniform1i(geometryBuffer.getLocation("texture_rough"), 2);
-    glUniform1i(geometryBuffer.getLocation("texture_normal"), 3);
-    glUniformMatrix4fv(geometryBuffer.getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
-    glUniformMatrix4fv(geometryBuffer.getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
+    glUniform1i(geometryBuffer->getLocation("texture_diffuse"), 0);
+    glUniform1i(geometryBuffer->getLocation("texture_metallic"), 1);
+    glUniform1i(geometryBuffer->getLocation("texture_rough"), 2);
+    glUniform1i(geometryBuffer->getLocation("texture_normal"), 3);
+    glUniformMatrix4fv(geometryBuffer->getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
+    glUniformMatrix4fv(geometryBuffer->getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
         meshStore.getMesh(MeshType(t))->bindTexture(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
         meshStore.getMesh(MeshType(t))->draw(models.size(t));
     }
 
-    geometryBuffer.idle();
+    geometryBuffer->idle();
 }
 
 void Renderer::lightingPass()
 {
-    deferredShading.use();
+    deferredShading->use();
 
-    glUniform1i(deferredShading.getLocation("g_position"), 0);
-    glUniform1i(deferredShading.getLocation("g_normal"), 1);
-    glUniform1i(deferredShading.getLocation("g_diffuse"), 2);
-    glUniform1i(deferredShading.getLocation("g_mr"), 3);
-    glUniform1i(deferredShading.getLocation("g_shadow"), 4);
-    glUniform1i(deferredShading.getLocation("environment"), 5);
-    glUniform1i(deferredShading.getLocation("irradiance_map"), 6);
-    glUniform3fv(deferredShading.getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));
-    glUniform3fv(deferredShading.getLocation("direct_light_color"), 1, value_ptr(directionalLight.color));
-    glUniform3fv(deferredShading.getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
-    glUniform3fv(deferredShading.getLocation("view_position"), 1, value_ptr(camera->getPosition()));
-    glUniform1f(deferredShading.getLocation("gamma"), 2.2);
+    glUniform1i(deferredShading->getLocation("g_position"), 0);
+    glUniform1i(deferredShading->getLocation("g_normal"), 1);
+    glUniform1i(deferredShading->getLocation("g_diffuse"), 2);
+    glUniform1i(deferredShading->getLocation("g_mr"), 3);
+    glUniform1i(deferredShading->getLocation("g_shadow"), 4);
+    glUniform1i(deferredShading->getLocation("environment"), 5);
+    glUniform1i(deferredShading->getLocation("irradiance_map"), 6);
+    glUniform3fv(deferredShading->getLocation("ambiant_color"), 1, value_ptr(directionalLight.ambiant));
+    glUniform3fv(deferredShading->getLocation("direct_light_color"), 1, value_ptr(directionalLight.color));
+    glUniform3fv(deferredShading->getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction * -1.f));
+    glUniform3fv(deferredShading->getLocation("view_position"), 1, value_ptr(camera->getPosition()));
+    glUniform1f(deferredShading->getLocation("gamma"), 2.2);
 
     gBuffer->bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
     environment.bind(GL_TEXTURE5);
@@ -238,5 +214,5 @@ void Renderer::lightingPass()
 
     quad->draw();
 
-    deferredShading.idle();
+    deferredShading->idle();
 }

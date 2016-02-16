@@ -2,7 +2,7 @@
 #include "../../inc/ecs/ComponentManager.hpp"
 #include "../../inc/ecs/Id.hpp"
 #include "../../inc/graphic/Renderer.hpp"
-#include "../../inc/utils/Aggregator.hpp"
+#include "../utils/Aggregator.hpp"
 #include "../graphic/Model.hpp"
 #include "../utils/log.hpp"
 
