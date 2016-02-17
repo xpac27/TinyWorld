@@ -11,6 +11,8 @@
 #include <components/Visibility.hpp>
 
 #include <graphic/Renderer.hpp>
+#include <graphic/MeshStore.hpp>
+#include <graphic/ProgramStore.hpp>
 
 class Game
 {
@@ -40,4 +42,6 @@ private:
     MovementSystem movementSystem;
 
     Renderer renderer;
+    MeshStore meshStore;
+    ProgramStore programStore;
 };

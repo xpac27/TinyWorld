@@ -10,6 +10,7 @@
 Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
     , movementSystem(&movementComponents)
+    , renderer(meshStore, programStore)
 {
     setupWorld();
     addTestEntity();
@@ -29,7 +30,8 @@ void Game::update(float seconds)
 
 void Game::reload()
 {
-    renderer.reload();
+    meshStore.reloadMeshesTextures();
+    programStore.reloadProgramesShaders();
 }
 
 void Game::setupWorld()

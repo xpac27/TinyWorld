@@ -1,4 +1,4 @@
-#include "GBuffer.hpp"
+#include "../../inc/graphic/GBuffer.hpp"
 #include "../utils/log.hpp"
 
 GBuffer::GBuffer()

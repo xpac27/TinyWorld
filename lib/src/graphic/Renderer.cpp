@@ -1,11 +1,11 @@
 #include "../../inc/graphic/Renderer.hpp"
+#include "../../inc/graphic/MeshStore.hpp"
+#include "../../inc/graphic/ProgramStore.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
 #include "Program.hpp"
 #include "Mesh.hpp"
-#include "Quad.hpp"
 #include "Model.hpp"
-#include "GBuffer.hpp"
 #include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
@@ -15,9 +15,9 @@
 using namespace std;
 using namespace glm;
 
-Renderer::Renderer()
-    : quad(new Quad())
-    , gBuffer(new GBuffer())
+Renderer::Renderer(MeshStore& _meshStore, ProgramStore& _programStore)
+    : meshStore(_meshStore)
+    , programStore(_programStore)
     , camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
@@ -54,18 +54,12 @@ Renderer::~Renderer()
     delete camera;
 }
 
-void Renderer::reload()
-{
-    meshStore.reloadMeshesTextures();
-    programStore.reloadProgramesShaders();
-}
-
 void Renderer::render(Aggregator<Model> &models)
 {
     uploadMatrices(models);
 
     // Off screen rendering
-    gBuffer->bind();
+    gBuffer.bind();
 
     // Render depth
     glEnable(GL_DEPTH_TEST);
@@ -99,7 +93,7 @@ void Renderer::render(Aggregator<Model> &models)
     geometryPass(models);
 
     // On screen rendering
-    gBuffer->idle();
+    gBuffer.idle();
 
     // Render lighting
     glDepthMask(GL_TRUE);
@@ -161,7 +155,7 @@ void Renderer::shadowImprintPass()
     Program* program = programStore.getProgram(ProgramType::SHADOW_IMPRINT);
     program->use();
 
-    quad->draw();
+    quad.draw();
 
     program->idle();
 }
@@ -204,11 +198,11 @@ void Renderer::lightingPass()
     glUniform3fv(program->getLocation("view_position"), 1, value_ptr(camera->getPosition()));
     glUniform1f(program->getLocation("gamma"), 2.2);
 
-    gBuffer->bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
+    gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
     environment.bind(GL_TEXTURE5);
     irradianceMap.bind(GL_TEXTURE6);
 
-    quad->draw();
+    quad.draw();
 
     program->idle();
 }

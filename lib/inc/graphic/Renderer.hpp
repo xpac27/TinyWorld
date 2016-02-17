@@ -1,28 +1,27 @@
 #pragma once
-#include "../utils/Cubemap.hpp"
-#include "MeshStore.hpp"
-#include "ProgramStore.hpp"
-#include "DirectionalLight.hpp"
+#include <graphic/Quad.hpp>
+#include <graphic/GBuffer.hpp>
+#include <graphic/DirectionalLight.hpp>
+#include <utils/Cubemap.hpp>
 #include <glm/vec3.hpp>
 
 template <typename T>
 class Aggregator;
 class Camera;
-class Quad;
-class GBuffer;
 class Model;
 class Program;
+class MeshStore;
+class ProgramStore;
 
 class Renderer
 {
 
 public:
 
-    Renderer();
+    Renderer(MeshStore& meshStore, ProgramStore& programStore);
     ~Renderer();
 
     void render(Aggregator<Model>& models);
-    void reload();
 
 private:
 
@@ -33,14 +32,14 @@ private:
     void lightingPass();
     void shadowImprintPass();
 
-    Quad* quad;
-    GBuffer* gBuffer;
-
-    // TODO init from outside
+    // TODO CubemapStore
     Cubemap environment;
     Cubemap irradianceMap;
-    MeshStore meshStore;
-    ProgramStore programStore;
+
+    MeshStore& meshStore;
+    ProgramStore& programStore;
+    Quad quad;
+    GBuffer gBuffer;
 
     // This should be passed as arguments to the render method
     DirectionalLight directionalLight; // Could be entity component
