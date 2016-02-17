@@ -1,10 +1,12 @@
 #include "../../inc/graphic/Renderer.hpp"
 #include "../../inc/graphic/MeshStore.hpp"
+#include "../../inc/graphic/CubemapStore.hpp"
 #include "../../inc/graphic/ProgramStore.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
 #include "Program.hpp"
 #include "Mesh.hpp"
+#include "Cubemap.hpp"
 #include "Model.hpp"
 #include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -15,38 +17,16 @@
 using namespace std;
 using namespace glm;
 
-Renderer::Renderer(MeshStore& _meshStore, ProgramStore& _programStore)
+Renderer::Renderer(MeshStore& _meshStore, ProgramStore& _programStore, CubemapStore& _cubemapStore)
     : meshStore(_meshStore)
     , programStore(_programStore)
+    , cubemapStore(_cubemapStore)
     , camera(new Camera(0.f, -5.f, 5.f, float(M_PI) * -0.25f, 0.f, 0.f))
 {
     // TODO make this date driven
     directionalLight.color = vec3(1.0, 0.9, 0.8);
     directionalLight.ambiant = vec3(0.44, 0.24, 0.04);
     directionalLight.direction = normalize(vec4(1.f, 1.f, -0.3f, 0.f));
-
-    environment.load({
-        "textures/environments/stormyday/cubemap/right.png",
-        "textures/environments/stormyday/cubemap/left.png",
-        "textures/environments/stormyday/cubemap/bottom.png",
-        "textures/environments/stormyday/cubemap/top.png",
-        "textures/environments/stormyday/cubemap/back.png",
-        "textures/environments/stormyday/cubemap/front.png",
-    });
-
-    irradianceMap.load({
-        "textures/environments/stormyday/irradiance-map/right.png",
-        "textures/environments/stormyday/irradiance-map/left.png",
-        "textures/environments/stormyday/irradiance-map/bottom.png",
-        "textures/environments/stormyday/irradiance-map/top.png",
-        "textures/environments/stormyday/irradiance-map/back.png",
-        "textures/environments/stormyday/irradiance-map/front.png",
-    });
-
-    glShadeModel(GL_SMOOTH);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glFrontFace(GL_CW);
-    glCullFace(GL_FRONT);
 }
 
 Renderer::~Renderer()
@@ -56,6 +36,12 @@ Renderer::~Renderer()
 
 void Renderer::render(Aggregator<Model> &models)
 {
+    // Setup
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+
     uploadMatrices(models);
 
     // Off screen rendering
@@ -199,8 +185,8 @@ void Renderer::lightingPass()
     glUniform1f(program->getLocation("gamma"), 2.2);
 
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
-    environment.bind(GL_TEXTURE5);
-    irradianceMap.bind(GL_TEXTURE6);
+    cubemapStore.getCubemap(CubemapType::STORMYDAY)->bind(GL_TEXTURE5);
+    cubemapStore.getCubemap(CubemapType::STORMYDAY_IM)->bind(GL_TEXTURE6);
 
     quad.draw();
 

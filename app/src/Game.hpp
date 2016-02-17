@@ -13,6 +13,7 @@
 #include <graphic/Renderer.hpp>
 #include <graphic/MeshStore.hpp>
 #include <graphic/ProgramStore.hpp>
+#include <graphic/CubemapStore.hpp>
 
 class Game
 {
@@ -44,4 +45,5 @@ private:
     Renderer renderer;
     MeshStore meshStore;
     ProgramStore programStore;
+    CubemapStore cubemapStore;
 };

@@ -1,16 +1,14 @@
-#include "../../inc/utils/Cubemap.hpp"
-#include "PNG.hpp"
+#include "Cubemap.hpp"
+#include "../utils/PNG.hpp"
 #include <string>
 
 using namespace std;
 
-void Cubemap::load(const vector<const char*> filenames)
+Cubemap::Cubemap(const char* filenames[6])
 {
-    if (loaded) destroy();
-
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-    for(GLuint i = 0; i < filenames.size(); i++) {
+    for(GLuint i = 0; i < 6; i++) {
         string filepath = "lib/res/";
         filepath += filenames[i];
         PNG png(filepath.data());
@@ -22,29 +20,15 @@ void Cubemap::load(const vector<const char*> filenames)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-    loaded = true;
 }
 
 Cubemap::~Cubemap()
 {
-    destroy();
+    glDeleteTextures(1, &id);
 }
 
 void Cubemap::bind(GLuint textureUnit)
 {
-    if (loaded) {
-        glActiveTexture(textureUnit);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-    } else {
-        glActiveTexture(textureUnit);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    }
-}
-
-void Cubemap::destroy()
-{
-    if (id) {
-        glDeleteTextures(1, &id);
-    }
+    glActiveTexture(textureUnit);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 }

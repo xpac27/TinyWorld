@@ -10,7 +10,7 @@
 Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
     , movementSystem(&movementComponents)
-    , renderer(meshStore, programStore)
+    , renderer(meshStore, programStore, cubemapStore)
 {
     setupWorld();
     addTestEntity();
