@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+files =
+    Dir.glob("lib/**/*.cpp") +
+    Dir.glob("app/**/*.h")
+
+file_list = files.join(' ')
+
+`clang-tidy #{file_list} -p out/compile_commands.json -fix -checks="-*,*"`

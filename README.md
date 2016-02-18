@@ -42,7 +42,7 @@ Optionaly, you can run:
 - `make compile` - compile the application
 - `make test` - compile and run the tests
 - `make clean` - remove all compiled objects
-- `make lint` - run cland tidy static analyzer
+- `make tidy` - run cland tidy static analyzer
 - `make check` - run cppcheck static analyzer
 - `make coverage` - run llvm-cov code coverage analyzer
 - `make analysis` - run scan-build static analyzer

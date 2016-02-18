@@ -30,11 +30,10 @@ reset:
 	@rm -rf out
 	@echo "done!"
 
-lint:
-	clang-tidy -p out/compile_commands.json `find lib/src app/src -name "*.cpp" | xargs`
+tidy:
+	./scripts/clang-tidy
 
 check:
-	@mkdir -p out/cppcheck
 	@./scripts/cppcheck
 	@./scripts/cppcheck-htmlreport --title="TinnyWorld" --source-dir=. --report-dir=out/cppcheck --file=out/cppcheck/result.xml
 	@open out/cppcheck/index.html
