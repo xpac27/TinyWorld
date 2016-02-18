@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+FileUtils.rm(".git/tags") if File.file?(".git/tags")
+FileUtils.rm(".git/cscope.out") if File.file?(".git/cscope.out")
+
+files =
+    Dir.glob("app/**/*.cpp") +
+    Dir.glob("app/**/*.hpp") +
+    Dir.glob("lib/**/*.cpp") +
+    Dir.glob("lib/**/*.hpp")
+
+File.open("srcfiles.txt", "w:UTF-8") {|f|
+    f << files.join("\n")
+}
+
+`ctags -L srcfiles.txt -f ./.git/tags`
+`cscope -i srcfiles.txt -Rbqvf .git/cscope.out`
+
+FileUtils.rm("srcfiles.txt")
