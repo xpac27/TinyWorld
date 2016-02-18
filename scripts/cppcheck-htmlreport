@@ -397,7 +397,6 @@ if __name__ == '__main__':
         parser.error('No cppcheck xml file specified. (--file=)')
 
     # Parse the xml file and produce a simple list of errors.
-    print('Parsing xml report.')
     try:
         contentHandler = CppCheckHandler()
         xml_parse(input_file, contentHandler)
@@ -420,14 +419,11 @@ if __name__ == '__main__':
         files[filename]['errors'].append(error)
 
     # Make sure that the report directory is created if it doesn't exist.
-    print('Creating %s directory' % options.report_dir)
     if not os.path.exists(options.report_dir):
         os.mkdir(options.report_dir)
 
     # Generate a HTML file with syntax highlighted source code for each
     # file that contains one or more errors.
-    print('Processing errors')
-
     decode_errors = []
     for filename, data in sorted(files.items()):
         htmlfile = data['htmlfile']
@@ -494,12 +490,8 @@ if __name__ == '__main__':
 
             output_file.write(HTML_FOOTER % contentHandler.versionCppcheck)
 
-        print('  ' + filename)
-
     # Generate a master index.html file that will contain a list of
     # all the errors created.
-    print('Creating index.html')
-
     with io.open(os.path.join(options.report_dir, 'index.html'),
                  'w') as output_file:
 
@@ -581,12 +573,10 @@ if __name__ == '__main__':
         sys.stderr.write("\nGenerating html failed for the following files: " + ' '.join(decode_errors))
         sys.stderr.write("\nConsider changing source-encoding (for example: \"htmlreport ... --source-encoding=\"iso8859-1\"\"\n")
 
-    print('Creating style.css file')
     with io.open(os.path.join(options.report_dir, 'style.css'),
                  'w') as css_file:
         css_file.write(STYLE_FILE)
 
-    print("Creating stats.html (statistics)\n")
     stats_countlist = {}
 
     for filename, data in sorted(files.items()):

@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+include_dirs = ["app/src", "lib/src", "lib/inc"]
+
+files =
+    Dir.glob("lib/**/*.cpp") +
+    Dir.glob("app/**/*.h")
+
+command = "cppcheck --xml --xml-version=2 --force --enable=all --std=c++11 --quiet"
+output_dir = "out/cppcheck"
+
+file_list = files.join(' ')
+include_dir_list = include_dirs.collect{|i| "-I#{i}"}.join(" ")
+
+FileUtils.mkdir_p(output_dir) unless File.directory?(output_dir)
+
+File.open("#{output_dir}/result.xml", "w:UTF-8") {|f|
+    IO.popen("#{command} #{include_dir_list} #{file_list} 2>&1") {|io|
+        f << io.read
+    }
+}
