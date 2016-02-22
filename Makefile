@@ -50,9 +50,5 @@ coverage:
 	@genhtml coverage/cov.info -o coverage &> /dev/null
 	@open coverage/index.html
 
-analysis:
-	@bf debug=true analysis=true
-	@scan-build -V ninja out/tinyworld
-
 tags:
 	./scripts/tags

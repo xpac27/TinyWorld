@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "../../src/utils/Aggregator.hpp"
-#include <iostream>
 
 namespace
 {

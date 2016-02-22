@@ -1,12 +1,13 @@
-filter debug: true
-    cxxflags += -g
-
-filter toolset: r"clang|gcc"
-    cxxflags += -std=c++11 -stdlib=libc++ -Weverything -Wextra
-
 filter toolset: clang
+    cxxflags += -std=c++11 -stdlib=libc++ -Weverything -Wextra
+    cxxflags += -Wno-c++98-compat
+    cxxflags += -Wno-c++98-compat-pedantic
+    cxxflags += -Wno-newline-eof
+    cxxflags += -Wno-padded
+    cxxflags += -Wno-exit-time-destructors
+
     filter debug: true
-        cxxflags += -g -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors -Wno-weak-vtables
+        cxxflags += -g
 
     filter release: true
         cxxflags += -g0
@@ -19,29 +20,25 @@ filter toolset: clang
         cxx = c++-analyzer
         defines += GLM_COMPILER=0
 
+libdirs = out
+
+build objects(out/objects/lib/**/*): auto lib/src/**/*.cpp
+    includedirs = lib/inc lib/src
+build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
+    includedirs = lib/tests/inc lib/inc lib/src
+build objects(out/objects/app/**/*): auto app/src/*.cpp
+    includedirs = lib/inc
+
+build library(out/tw): auto objects(out/objects/lib/**/*)
+
+build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/tw)
+    libs = tw
+
 filter system: Darwin
-    libs = png glfw3 GLEW c++
-    frameworks = CoreVideo Cocoa IOKit OpenGL
+    build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/tw)
+        frameworks = CoreVideo Cocoa IOKit OpenGL
+        libs = tw c++ png glfw3 GLEW
 
 filter system: Linux
-    libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi
-
-includedirs = lib/inc
-
-# BUILD LIBRARY TW
-build objects(out/objects/lib/**/*): auto lib/src/**/*.cpp
-    includedirs += lib/src
-build library(out/lib/tw): auto objects(out/objects/lib/**/*)
-
-# BUILD TESTS EXECUTABLE
-build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
-    includedirs += lib/tests/inc lib/src
-build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/lib/tw)
-    libdirs += out/lib
-    libs += tw
-
-# BUILD TINYWORLD EXECUTABLE
-build objects(out/objects/app/*): auto app/src/*.cpp
-build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/lib/tw)
-    libdirs += out/lib
-    libs += tw
+    build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/tw)
+        libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi

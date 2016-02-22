@@ -45,7 +45,6 @@ Optionaly, you can run:
 - `make tidy` - run cland tidy static analyzer
 - `make check` - run cppcheck static analyzer
 - `make coverage` - run llvm-cov code coverage analyzer
-- `make analysis` - run scan-build static analyzer
 
 ## Setup
 
@@ -99,11 +98,10 @@ To install CPPCheck:
     cmake .
     make && make install
 
-To install Clang Static Analyzer, llvm-cov, scan-build and clang-tidy:
+To install Clang Static Analyzer, llvm-cov, clang-tidy:
 
 	brew install lcov
 	brew install llvm --with-clang
-	export PATH="$PATH:/usr/local/opt/llvm/share/clang/tools/scan-build"
 	export PATH="$PATH:/usr/local/opt/llvm/bin/"
 
 or:

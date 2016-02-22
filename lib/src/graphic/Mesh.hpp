@@ -13,9 +13,14 @@ class Texture;
 
 class Mesh
 {
-
 public:
-
+    // struct Params
+    // {
+    //     const char* filename;
+    // };
+    //
+    //
+    // Mesh(Params params) {} // TODO ...
     Mesh(const char *filename);
     ~Mesh();
 
