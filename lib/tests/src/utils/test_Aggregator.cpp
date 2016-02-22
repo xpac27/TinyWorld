@@ -4,7 +4,7 @@
 
 namespace
 {
-    SCENARIO("Aggregator" "[Aggregator]") {
+    SCENARIO("Aggregator") {
         GIVEN("An Aggregator") {
             Aggregator<const char*> aggregator;
 

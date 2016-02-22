@@ -61,13 +61,13 @@ template<typename T>
 const std::vector<T>* Aggregator<T>::get(unsigned int index) const
 {
     assert(index < itemLists.size() && "index out of bounds");
-    return &itemLists[index];
+    return &itemLists.at(index);
 }
 
 template<typename T>
 void Aggregator<T>::checkCapacity(unsigned int index)
 {
-    if (index > itemLists.size() - 1) {
+    if (index >= itemLists.size()) {
         itemLists.resize(index + 1);
     }
 }
