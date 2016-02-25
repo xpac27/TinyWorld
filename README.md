@@ -41,6 +41,7 @@ Optionaly, you can run:
 - `make configure` - generate the project
 - `make compile` - compile the application
 - `make test` - compile and run the tests
+- `make run` - run the application
 - `make clean` - remove all compiled objects
 - `make tidy` - run cland tidy static analyzer
 - `make check` - run cppcheck static analyzer
