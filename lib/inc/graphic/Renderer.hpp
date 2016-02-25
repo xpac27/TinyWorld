@@ -2,6 +2,7 @@
 #include <graphic/Quad.hpp>
 #include <graphic/GBuffer.hpp>
 #include <graphic/DirectionalLight.hpp>
+#include <graphic/RendererParams.hpp>
 #include <glm/vec3.hpp>
 
 template <typename T, typename TT, typename TTT>
@@ -12,9 +13,10 @@ class Camera;
 class Model;
 class Program;
 class MeshStore;
-class ProgramStore;
 class Cubemap;
-class CubemapParams;
+class Program;
+struct CubemapParams;
+struct ProgramParams;
 
 class Renderer
 {
@@ -23,13 +25,13 @@ public:
 
     Renderer(
         MeshStore& meshStore,
-        ProgramStore& programStore,
+        Store<const char*, Program, ProgramParams>& programStore,
         Store<const char*, Cubemap, CubemapParams>& cubemapStore
     );
     ~Renderer();
 
     void render(Aggregator<Model>& models);
-    void setCubemapId(unsigned int id);
+    void setup(RendererParams params);
 
 private:
 
@@ -40,11 +42,11 @@ private:
     void lightingPass();
     void shadowImprintPass();
 
-    int cubemapId = -1;
+    RendererParams params;
 
     MeshStore& meshStore;
-    ProgramStore& programStore;
 
+    Store<const char*, Program, ProgramParams>& programStore;
     Store<const char*, Cubemap, CubemapParams>& cubemapStore;
 
     Quad quad;

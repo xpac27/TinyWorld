@@ -1,12 +1,12 @@
 #include "../../inc/graphic/Cubemap.hpp"
 #include "../../inc/graphic/CubemapParams.hpp"
+#include "../../inc/graphic/Program.hpp"
+#include "../../inc/graphic/ProgramParams.hpp"
 #include "../../inc/graphic/Renderer.hpp"
 #include "../../inc/graphic/MeshStore.hpp"
-#include "../../inc/graphic/ProgramStore.hpp"
 #include "../../inc/utils/Store.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
-#include "Program.hpp"
 #include "Mesh.hpp"
 #include "Model.hpp"
 #include "Camera.hpp"
@@ -20,7 +20,7 @@ using namespace glm;
 
 Renderer::Renderer(
         MeshStore& _meshStore,
-        ProgramStore& _programStore,
+        Store<const char*, Program, ProgramParams>& _programStore,
         Store<const char*, Cubemap, CubemapParams>& _cubemapStore
 )
     : meshStore(_meshStore)
@@ -39,9 +39,9 @@ Renderer::~Renderer()
     delete camera;
 }
 
-void Renderer::setCubemapId(unsigned int id)
+void Renderer::setup(RendererParams _params)
 {
-    cubemapId = static_cast<int>(id);
+    params = _params;
 }
 
 void Renderer::render(Aggregator<Model> &models)
@@ -117,7 +117,7 @@ void Renderer::uploadMatrices(Aggregator<Model> &models)
 
 void Renderer::depthPass(Aggregator<Model> &models)
 {
-    Program* program = programStore.getProgram(ProgramType::FILLING);
+    unique_ptr<Program>& program = programStore.getById(params.fillingProgramId);
     program->use();
 
     glUniformMatrix4fv(program->getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
@@ -132,7 +132,7 @@ void Renderer::depthPass(Aggregator<Model> &models)
 
 void Renderer::shadowVolumePass(Aggregator<Model> &models)
 {
-    Program* program = programStore.getProgram(ProgramType::SHADOW_VOLUME);
+    unique_ptr<Program>& program = programStore.getById(params.shadowVolumeProgramId);
     program->use();
 
     glUniformMatrix4fv(program->getLocation("view"), 1, GL_FALSE, value_ptr(camera->getRotation() * camera->getTranslation()));
@@ -148,7 +148,7 @@ void Renderer::shadowVolumePass(Aggregator<Model> &models)
 
 void Renderer::shadowImprintPass()
 {
-    Program* program = programStore.getProgram(ProgramType::SHADOW_IMPRINT);
+    unique_ptr<Program>& program = programStore.getById(params.shadowImprintProgramId);
     program->use();
 
     quad.draw();
@@ -158,7 +158,7 @@ void Renderer::shadowImprintPass()
 
 void Renderer::geometryPass(Aggregator<Model> &models)
 {
-    Program* program = programStore.getProgram(ProgramType::GEOMETRY_BUFFER);
+    unique_ptr<Program>& program = programStore.getById(params.geometryBufferProgramId);
     program->use();
 
     glUniform1i(program->getLocation("texture_diffuse"), 0);
@@ -178,7 +178,7 @@ void Renderer::geometryPass(Aggregator<Model> &models)
 
 void Renderer::lightingPass()
 {
-    Program* program = programStore.getProgram(ProgramType::DEFERRED_SHADING);
+    unique_ptr<Program>& program = programStore.getById(params.deferredShadingProgramId);
     program->use();
 
     glUniform1i(program->getLocation("g_position"), 0);
@@ -195,8 +195,8 @@ void Renderer::lightingPass()
     glUniform1f(program->getLocation("gamma"), 2.2);
 
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
-    cubemapStore.getById(cubemapId)->bind(GL_TEXTURE5);
-    cubemapStore.getById(cubemapId)->bind(GL_TEXTURE6);
+    cubemapStore.getById(params.cubemapId)->bind(GL_TEXTURE5);
+    cubemapStore.getById(params.cubemapId)->bind(GL_TEXTURE6);
 
     quad.draw();
 

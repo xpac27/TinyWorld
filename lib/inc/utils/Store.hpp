@@ -5,6 +5,7 @@
 #include <assert.h>
 
 // TODO try to return const C
+// TODO try not to use pointers
 
 template <typename K, typename C, typename A>
 class Store

@@ -1,12 +1,16 @@
-#include "Shader.hpp"
+#include "../../inc/graphic/Shader.hpp"
 #include "../utils/log.hpp"
 #include <fstream>
 
 using namespace std;
 
-Shader::Shader(GLuint _type, GLuint _programReference, const char* filename)
+Shader::Shader(GLuint _type, GLuint _programReference)
     : reference(glCreateShader(_type))
     , programReference(_programReference)
+{
+}
+
+void Shader::load(const char* filename)
 {
     // Read
     ifstream file(filename, ifstream::in);

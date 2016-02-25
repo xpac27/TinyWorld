@@ -8,6 +8,8 @@
 
 #include <graphic/Cubemap.hpp>
 #include <graphic/CubemapParams.hpp>
+#include <graphic/Program.hpp>
+#include <graphic/ProgramParams.hpp>
 
 Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
@@ -20,36 +22,59 @@ Game::Game()
 
     // TODO move to a loader?
     cubemapStore.insert("stormyday", {
-        .right = "textures/environments/stormyday/cubemap/right.png",
-        .left = "textures/environments/stormyday/cubemap/left.png",
+        .right  = "textures/environments/stormyday/cubemap/right.png",
+        .left   = "textures/environments/stormyday/cubemap/left.png",
         .bottom = "textures/environments/stormyday/cubemap/bottom.png",
-        .top = "textures/environments/stormyday/cubemap/top.png",
-        .back = "textures/environments/stormyday/cubemap/back.png",
-        .front = "textures/environments/stormyday/cubemap/front.png" });
+        .top    = "textures/environments/stormyday/cubemap/top.png",
+        .back   = "textures/environments/stormyday/cubemap/back.png",
+        .front  = "textures/environments/stormyday/cubemap/front.png" });
     cubemapStore.insert("stormyday-irradiance-map", {
-        .right = "textures/environments/stormyday/irradiance-map/right.png",
-        .left = "textures/environments/stormyday/irradiance-map/left.png",
+        .right  = "textures/environments/stormyday/irradiance-map/right.png",
+        .left   = "textures/environments/stormyday/irradiance-map/left.png",
         .bottom = "textures/environments/stormyday/irradiance-map/bottom.png",
-        .top = "textures/environments/stormyday/irradiance-map/top.png",
-        .back = "textures/environments/stormyday/irradiance-map/back.png",
-        .front = "textures/environments/stormyday/irradiance-map/front.png" });
+        .top    = "textures/environments/stormyday/irradiance-map/top.png",
+        .back   = "textures/environments/stormyday/irradiance-map/back.png",
+        .front  = "textures/environments/stormyday/irradiance-map/front.png" });
     cubemapStore.insert("archipelago", {
-        .right = "textures/environments/archipelago/cubemap/right.png",
-        .left = "textures/environments/archipelago/cubemap/left.png",
+        .right  = "textures/environments/archipelago/cubemap/right.png",
+        .left   = "textures/environments/archipelago/cubemap/left.png",
         .bottom = "textures/environments/archipelago/cubemap/bottom.png",
-        .top = "textures/environments/archipelago/cubemap/top.png",
-        .back = "textures/environments/archipelago/cubemap/back.png",
-        .front = "textures/environments/archipelago/cubemap/front.png" });
+        .top    = "textures/environments/archipelago/cubemap/top.png",
+        .back   = "textures/environments/archipelago/cubemap/back.png",
+        .front  = "textures/environments/archipelago/cubemap/front.png" });
     cubemapStore.insert("archipelago-irradiance-map", {
-        .right = "textures/environments/archipelago/irradiance-map/right.png",
-        .left = "textures/environments/archipelago/irradiance-map/left.png",
+        .right  = "textures/environments/archipelago/irradiance-map/right.png",
+        .left   = "textures/environments/archipelago/irradiance-map/left.png",
         .bottom = "textures/environments/archipelago/irradiance-map/bottom.png",
-        .top = "textures/environments/archipelago/irradiance-map/top.png",
-        .back = "textures/environments/archipelago/irradiance-map/back.png",
-        .front = "textures/environments/archipelago/irradiance-map/front.png" });
+        .top    = "textures/environments/archipelago/irradiance-map/top.png",
+        .back   = "textures/environments/archipelago/irradiance-map/back.png",
+        .front  = "textures/environments/archipelago/irradiance-map/front.png" });
 
+    programStore.insert("shadow_volume", {
+        .vertexShader   = "lib/src/shaders/shadow_volume.vert",
+        .geometryShader = "lib/src/shaders/shadow_volume.geom",
+        .fragmentShader = "lib/src/shaders/shadow_volume.frag" });
+    programStore.insert("shadow_imprint", {
+        .vertexShader   = "lib/src/shaders/shadow_imprint.vert",
+        .fragmentShader = "lib/src/shaders/shadow_imprint.frag" });
+    programStore.insert("filling", {
+        .vertexShader   = "lib/src/shaders/filling.vert",
+        .fragmentShader = "lib/src/shaders/filling.frag" });
+    programStore.insert("geometry_buffer", {
+        .vertexShader   = "lib/src/shaders/geometry_buffer.vert",
+        .fragmentShader = "lib/src/shaders/geometry_buffer.frag" });
+    programStore.insert("deferred_shading", {
+        .vertexShader   = "lib/src/shaders/deferred_shading.vert",
+        .fragmentShader = "lib/src/shaders/deferred_shading.frag" });
 
-    renderer.setCubemapId(cubemapStore.getId("stormyday"));
+    renderer.setup({
+        .cubemapId                = cubemapStore.getId("stormyday"),
+        .shadowVolumeProgramId    = programStore.getId("shadow_volume"),
+        .shadowImprintProgramId   = programStore.getId("shadow_imprint"),
+        .fillingProgramId         = programStore.getId("filling"),
+        .geometryBufferProgramId  = programStore.getId("geometry_buffer"),
+        .deferredShadingProgramId = programStore.getId("deferred_shading")
+    });
 }
 
 void Game::draw()
@@ -65,8 +90,7 @@ void Game::update(float seconds)
 
 void Game::reload()
 {
-    meshStore.reloadMeshesTextures();
-    programStore.reloadProgramesShaders();
+    // TODO... reload
 }
 
 void Game::setupWorld()
