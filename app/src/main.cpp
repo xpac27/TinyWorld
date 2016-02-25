@@ -69,7 +69,7 @@ int main()
     thread t2(draw, application, window);
 
     // Run the app
-    while (application->isRunning()) glfwPollEvents();
+    while (application->isRunning() && !glfwWindowShouldClose(window)) glfwPollEvents();
 
     // Wait for threads
     t1.join();
@@ -77,6 +77,7 @@ int main()
 
     // GLFW shutdown
     glfwSetWindowShouldClose(window, GL_TRUE);
+	glfwDestroyWindow(window);
     glfwTerminate();
 
     return 0;

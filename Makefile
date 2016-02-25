@@ -1,5 +1,3 @@
-DIR:=$(shell cd $(dir $(MAKEFILE_PATH));pwd)
-
 .PHONY: all configure run debug test analysis coverage clean reset tags
 
 all: configure compile run
