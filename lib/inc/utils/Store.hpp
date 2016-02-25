@@ -1,54 +1,75 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <utility>
 #include <assert.h>
 
-template <typename C, typename A>
+template <typename K, typename C, typename A>
 class Store
 {
 
 public:
 
-    void init(unsigned int index, A arguments);
-    void clear();
+    void insert(K key, A arguments);
 
-    std::unique_ptr<C>& get(unsigned int index);
+    unsigned int getId(K key);
+
+    std::unique_ptr<C>& get(K key);
+    std::unique_ptr<C>& getById(unsigned int id);
 
 private:
 
-    void checkCapacity(unsigned int index);
+    int findId(K key);
 
-    std::vector<std::unique_ptr<C>> itemLists = {};
+    std::vector<std::unique_ptr<C>> items;
+    std::vector<std::pair<K, unsigned int>> ids;
 };
 
-template <typename C, typename A>
-void Store<C, A>::clear()
+template <typename K, typename C, typename A>
+void Store<K, C, A>::insert(K key, A arguments)
 {
-    for (auto& item : itemLists) {
-        item.release();
+    if (findId(key) == -1) {
+        ids.push_back(std::make_pair(key, items.size()));
+        items.emplace_back(std::move(new C(arguments)));
     }
 }
 
-template <typename C, typename A>
-void Store<C, A>::init(unsigned int index, A arguments)
+template <typename K, typename C, typename A>
+int Store<K, C, A>::findId(K key)
 {
-    checkCapacity(index);
-    if (!itemLists.at(index)) {
-        itemLists.at(index).reset(new C(arguments));
+    for (auto& pair : ids) {
+        if (pair.first == key) {
+            return static_cast<int>(pair.second);
+        }
+    }
+    return -1;
+}
+
+
+template <typename K, typename C, typename A>
+unsigned int Store<K, C, A>::getId(K key)
+{
+    int id = findId(key);
+    if (id == -1) {
+        throw std::out_of_range("Item has not been inserted, id cannot be found!");
+    } else {
+        return static_cast<unsigned int>(id);
     }
 }
 
-template <typename C, typename A>
-std::unique_ptr<C>& Store<C, A>::get(unsigned int index)
+template <typename K, typename C, typename A>
+std::unique_ptr<C>& Store<K, C, A>::get(K key)
 {
-    assert(index < itemLists.size() && itemLists.at(index) && "index out of bounds");
-    return itemLists.at(index);
+    int id = findId(key);
+    if (id == -1) {
+        throw std::out_of_range("Item has not been inserted, item cannot be found!");
+    } else {
+        return items.at(static_cast<unsigned int>(id));
+    }
 }
 
-template <typename C, typename A>
-void Store<C, A>::checkCapacity(unsigned int index)
+template <typename K, typename C, typename A>
+std::unique_ptr<C>& Store<K, C, A>::getById(unsigned int id)
 {
-    if (index >= itemLists.size()) {
-        itemLists.resize(index + 1);
-    }
+    return items.at(id);
 }
