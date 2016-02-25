@@ -1,11 +1,13 @@
-#include "Cubemap.hpp"
+#include "../../inc/graphic/Cubemap.hpp"
 #include "../utils/PNG.hpp"
 #include <string>
 
 using namespace std;
 
-Cubemap::Cubemap(const char* filenames[6])
+Cubemap::Cubemap(CubemapParams params)
 {
+    const char* filenames[6] {params.right, params.left, params.bottom, params.top, params.back, params.front};
+
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     for(GLuint i = 0; i < 6; i++) {

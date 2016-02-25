@@ -4,6 +4,8 @@
 #include <graphic/DirectionalLight.hpp>
 #include <glm/vec3.hpp>
 
+template <typename T, typename TT, typename TTT>
+class Store;
 template <typename T>
 class Aggregator;
 class Camera;
@@ -11,17 +13,23 @@ class Model;
 class Program;
 class MeshStore;
 class ProgramStore;
-class CubemapStore;
+class Cubemap;
+class CubemapParams;
 
 class Renderer
 {
 
 public:
 
-    Renderer(MeshStore& meshStore, ProgramStore& programStore, CubemapStore& cubemapStore);
+    Renderer(
+        MeshStore& meshStore,
+        ProgramStore& programStore,
+        Store<const char*, Cubemap, CubemapParams>& cubemapStore
+    );
     ~Renderer();
 
     void render(Aggregator<Model>& models);
+    void setCubemapId(unsigned int id);
 
 private:
 
@@ -32,13 +40,16 @@ private:
     void lightingPass();
     void shadowImprintPass();
 
+    int cubemapId = -1;
+
     MeshStore& meshStore;
     ProgramStore& programStore;
-    CubemapStore& cubemapStore;
+
+    Store<const char*, Cubemap, CubemapParams>& cubemapStore;
 
     Quad quad;
     GBuffer gBuffer;
-    // This should be passed as arguments to the render method
+    // This should be passed as arguments to the render method (light store?)
     DirectionalLight directionalLight; // Could be entity component
     Camera *camera; // Could be entity component
 };

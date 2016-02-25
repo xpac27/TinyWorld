@@ -4,6 +4,8 @@
 #include <utility>
 #include <assert.h>
 
+// TODO try to return const C
+
 template <typename K, typename C, typename A>
 class Store
 {

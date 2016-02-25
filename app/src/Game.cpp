@@ -6,6 +6,9 @@
 #include <utils/Random.hpp>
 #include <glm/detail/func_geometric.hpp>
 
+#include <graphic/Cubemap.hpp>
+#include <graphic/CubemapParams.hpp>
+
 Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
     , movementSystem(&movementComponents)
@@ -14,6 +17,39 @@ Game::Game()
     setupWorld();
     addTestEntity();
     // for (auto i(0u); i < 10; i ++) addEntity();
+
+    // TODO move to a loader?
+    cubemapStore.insert("stormyday", {
+        .right = "textures/environments/stormyday/cubemap/right.png",
+        .left = "textures/environments/stormyday/cubemap/left.png",
+        .bottom = "textures/environments/stormyday/cubemap/bottom.png",
+        .top = "textures/environments/stormyday/cubemap/top.png",
+        .back = "textures/environments/stormyday/cubemap/back.png",
+        .front = "textures/environments/stormyday/cubemap/front.png" });
+    cubemapStore.insert("stormyday-irradiance-map", {
+        .right = "textures/environments/stormyday/irradiance-map/right.png",
+        .left = "textures/environments/stormyday/irradiance-map/left.png",
+        .bottom = "textures/environments/stormyday/irradiance-map/bottom.png",
+        .top = "textures/environments/stormyday/irradiance-map/top.png",
+        .back = "textures/environments/stormyday/irradiance-map/back.png",
+        .front = "textures/environments/stormyday/irradiance-map/front.png" });
+    cubemapStore.insert("archipelago", {
+        .right = "textures/environments/archipelago/cubemap/right.png",
+        .left = "textures/environments/archipelago/cubemap/left.png",
+        .bottom = "textures/environments/archipelago/cubemap/bottom.png",
+        .top = "textures/environments/archipelago/cubemap/top.png",
+        .back = "textures/environments/archipelago/cubemap/back.png",
+        .front = "textures/environments/archipelago/cubemap/front.png" });
+    cubemapStore.insert("archipelago-irradiance-map", {
+        .right = "textures/environments/archipelago/irradiance-map/right.png",
+        .left = "textures/environments/archipelago/irradiance-map/left.png",
+        .bottom = "textures/environments/archipelago/irradiance-map/bottom.png",
+        .top = "textures/environments/archipelago/irradiance-map/top.png",
+        .back = "textures/environments/archipelago/irradiance-map/back.png",
+        .front = "textures/environments/archipelago/irradiance-map/front.png" });
+
+
+    renderer.setCubemapId(cubemapStore.getId("stormyday"));
 }
 
 void Game::draw()

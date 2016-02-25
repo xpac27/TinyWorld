@@ -1,12 +1,13 @@
+#include "../../inc/graphic/Cubemap.hpp"
+#include "../../inc/graphic/CubemapParams.hpp"
 #include "../../inc/graphic/Renderer.hpp"
 #include "../../inc/graphic/MeshStore.hpp"
-#include "../../inc/graphic/CubemapStore.hpp"
 #include "../../inc/graphic/ProgramStore.hpp"
+#include "../../inc/utils/Store.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
 #include "Program.hpp"
 #include "Mesh.hpp"
-#include "Cubemap.hpp"
 #include "Model.hpp"
 #include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -17,7 +18,11 @@
 using namespace std;
 using namespace glm;
 
-Renderer::Renderer(MeshStore& _meshStore, ProgramStore& _programStore, CubemapStore& _cubemapStore)
+Renderer::Renderer(
+        MeshStore& _meshStore,
+        ProgramStore& _programStore,
+        Store<const char*, Cubemap, CubemapParams>& _cubemapStore
+)
     : meshStore(_meshStore)
     , programStore(_programStore)
     , cubemapStore(_cubemapStore)
@@ -32,6 +37,11 @@ Renderer::Renderer(MeshStore& _meshStore, ProgramStore& _programStore, CubemapSt
 Renderer::~Renderer()
 {
     delete camera;
+}
+
+void Renderer::setCubemapId(unsigned int id)
+{
+    cubemapId = static_cast<int>(id);
 }
 
 void Renderer::render(Aggregator<Model> &models)
@@ -185,8 +195,8 @@ void Renderer::lightingPass()
     glUniform1f(program->getLocation("gamma"), 2.2);
 
     gBuffer.bindTextures(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4);
-    cubemapStore.getCubemap(CubemapType::STORMYDAY)->bind(GL_TEXTURE5);
-    cubemapStore.getCubemap(CubemapType::STORMYDAY_IM)->bind(GL_TEXTURE6);
+    cubemapStore.getById(cubemapId)->bind(GL_TEXTURE5);
+    cubemapStore.getById(cubemapId)->bind(GL_TEXTURE6);
 
     quad.draw();
 

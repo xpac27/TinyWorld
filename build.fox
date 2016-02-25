@@ -5,6 +5,7 @@ filter toolset: clang
     cxxflags += -Wno-newline-eof
     cxxflags += -Wno-padded
     cxxflags += -Wno-exit-time-destructors
+    cxxflags += -Wno-c99-extensions
 
     filter debug: true
         cxxflags += -g
