@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../../inc/utils/Path.hpp"
+#include "../../../src/utils/Path.hpp"
 #include <iostream>
 
 namespace

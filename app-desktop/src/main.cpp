@@ -65,15 +65,13 @@ int main()
     application = new Application();
 
     // Create a draw and update thread
-    thread t1(update, application);
-    thread t2(draw, application, window);
+    thread t1(draw, application, window);
 
     // Run the app
     while (application->isRunning() && !glfwWindowShouldClose(window)) glfwPollEvents();
 
     // Wait for threads
     t1.join();
-    t2.join();
 
     // GLFW shutdown
     glfwSetWindowShouldClose(window, GL_TRUE);
@@ -90,15 +88,9 @@ void draw(Application *app, GLFWwindow *window)
     glfwMakeContextCurrent(window);
 
     while (app->isRunning()) {
+        app->update(float(glfwGetTime()));
         app->draw();
         glfwSwapBuffers(window);
-    }
-}
-
-void update(Application *app)
-{
-    while (app->isRunning()) {
-        app->update(float(glfwGetTime()));
     }
 }
 

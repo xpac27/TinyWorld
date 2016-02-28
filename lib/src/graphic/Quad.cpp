@@ -1,4 +1,4 @@
-#include "../../inc/graphic/Quad.hpp"
+#include "Quad.hpp"
 
 Quad::Quad()
 {

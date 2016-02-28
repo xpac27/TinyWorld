@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "../../inc/ecs/EntityManager.hpp"
-#include "../../inc/ecs/Id.hpp"
+#include "../../src/ecs/EntityManager.hpp"
+#include "../../src/ecs/Id.hpp"
 
 namespace
 {

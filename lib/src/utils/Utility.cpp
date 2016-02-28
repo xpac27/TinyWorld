@@ -1,4 +1,4 @@
-#include "../../inc/utils/Utility.hpp"
+#include "Utility.hpp"
 
 bool isEmpty(const char* c)
 {

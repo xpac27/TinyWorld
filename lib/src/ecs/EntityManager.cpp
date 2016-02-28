@@ -1,4 +1,4 @@
-#include "../../inc/ecs/EntityManager.hpp"
+#include "EntityManager.hpp"
 
 namespace ecs {
 

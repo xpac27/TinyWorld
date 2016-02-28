@@ -1,5 +1,5 @@
-#include "../../inc/graphic/Mesh.hpp"
-#include "../../inc/utils/Utility.hpp"
+#include "Mesh.hpp"
+#include "../utils/Utility.hpp"
 #include "../utils/Texture.hpp"
 #include "../utils/OBJ.hpp"
 #include "../utils/log.hpp"

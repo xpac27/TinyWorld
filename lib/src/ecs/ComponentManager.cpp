@@ -1,1 +1,1 @@
-#include "../../inc/ecs/ComponentManager.hpp"
+#include "ComponentManager.hpp"

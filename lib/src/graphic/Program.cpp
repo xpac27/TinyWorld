@@ -1,5 +1,5 @@
-#include "../../inc/graphic/Program.hpp"
-#include "../../inc/utils/Utility.hpp"
+#include "Program.hpp"
+#include "../utils/Utility.hpp"
 #include "../utils/log.hpp"
 
 Program::Program(ProgramParams params)
