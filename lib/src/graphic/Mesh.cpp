@@ -71,10 +71,12 @@ void Mesh::draw(unsigned int instances)
 
 void Mesh::drawAdjacency(unsigned int instances)
 {
+    #ifdef PLATFORM_OSX
     vertexArray->uploadIndexes(adjacencyIndexes);
     vertexArray->bind();
     glDrawElementsInstanced(GL_TRIANGLES_ADJACENCY, GLsizei(adjacencyIndexes.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
+    #endif
 }
 
 void Mesh::verifyUVs()
