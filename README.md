@@ -24,8 +24,6 @@ Todo:
 
 ## Requirements
 
-* **OpenGL** 4.1 + ([website](https://www.opengl.org/))
-* **GLEW** 1.12.0 + ([website](http://glew.sourceforge.net/))
 * **GLFW** 3.1.1 + ([website](glfw.org/index.html))
 * **GLM** 0.9.6 + ([website](glm.g-truc.net))
 * **LibPNG** ([website](http://www.libpng.org/pub/png/libpng.html))
@@ -53,7 +51,7 @@ Optionaly, you can run:
 
 	brew update
 	brew tap homebrew/versions
-	brew install glfw3 glew glm libpng ninja
+	brew install glfw3 glm libpng ninja
 	pip install buildfox
 
 ### Ubuntu
