@@ -1,6 +1,5 @@
 #include "Application.hpp"
 #include "Game.hpp"
-#include <GLFW/glfw3.h>
 
 Application::Application()
     : game(new Game())
@@ -22,13 +21,11 @@ void Application::update(float seconds)
     game->update(seconds);
 }
 
-void Application::keyCallback(int key, int /*scancode*/, int action, int /*mods*/)
+void Application::onKeyPressed(int key)
 {
-    if (action == GLFW_PRESS) {
-        switch (key) {
-            case GLFW_KEY_ESCAPE: running = false; break;
-            case GLFW_KEY_R: reloadRequested = true; break;
-        }
+    switch (key) {
+        case 256: running = false; break; // ESC
+        case 82: reloadRequested = true; break; // R
     }
 }
 

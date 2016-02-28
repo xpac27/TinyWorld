@@ -12,7 +12,7 @@ public:
     bool isRunning();
     void draw();
     void update(float seconds);
-    void keyCallback(int key, int scancode, int action, int mods);
+    void onKeyPressed(int key);
 
 private:
 

@@ -101,7 +101,9 @@ void glfwErrorCallback(int /*error*/, const char* description)
     fputs(description, stderr);
 }
 
-void glfwKeyCallback(GLFWwindow* /*window*/, int key, int scancode, int action, int mods)
+void glfwKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/)
 {
-    application->keyCallback(key, scancode, action, mods);
+    switch (action) {
+        case GLFW_PRESS: application->onKeyPressed(key);
+    }
 }
