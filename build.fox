@@ -27,23 +27,26 @@ filter system: Darwin
 
     build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
         defines = PLATFORM_OSX
+        frameworks = OpenGL
         includedirs = lib/inc lib/src
-    build library(out/core): auto objects(out/objects/lib-osx/**/*)
-        libs = c++
 
     build objects(out/objects/lib-ios/**/*): auto lib/src/**/*.cpp
         defines = PLATFORM_IOS
         includedirs = /usr/local/include lib/inc lib/src
+        frameworks = OpenGLES
         cxxflags += -arch arm64
         cxx = xcrun --sdk iphoneos9.2 clang
+
+    build library(out/core): auto objects(out/objects/lib-osx/**/*)
+        libs = c++
     build library(out/core-ios): auto objects(out/objects/lib-ios/**/*)
         libs = c++
 
     build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
         includedirs = lib/inc
     build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/core)
-        libs = c++ core png glfw3
         frameworks = CoreVideo Cocoa IOKit OpenGL
+        libs = c++ core png glfw3
 
     build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
         includedirs = lib/tests/inc lib/inc lib/src
