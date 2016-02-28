@@ -1,5 +1,0 @@
-newmtl Teapot
-map_Kd textures/surfaces/worn_metal_floor/diffuse.png
-map_Ks textures/surfaces/worn_metal_floor/metallicness.png
-map_Ns textures/surfaces/worn_metal_floor/roughness.png
-map_Bump textures/surfaces/worn_metal_floor/normal.png

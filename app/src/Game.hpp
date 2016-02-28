@@ -11,14 +11,15 @@
 #include <components/Visibility.hpp>
 
 #include <graphic/Renderer.hpp>
-#include <graphic/MeshStore.hpp>
 
 #include <utils/Store.hpp>
 
 class Cubemap;
 class Program;
+class Mesh;
 struct CubemapParams;
 struct ProgramParams;
+struct MeshParams;
 
 class Game
 {
@@ -36,7 +37,6 @@ private:
 
     void setupWorld();
     void addEntity();
-    void addTestEntity();
 
     ecs::EntityManager entities;
 
@@ -48,8 +48,8 @@ private:
     MovementSystem movementSystem;
 
     Renderer renderer;
-    MeshStore meshStore;
 
+    Store<const char*, Mesh, MeshParams> meshStore;
     Store<const char*, Program, ProgramParams> programStore;
     Store<const char*, Cubemap, CubemapParams> cubemapStore;
 };

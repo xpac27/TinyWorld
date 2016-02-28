@@ -12,11 +12,12 @@ class Aggregator;
 class Camera;
 class Model;
 class Program;
-class MeshStore;
 class Cubemap;
 class Program;
+class Mesh;
 struct CubemapParams;
 struct ProgramParams;
+struct MeshParams;
 
 class Renderer
 {
@@ -24,7 +25,7 @@ class Renderer
 public:
 
     Renderer(
-        MeshStore& meshStore,
+        Store<const char*, Mesh, MeshParams>& meshStore,
         Store<const char*, Program, ProgramParams>& programStore,
         Store<const char*, Cubemap, CubemapParams>& cubemapStore
     );
@@ -44,8 +45,7 @@ private:
 
     RendererParams params;
 
-    MeshStore& meshStore;
-
+    Store<const char*, Mesh, MeshParams>& meshStore;
     Store<const char*, Program, ProgramParams>& programStore;
     Store<const char*, Cubemap, CubemapParams>& cubemapStore;
 

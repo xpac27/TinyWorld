@@ -1,34 +1,37 @@
-#include "Mesh.hpp"
-#include "Material.hpp"
-#include "MeshVertexArray.hpp"
+#include "../../inc/graphic/Mesh.hpp"
+#include "../../inc/utils/Utility.hpp"
 #include "../utils/Texture.hpp"
 #include "../utils/OBJ.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Manifold.hpp"
+#include "Material.hpp"
+#include "MeshVertexArray.hpp"
 
 using namespace std;
 using namespace glm;
 
-Mesh::Mesh(const char *filename)
+Mesh::Mesh(MeshParams params)
     : vertexArray(new MeshVertexArray())
     , diffuseTexture(new Texture())
     , metallicTexture(new Texture())
     , roughTexture(new Texture())
     , normalTexture(new Texture())
 {
-    OBJ(triangles, vertexes, uvs, normals, indexes, materials).load(filename);
+    OBJ(triangles, vertexes, uvs, normals, indexes).load(params.object);
 
     verifyUVs();
-    verifyMeterials();
 
-    initializeTriangleData(); // Move to manifold
-    computeTrianglesPlaneEquations(); // Move to manifold
-    computeTrianglesTangents(); // Move to manifold
+    initializeTriangleData(); // TODO Move to manifold
+    computeTrianglesPlaneEquations(); // TODO Move to manifold
+    computeTrianglesTangents(); // TODO Move to manifold
     generateTrianglesAdjacencyIndex(triangles, adjacencyIndexes);
 
     vertexArray->initialize(vertexes, uvs, normals, trianglesTangents, trianglesBitangents);
 
-    loadTextures();
+    if (!isEmpty(params.diffuseTexture)) diffuseTexture->load(params.diffuseTexture);
+    if (!isEmpty(params.metallicTexture)) metallicTexture->load(params.metallicTexture);
+    if (!isEmpty(params.roughTexture)) roughTexture->load(params.roughTexture);
+    if (!isEmpty(params.normalTexture)) normalTexture->load(params.normalTexture);
 }
 
 Mesh::~Mesh()
@@ -40,24 +43,9 @@ Mesh::~Mesh()
     delete vertexArray;
 }
 
-void Mesh::reloadTextures()
-{
-    loadTextures();
-}
-
 void Mesh::debug()
 {
-    OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
-}
-
-void Mesh::loadTextures()
-{
-    if (materials.size() > 0) {
-        diffuseTexture->load(materials[0].map_diffuse.data());
-        metallicTexture->load(materials[0].map_metallic.data());
-        roughTexture->load(materials[0].map_rough.data());
-        normalTexture->load(materials[0].map_normal.data());
-    }
+    OBJ::debug(triangles, vertexes, uvs, normals, indexes);
 }
 
 void Mesh::bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal)
@@ -93,13 +81,6 @@ void Mesh::verifyUVs()
 {
     if (uvs.size() < vertexes.size()) {
         uvs.resize(vertexes.size(), vec2(0.f));
-    }
-}
-
-void Mesh::verifyMeterials()
-{
-    if (materials.size() == 0) {
-        materials.push_back(Material("default"));
     }
 }
 

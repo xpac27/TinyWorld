@@ -47,7 +47,7 @@ void RenderSystem::update(Renderer& renderer)
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            models.add(visibility->meshType, Model(modelTranslation, modelRotation, modelScale));
+            models.add(visibility->meshId, Model(modelTranslation, modelRotation, modelScale));
         }
     }
 

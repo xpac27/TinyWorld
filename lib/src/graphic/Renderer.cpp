@@ -2,12 +2,12 @@
 #include "../../inc/graphic/CubemapParams.hpp"
 #include "../../inc/graphic/Program.hpp"
 #include "../../inc/graphic/ProgramParams.hpp"
+#include "../../inc/graphic/Mesh.hpp"
+#include "../../inc/graphic/MeshParams.hpp"
 #include "../../inc/graphic/Renderer.hpp"
-#include "../../inc/graphic/MeshStore.hpp"
 #include "../../inc/utils/Store.hpp"
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
-#include "Mesh.hpp"
 #include "Model.hpp"
 #include "Camera.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -19,7 +19,7 @@ using namespace std;
 using namespace glm;
 
 Renderer::Renderer(
-        MeshStore& _meshStore,
+        Store<const char*, Mesh, MeshParams>& _meshStore,
         Store<const char*, Program, ProgramParams>& _programStore,
         Store<const char*, Cubemap, CubemapParams>& _cubemapStore
 )
@@ -111,7 +111,7 @@ void Renderer::uploadMatrices(Aggregator<Model> &models)
         for (unsigned int i = 0; i < totalModels; i++) {
             matrices.push_back(models.get(t)->at(i).getProduct());
         }
-        meshStore.getMesh(MeshType(t))->updateMatrices(totalModels, matrices.data());
+        meshStore.getById(t)->updateMatrices(totalModels, matrices.data());
     }
 }
 
@@ -124,7 +124,7 @@ void Renderer::depthPass(Aggregator<Model> &models)
     glUniformMatrix4fv(program->getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->draw(models.size(t));
+        meshStore.getById(t)->draw(models.size(t));
     }
 
     program->idle();
@@ -140,7 +140,7 @@ void Renderer::shadowVolumePass(Aggregator<Model> &models)
     glUniform4fv(program->getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->drawAdjacency(models.size(t));
+        meshStore.getById(t)->drawAdjacency(models.size(t));
     }
 
     program->idle();
@@ -169,8 +169,8 @@ void Renderer::geometryPass(Aggregator<Model> &models)
     glUniformMatrix4fv(program->getLocation("projection"), 1, GL_FALSE, value_ptr(camera->getPerspective()));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
-        meshStore.getMesh(MeshType(t))->bindTexture(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
-        meshStore.getMesh(MeshType(t))->draw(models.size(t));
+        meshStore.getById(t)->bindTexture(GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3);
+        meshStore.getById(t)->draw(models.size(t));
     }
 
     program->idle();

@@ -1,4 +1,5 @@
 #include "../../inc/graphic/Program.hpp"
+#include "../../inc/utils/Utility.hpp"
 #include "../utils/log.hpp"
 
 Program::Program(ProgramParams params)
@@ -7,13 +8,13 @@ Program::Program(ProgramParams params)
     , gs(GL_GEOMETRY_SHADER, reference)
     , fs(GL_FRAGMENT_SHADER, reference)
 {
-    if (params.vertexShader && params.vertexShader[0]) {
+    if (!isEmpty(params.vertexShader)) {
         vs.load(params.vertexShader);
     }
-    if (params.geometryShader && params.geometryShader[0]) {
+    if (!isEmpty(params.geometryShader)) {
         gs.load(params.geometryShader);
     }
-    if (params.fragmentShader && params.fragmentShader[0]) {
+    if (!isEmpty(params.fragmentShader)) {
         fs.load(params.fragmentShader);
     }
     link();
