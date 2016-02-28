@@ -1,8 +1,5 @@
-#include "Cubemap.hpp"
 #include "CubemapParams.hpp"
-#include "Program.hpp"
 #include "ProgramParams.hpp"
-#include "Mesh.hpp"
 #include "MeshParams.hpp"
 #include "Renderer.hpp"
 #include "Model.hpp"
@@ -11,8 +8,7 @@
 #include "../utils/log.hpp"
 #include "../utils/Aggregator.hpp"
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <GL/glew.h>
 
 using namespace std;

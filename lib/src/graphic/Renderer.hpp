@@ -1,9 +1,12 @@
 #pragma once
-#include <graphic/Quad.hpp>
-#include <graphic/GBuffer.hpp>
-#include <graphic/DirectionalLight.hpp>
-#include <graphic/RendererParams.hpp>
-#include <glm/vec3.hpp>
+#include "Quad.hpp"
+#include "GBuffer.hpp"
+#include "DirectionalLight.hpp"
+#include "RendererParams.hpp"
+#include "Cubemap.hpp"
+#include "Program.hpp"
+#include "Mesh.hpp"
+#include <glm/glm.hpp>
 
 template <typename T, typename TT, typename TTT>
 class Store;
@@ -12,9 +15,6 @@ class Aggregator;
 class Camera;
 class Model;
 class Program;
-class Cubemap;
-class Program;
-class Mesh;
 struct CubemapParams;
 struct ProgramParams;
 struct MeshParams;

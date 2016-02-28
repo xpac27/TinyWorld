@@ -4,7 +4,8 @@
 #include <systems/MovementSystem.hpp>
 
 #include <utils/Random.hpp>
-#include <glm/detail/func_geometric.hpp>
+
+#include <glm/glm.hpp>
 
 #include <graphic/Cubemap.hpp>
 #include <graphic/CubemapParams.hpp>
@@ -17,6 +18,10 @@ Game::Game()
     : renderSystem(&visibilityComponents, &movementComponents)
     , movementSystem(&movementComponents)
     , renderer(meshStore, programStore, cubemapStore)
+{
+}
+
+void Game::load(const char* rootPath)
 {
     // TODO move to a loader?
     cubemapStore.insert("stormyday", {
@@ -91,15 +96,15 @@ Game::Game()
     addEntity();
 }
 
-void Game::draw()
-{
-    renderSystem.update(renderer);
-}
-
 void Game::update(float seconds)
 {
     movementSystem.update(seconds - previousUpdateSeconds);
     previousUpdateSeconds = seconds;
+}
+
+void Game::draw()
+{
+    renderSystem.update(renderer);
 }
 
 void Game::reload()

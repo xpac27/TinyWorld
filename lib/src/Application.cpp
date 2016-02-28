@@ -3,17 +3,24 @@
 
 Application::Application()
     : game(new Game())
-{}
-
-bool Application::isRunning()
 {
-    return running;
 }
 
-void Application::draw()
+Application::~Application()
 {
-    game->draw();
-    checkReload();
+    delete game;
+}
+
+void Application::setup(ApplicationParams params)
+{
+    game->load(params.rootPath);
+}
+
+void Application::onKeyPressed(int key)
+{
+    switch (key) {
+        case 256: running = false; break; // ESC
+    }
 }
 
 void Application::update(float seconds)
@@ -21,18 +28,16 @@ void Application::update(float seconds)
     game->update(seconds);
 }
 
-void Application::onKeyPressed(int key)
+void Application::draw()
 {
-    switch (key) {
-        case 256: running = false; break; // ESC
-        case 82: reloadRequested = true; break; // R
-    }
+    game->draw();
 }
 
-void Application::checkReload()
+void Application::tearDown()
 {
-    if (reloadRequested) {
-        game->reload();
-        reloadRequested = false;
-    }
+}
+
+bool Application::isRunning()
+{
+    return running;
 }

@@ -1,9 +1,17 @@
 .DS_Store
+
 .ycm_extra_conf.py
 .ycm_extra_conf.pyc
+
 .lvimrc
+
 .ninja_deps
 .ninja_log
+
 build.ninja
+
 out/*
 coverage/*
+
+app-ios.xcodeproj/project.xcworkspace/
+app-ios.xcodeproj/xcuserdata/

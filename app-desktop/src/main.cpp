@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include <Application.hpp>
 
 #include <cmath>
 #include <ctime>
@@ -63,6 +63,9 @@ int main()
 
     // Initialize application
     application = new Application();
+    application->setup({
+        .rootPath = ""
+    });
 
     // Create a draw and update thread
     thread t1(draw, application, window);

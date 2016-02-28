@@ -2,7 +2,7 @@
 #include <ecs/System.hpp>
 #include <components/Visibility.hpp>
 #include <components/Movement.hpp>
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 
 class Renderer;
 template <typename T> class Aggregator;

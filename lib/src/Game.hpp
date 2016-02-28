@@ -27,8 +27,9 @@ public:
 
     Game();
 
-    void draw();
+    void load(const char* rootPath);
     void update(float seconds);
+    void draw();
     void reload();
 
 private:

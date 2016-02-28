@@ -1,4 +1,5 @@
 #pragma once
+#include <ApplicationParams.hpp>
 
 class Game;
 
@@ -8,18 +9,19 @@ class Application
 public:
 
     Application();
+    ~Application();
+
+    void setup(ApplicationParams params);
+    void onKeyPressed(int key);
+    void update(float seconds);
+    void draw();
+    void tearDown();
 
     bool isRunning();
-    void draw();
-    void update(float seconds);
-    void onKeyPressed(int key);
 
 private:
-
-    void checkReload();
 
     Game* game;
 
     bool running = true;
-    bool reloadRequested = false;
 };
