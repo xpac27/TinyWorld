@@ -1,41 +1,34 @@
 #pragma once
+#include <graphic/MeshParams.hpp>
+
 #include <GL/glew.h>
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/glm.hpp>
+
 #include <vector>
 
-struct Material;
 class MeshVertexArray;
 class Texture;
 
 class Mesh
 {
 public:
-    // struct Params
-    // {
-    //     const char* filename;
-    // };
-    //
-    //
-    // Mesh(Params params) {} // TODO ...
-    Mesh(const char *filename);
+    Mesh(MeshParams params);
     ~Mesh();
 
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
     void drawAdjacency(unsigned int instances);
-    void reloadTextures();
     void bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal);
     void debug();
 
 private:
 
-    void loadTextures();
     void verifyUVs();
-    void verifyMeterials();
     void initializeTriangleData();
     void computeTrianglesPlaneEquations();
     void computeTrianglesTangents();
@@ -51,7 +44,6 @@ private:
     std::vector<glm::vec4> vertexes;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    std::vector<Material> materials;
 
     Texture *diffuseTexture;
     Texture *metallicTexture;

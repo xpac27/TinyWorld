@@ -1,7 +1,5 @@
 #include "OBJ.hpp"
-#include "MTL.hpp"
 #include "log.hpp"
-#include "../graphic/Material.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -10,6 +8,14 @@
 
 using namespace std;
 using namespace glm;
+
+OBJ::OBJ(std::vector<glm::uvec3> &_triangles, std::vector<glm::vec4> &_vertexes, std::vector<glm::vec2> &_uvs, std::vector<glm::vec3> &_normals, std::vector<unsigned int> &_indexes)
+    : triangles(_triangles)
+    , vertexes(_vertexes)
+    , uvs(_uvs)
+    , normals(_normals)
+    , indexes(_indexes)
+{}
 
 void OBJ::load(const char *filename)
 {
@@ -26,7 +32,6 @@ void OBJ::load(const char *filename)
     uvs.shrink_to_fit();
     normals.shrink_to_fit();
     indexes.shrink_to_fit();
-    materials.shrink_to_fit();
 
     assert(vertexes.size() == uvs.size());
     assert(vertexes.size() == normals.size());
@@ -50,9 +55,7 @@ void OBJ::parseLines(ifstream &fin)
     while (!fin.eof()) {
         char k[7] {' '};
         fin >> k;
-        if (strncmp(k, MTLLIB, 7) == 0) {
-            parseMTLLib(fin);
-        } else if (strncmp(k, VT, 3) == 0) {
+        if (strncmp(k, VT, 3) == 0) {
             parseUVs(fin);
         } else if (strncmp(k, VN, 3) == 0) {
             parseNormal(fin);
@@ -132,19 +135,12 @@ void OBJ::skipNextChar(std::ifstream &fin)
     fin.ignore();
 }
 
-void OBJ::parseMTLLib(ifstream &fin)
-{
-    char c[80] {' '};
-    fin >> c;
-    MTL(materials).load(c);
-}
-
 void OBJ::debug()
 {
-    OBJ::debug(triangles, vertexes, uvs, normals, indexes, materials);
+    OBJ::debug(triangles, vertexes, uvs, normals, indexes);
 }
 
-void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes, std::vector<Material> &materials)
+void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vertexes, std::vector<glm::vec2> &uvs, std::vector<glm::vec3> &normals, std::vector<unsigned int> &indexes)
 {
     nl();
     info("printing mesh details");
@@ -174,21 +170,6 @@ void OBJ::debug(std::vector<glm::uvec3> &triangles, std::vector<glm::vec4> &vert
     info("  triangles:");
     for (auto t : triangles) {
         printl("    ", t.x + 1, t.y + 1, t.z + 1);
-    }
-
-    nl();
-    info("  materials:");
-    for (auto m : materials) {
-        printl("    ", "name", "=", m.name);
-        printl("    ", "d", "=", m.d);
-        printl("    ", "Ns", "=", m.Ns);
-        printl("    ", "Ka", "=", m.Ka[0], m.Ka[1], m.Ka[2]);
-        printl("    ", "Kd", "=", m.Kd[0], m.Kd[1], m.Kd[2]);
-        printl("    ", "Ks", "=", m.Ks[0], m.Ks[1], m.Ks[2]);
-        printl("    ", "map_diffuse",  "=", m.map_diffuse);
-        printl("    ", "map_metallic", "=", m.map_metallic);
-        printl("    ", "map_rough",    "=", m.map_normal);
-        printl("    ", "map_normal",   "=", m.map_normal);
     }
 
     nl();
