@@ -1,7 +1,7 @@
 #pragma once
 #include "ProgramParams.hpp"
 #include "Shader.hpp"
-#include <GL/glew.h>
+#include <OpenGL.hpp>
 
 class Program
 {

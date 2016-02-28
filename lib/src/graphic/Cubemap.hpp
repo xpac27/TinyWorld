@@ -1,8 +1,6 @@
 #pragma once
 #include <graphic/CubemapParams.hpp>
-
-#include <GL/glew.h>
-
+#include <OpenGL.hpp>
 #include <vector>
 
 class Cubemap

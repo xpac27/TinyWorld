@@ -1,3 +1,5 @@
+#include <GLFW/glfw3.h>
+
 #include <Application.hpp>
 
 #include <cmath>
@@ -5,9 +7,6 @@
 #include <thread>
 #include <cstdio>
 #include <stdlib.h>
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -37,7 +36,6 @@ int main()
     }
 
     // GLFW create context window
-    // TODO get windows size from conf
     GLFWwindow* window = glfwCreateWindow(800, 600, "TinyWorld", NULL, NULL);
     if (window) {
         glfwMakeContextCurrent(window);
@@ -48,15 +46,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    // GLEW initialize
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if (GLEW_OK == err) {
-        printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
-    } else {
-        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
+    printf("GL Version %s\n", glGetString(GL_VERSION));
 
     // Random seed
     srand(unsigned(time(NULL)));

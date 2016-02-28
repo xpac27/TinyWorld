@@ -9,7 +9,7 @@
 #include "../utils/Aggregator.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
-#include <GL/glew.h>
+#include <OpenGL.hpp>
 
 using namespace std;
 using namespace glm;
@@ -43,8 +43,6 @@ void Renderer::setup(RendererParams _params)
 void Renderer::render(Aggregator<Model> &models)
 {
     // Setup
-    glShadeModel(GL_SMOOTH);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
 

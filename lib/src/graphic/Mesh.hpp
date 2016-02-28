@@ -1,10 +1,7 @@
 #pragma once
 #include <graphic/MeshParams.hpp>
-
-#include <GL/glew.h>
-
+#include <OpenGL.hpp>
 #include <glm/glm.hpp>
-
 #include <vector>
 
 class MeshVertexArray;

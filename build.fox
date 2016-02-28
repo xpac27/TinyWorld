@@ -23,23 +23,26 @@ filter toolset: clang
 
 libdirs = out
 
-build objects(out/objects/lib/**/*): auto lib/src/**/*.cpp
-    includedirs = lib/inc lib/src
-build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
-    includedirs = lib/tests/inc lib/inc lib/src
-build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
-    includedirs = lib/inc
-
-build library(out/game): auto objects(out/objects/lib/**/*)
-
-build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/game)
-    libs = game
-
 filter system: Darwin
-    build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/game)
-        frameworks = CoreVideo Cocoa IOKit OpenGL
-        libs = game c++ png glfw3 GLEW
 
-filter system: Linux
-    build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/game)
-        libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi
+    build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
+        defines = PLATFORM_OSX
+        includedirs = lib/inc lib/src
+
+    build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
+        defines = PLATFORM_OSX
+        includedirs = lib/tests/inc lib/inc lib/src
+
+    build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
+        defines = PLATFORM_OSX
+        includedirs = lib/inc
+
+    build library(out/core): auto objects(out/objects/lib-osx/**/*)
+        libs = c++
+
+    build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/core)
+        frameworks = CoreVideo Cocoa IOKit OpenGL
+        libs = c++ core png glfw3
+
+    build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/core)
+        libs = c++ core
