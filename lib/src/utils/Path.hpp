@@ -10,7 +10,7 @@ public:
     Path(const std::string location);
     Path get(const std::string path) const;
 
-    std::string get() const;
+    const char* data() const;
 
 private:
 

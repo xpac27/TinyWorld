@@ -4,6 +4,7 @@
 #include <systems/MovementSystem.hpp>
 
 #include <utils/Random.hpp>
+#include <utils/Path.hpp>
 
 #include <glm/glm.hpp>
 
@@ -23,65 +24,67 @@ Game::Game()
 
 void Game::load(const char* rootPath)
 {
+    Path root(rootPath);
+
     // TODO move to a loader?
     cubemapStore.insert("stormyday", {
-        .right  = "lib/res/textures/environments/stormyday/cubemap/right.png",
-        .left   = "lib/res/textures/environments/stormyday/cubemap/left.png",
-        .bottom = "lib/res/textures/environments/stormyday/cubemap/bottom.png",
-        .top    = "lib/res/textures/environments/stormyday/cubemap/top.png",
-        .back   = "lib/res/textures/environments/stormyday/cubemap/back.png",
-        .front  = "lib/res/textures/environments/stormyday/cubemap/front.png" });
+        .right  = root.get("res/textures/environments/stormyday/cubemap/right.png").data(),
+        .left   = root.get("res/textures/environments/stormyday/cubemap/left.png").data(),
+        .bottom = root.get("res/textures/environments/stormyday/cubemap/bottom.png").data(),
+        .top    = root.get("res/textures/environments/stormyday/cubemap/top.png").data(),
+        .back   = root.get("res/textures/environments/stormyday/cubemap/back.png").data(),
+        .front  = root.get("res/textures/environments/stormyday/cubemap/front.png").data() });
     cubemapStore.insert("stormyday-irradiance-map", {
-        .right  = "lib/res/textures/environments/stormyday/irradiance-map/right.png",
-        .left   = "lib/res/textures/environments/stormyday/irradiance-map/left.png",
-        .bottom = "lib/res/textures/environments/stormyday/irradiance-map/bottom.png",
-        .top    = "lib/res/textures/environments/stormyday/irradiance-map/top.png",
-        .back   = "lib/res/textures/environments/stormyday/irradiance-map/back.png",
-        .front  = "lib/res/textures/environments/stormyday/irradiance-map/front.png" });
+        .right  = root.get("res/textures/environments/stormyday/irradiance-map/right.png").data(),
+        .left   = root.get("res/textures/environments/stormyday/irradiance-map/left.png").data(),
+        .bottom = root.get("res/textures/environments/stormyday/irradiance-map/bottom.png").data(),
+        .top    = root.get("res/textures/environments/stormyday/irradiance-map/top.png").data(),
+        .back   = root.get("res/textures/environments/stormyday/irradiance-map/back.png").data(),
+        .front  = root.get("res/textures/environments/stormyday/irradiance-map/front.png").data() });
     cubemapStore.insert("archipelago", {
-        .right  = "lib/res/textures/environments/archipelago/cubemap/right.png",
-        .left   = "lib/res/textures/environments/archipelago/cubemap/left.png",
-        .bottom = "lib/res/textures/environments/archipelago/cubemap/bottom.png",
-        .top    = "lib/res/textures/environments/archipelago/cubemap/top.png",
-        .back   = "lib/res/textures/environments/archipelago/cubemap/back.png",
-        .front  = "lib/res/textures/environments/archipelago/cubemap/front.png" });
+        .right  = root.get("res/textures/environments/archipelago/cubemap/right.png").data(),
+        .left   = root.get("res/textures/environments/archipelago/cubemap/left.png").data(),
+        .bottom = root.get("res/textures/environments/archipelago/cubemap/bottom.png").data(),
+        .top    = root.get("res/textures/environments/archipelago/cubemap/top.png").data(),
+        .back   = root.get("res/textures/environments/archipelago/cubemap/back.png").data(),
+        .front  = root.get("res/textures/environments/archipelago/cubemap/front.png").data() });
     cubemapStore.insert("archipelago-irradiance-map", {
-        .right  = "lib/res/textures/environments/archipelago/irradiance-map/right.png",
-        .left   = "lib/res/textures/environments/archipelago/irradiance-map/left.png",
-        .bottom = "lib/res/textures/environments/archipelago/irradiance-map/bottom.png",
-        .top    = "lib/res/textures/environments/archipelago/irradiance-map/top.png",
-        .back   = "lib/res/textures/environments/archipelago/irradiance-map/back.png",
-        .front  = "lib/res/textures/environments/archipelago/irradiance-map/front.png" });
+        .right  = root.get("res/textures/environments/archipelago/irradiance-map/right.png").data(),
+        .left   = root.get("res/textures/environments/archipelago/irradiance-map/left.png").data(),
+        .bottom = root.get("res/textures/environments/archipelago/irradiance-map/bottom.png").data(),
+        .top    = root.get("res/textures/environments/archipelago/irradiance-map/top.png").data(),
+        .back   = root.get("res/textures/environments/archipelago/irradiance-map/back.png").data(),
+        .front  = root.get("res/textures/environments/archipelago/irradiance-map/front.png").data() });
 
     programStore.insert("shadow_volume", {
-        .vertexShader   = "lib/src/shaders/shadow_volume.vert",
-        .geometryShader = "lib/src/shaders/shadow_volume.geom",
-        .fragmentShader = "lib/src/shaders/shadow_volume.frag" });
+        .vertexShader   = root.get("res/shaders/shadow_volume.vert").data(),
+        .geometryShader = root.get("res/shaders/shadow_volume.geom").data(),
+        .fragmentShader = root.get("res/shaders/shadow_volume.frag").data() });
     programStore.insert("shadow_imprint", {
-        .vertexShader   = "lib/src/shaders/shadow_imprint.vert",
-        .fragmentShader = "lib/src/shaders/shadow_imprint.frag" });
+        .vertexShader   = root.get("res/shaders/shadow_imprint.vert").data(),
+        .fragmentShader = root.get("res/shaders/shadow_imprint.frag").data() });
     programStore.insert("filling", {
-        .vertexShader   = "lib/src/shaders/filling.vert",
-        .fragmentShader = "lib/src/shaders/filling.frag" });
+        .vertexShader   = root.get("res/shaders/filling.vert").data(),
+        .fragmentShader = root.get("res/shaders/filling.frag").data() });
     programStore.insert("geometry_buffer", {
-        .vertexShader   = "lib/src/shaders/geometry_buffer.vert",
-        .fragmentShader = "lib/src/shaders/geometry_buffer.frag" });
+        .vertexShader   = root.get("res/shaders/geometry_buffer.vert").data(),
+        .fragmentShader = root.get("res/shaders/geometry_buffer.frag").data() });
     programStore.insert("deferred_shading", {
-        .vertexShader   = "lib/src/shaders/deferred_shading.vert",
-        .fragmentShader = "lib/src/shaders/deferred_shading.frag" });
+        .vertexShader   = root.get("res/shaders/deferred_shading.vert").data(),
+        .fragmentShader = root.get("res/shaders/deferred_shading.frag").data() });
 
     meshStore.insert("twisted_torus", {
-        .object          = "lib/res/objects/twisted-torus.obj",
-        .diffuseTexture  = "lib/res/textures/surfaces/old_tiles/diffuse.png",
-        .metallicTexture = "lib/res/textures/surfaces/old_tiles/metallicness.png",
-        .roughTexture    = "lib/res/textures/surfaces/old_tiles/roughness.png",
-        .normalTexture   = "lib/res/textures/surfaces/old_tiles/normal.png" });
+        .object          = root.get("res/objects/twisted-torus.obj").data(),
+        .diffuseTexture  = root.get("res/textures/surfaces/old_tiles/diffuse.png").data(),
+        .metallicTexture = root.get("res/textures/surfaces/old_tiles/metallicness.png").data(),
+        .roughTexture    = root.get("res/textures/surfaces/old_tiles/roughness.png").data(),
+        .normalTexture   = root.get("res/textures/surfaces/old_tiles/normal.png").data() });
     meshStore.insert("plan", {
-        .object          = "lib/res/objects/plan.obj",
-        .diffuseTexture  = "lib/res/textures/surfaces/worn_plaster/diffuse.png",
-        .metallicTexture = "lib/res/textures/surfaces/worn_plaster/metallicness.png",
-        .roughTexture    = "lib/res/textures/surfaces/worn_plaster/roughness.png",
-        .normalTexture   = "lib/res/textures/surfaces/worn_plaster/normal.png" });
+        .object          = root.get("res/objects/plan.obj").data(),
+        .diffuseTexture  = root.get("res/textures/surfaces/worn_plaster/diffuse.png").data(),
+        .metallicTexture = root.get("res/textures/surfaces/worn_plaster/metallicness.png").data(),
+        .roughTexture    = root.get("res/textures/surfaces/worn_plaster/roughness.png").data(),
+        .normalTexture   = root.get("res/textures/surfaces/worn_plaster/normal.png").data() });
 
     renderer.setup({
         .cubemapId                = cubemapStore.getId("stormyday"),
