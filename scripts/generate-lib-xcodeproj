@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+require 'xcodeproj'
+require 'pathname'
+
+project = Xcodeproj::Project.new('example.xcodeproj')
+
+files =
+  Dir.glob('lib/src/**/*.cpp') +
+  Dir.glob('lib/src/**/*.hpp') +
+  Dir.glob('lib/inc/**/*.hpp')
+
+files.each {|file| project.new_file(file) }
+
+# files.each do |file|
+#   project.new_file(file)
+# end
+#
+# item.gsub!(/^lib\/[a-z]+\//, '')
+#
+# @group = project.main_group
+# @group.new_group('lib')
+# Dir[File.join('lib', 'src', '**', '*')].each do |item|
+#   if File.directory? item
+#     @group = project.new_group(File.basename(item))
+#   elsif ['.cpp', '.hpp'].include? File.extname(item)
+#     @group.new_reference(item)
+#   end
+# end
+
+target = project.new_target(:dynamic_library, 'lib', :ios)
+target.add_file_references(project.files)
+target.add_system_frameworks('OpenGLES')
+target.add_system_libraries(['c++'])
+target.build_configuration_list.build_configurations.each do |config|
+  config.build_settings["LIBRARY_SEARCH_PATHS"] = '/usr/local/lib'
+  config.build_settings["HEADER_SEARCH_PATHS"] = 'lib/src lib/inc /usr/local/include'
+  config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"] = 'PLATFORM_IOS=1'
+  config.build_settings["SYMROOT"] = 'out'
+end
+
+project.save

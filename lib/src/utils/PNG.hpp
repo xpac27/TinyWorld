@@ -1,5 +1,6 @@
 #pragma once
-#include "png.h"
+#include "lodepng.h"
+#include <vector>
 
 class PNG
 {
@@ -8,16 +9,15 @@ public:
 
     PNG(const char *filename);
 
-    ~PNG();
-
-    png_byte* data();
-    png_uint_32 width();
-    png_uint_32 height();
+    unsigned char* data();
+    unsigned int width();
+    unsigned int height();
 
 private:
 
-    png_byte *image_data;
-	png_uint_32 image_width;
-	png_uint_32 image_height;
+    std::vector<unsigned char> image; //the raw pixels
+
+    unsigned int imageWidth;
+    unsigned int imageHeight;
 
 };

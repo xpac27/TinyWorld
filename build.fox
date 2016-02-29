@@ -46,7 +46,7 @@ filter system: Darwin
         includedirs = lib/inc
     build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/core)
         frameworks = CoreVideo Cocoa IOKit OpenGL
-        libs = c++ core png glfw3
+        libs = c++ core glfw3
 
     build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
         includedirs = lib/tests/inc lib/inc lib/src
