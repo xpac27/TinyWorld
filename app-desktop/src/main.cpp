@@ -54,7 +54,7 @@ int main()
     // Initialize application
     application = new Application();
     application->setup({
-        .rootPath = ""
+        .rootPath = "lib"
     });
 
     // Create a draw and update thread

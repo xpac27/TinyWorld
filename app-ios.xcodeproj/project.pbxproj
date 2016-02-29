@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC230D151C84FFF3007D55E6 /* lib-core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AC230D121C84FFE9007D55E6 /* lib-core.dylib */; };
 		AC2400B01C8359DD005C6DF6 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */; };
 		AC2400B21C8359E3005C6DF6 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2400B11C8359E3005C6DF6 /* GLKit.framework */; };
 		AC3E69D91C83573500AAAC4F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC3E69D81C83573500AAAC4F /* main.m */; };
@@ -15,9 +16,21 @@
 		AC3E69E61C83573500AAAC4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E41C83573500AAAC4F /* Main.storyboard */; };
 		AC3E69E81C83573500AAAC4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E71C83573500AAAC4F /* Assets.xcassets */; };
 		AC3E69EB1C83573500AAAC4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E91C83573500AAAC4F /* LaunchScreen.storyboard */; };
+		AC5131111C850A3100F7F84D /* res in Resources */ = {isa = PBXBuildFile; fileRef = AC5131101C850A3100F7F84D /* res */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AC230D111C84FFE9007D55E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 77F069BABB3E09DEF3D6303F;
+			remoteInfo = "lib-core";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "lib-core.xcodeproj"; sourceTree = "<group>"; };
 		AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		AC2400B11C8359E3005C6DF6 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		AC3E69D41C83573500AAAC4F /* app-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +43,7 @@
 		AC3E69E71C83573500AAAC4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC3E69EA1C83573500AAAC4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC3E69EC1C83573500AAAC4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC5131101C850A3100F7F84D /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = lib/res; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC230D151C84FFF3007D55E6 /* lib-core.dylib in Frameworks */,
 				AC2400B21C8359E3005C6DF6 /* GLKit.framework in Frameworks */,
 				AC2400B01C8359DD005C6DF6 /* OpenGLES.framework in Frameworks */,
 			);
@@ -45,11 +60,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC230D0E1C84FFE9007D55E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC230D121C84FFE9007D55E6 /* lib-core.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		AC3E69CB1C83573500AAAC4F = {
 			isa = PBXGroup;
 			children = (
+				AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */,
 				AC2400B11C8359E3005C6DF6 /* GLKit.framework */,
 				AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */,
+				AC5131101C850A3100F7F84D /* res */,
 				AC3E69D51C83573500AAAC4F /* Products */,
 				AC3E69D61C83573500AAAC4F /* app-ios */,
 			);
@@ -133,6 +158,12 @@
 			mainGroup = AC3E69CB1C83573500AAAC4F;
 			productRefGroup = AC3E69D51C83573500AAAC4F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = AC230D0E1C84FFE9007D55E6 /* Products */;
+					ProjectRef = AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				AC3E69D31C83573500AAAC4F /* app-ios */,
@@ -140,11 +171,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		AC230D121C84FFE9007D55E6 /* lib-core.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = "lib-core.dylib";
+			remoteRef = AC230D111C84FFE9007D55E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		AC3E69D21C83573500AAAC4F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC5131111C850A3100F7F84D /* res in Resources */,
 				AC3E69E81C83573500AAAC4F /* Assets.xcassets in Resources */,
 				AC3E69E61C83573500AAAC4F /* Main.storyboard in Resources */,
 				AC3E69EB1C83573500AAAC4F /* LaunchScreen.storyboard in Resources */,

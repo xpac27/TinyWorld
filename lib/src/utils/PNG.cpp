@@ -6,12 +6,17 @@ PNG::PNG(const char *filename)
 {
     std::vector<unsigned char> png;
 
-    //load and decode
-    unsigned error = lodepng::load_file(png, filename);
-    if(!error) error = lodepng::decode(image, imageWidth, imageHeight, png);
+    unsigned e = lodepng::load_file(png, filename);
+    if (e) {
+        error("PNG:", lodepng_error_text(e), filename);
+        return;
+    }
 
-    //if there's an error, display it
-    if(error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+    e = lodepng::decode(image, imageWidth, imageHeight, png);
+    if (e) {
+        error("PNG:", lodepng_error_text(e), filename);
+        return;
+    }
 
     success("PNG loaded:", filename);
 }

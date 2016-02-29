@@ -2,33 +2,19 @@
 require 'xcodeproj'
 require 'pathname'
 
-project = Xcodeproj::Project.new('example.xcodeproj')
+project = Xcodeproj::Project.new('lib-core.xcodeproj')
 
-files =
+src = project.new_group('src')
+
+sources =
   Dir.glob('lib/src/**/*.cpp') +
   Dir.glob('lib/src/**/*.hpp') +
   Dir.glob('lib/inc/**/*.hpp')
 
-files.each {|file| project.new_file(file) }
+sources.each {|file| src.new_reference(file) }
 
-# files.each do |file|
-#   project.new_file(file)
-# end
-#
-# item.gsub!(/^lib\/[a-z]+\//, '')
-#
-# @group = project.main_group
-# @group.new_group('lib')
-# Dir[File.join('lib', 'src', '**', '*')].each do |item|
-#   if File.directory? item
-#     @group = project.new_group(File.basename(item))
-#   elsif ['.cpp', '.hpp'].include? File.extname(item)
-#     @group.new_reference(item)
-#   end
-# end
-
-target = project.new_target(:dynamic_library, 'lib', :ios)
-target.add_file_references(project.files)
+target = project.new_target(:dynamic_library, 'lib-core', :ios)
+target.add_file_references(src.files)
 target.add_system_frameworks('OpenGLES')
 target.add_system_libraries(['c++'])
 target.build_configuration_list.build_configurations.each do |config|

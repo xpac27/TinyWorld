@@ -15,3 +15,5 @@ coverage/*
 
 app-ios.xcodeproj/project.xcworkspace/
 app-ios.xcodeproj/xcuserdata/
+lib-core.xcodeproj/project.xcworkspace/
+lib-core.xcodeproj/xcuserdata/
