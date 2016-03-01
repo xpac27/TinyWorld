@@ -5,7 +5,7 @@
 #include "RendererParams.hpp"
 #include "Cubemap.hpp"
 #include "Program.hpp"
-#include "../../inc/graphic/Mesh.hpp"
+#include "Mesh.hpp"
 #include <glm/glm.hpp>
 
 template <typename T, typename TT, typename TTT>

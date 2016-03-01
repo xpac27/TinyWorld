@@ -1,4 +1,4 @@
-#include "../../inc/graphic/Mesh.hpp"
+#include "Mesh.hpp"
 #include "../../inc/utils/Utility.hpp"
 #include "../utils/Texture.hpp"
 #include "../utils/OBJ.hpp"
