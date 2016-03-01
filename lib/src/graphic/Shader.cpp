@@ -20,6 +20,15 @@ void Shader::load(const char* filename)
             getline(file, line);
             content.append(line + "\n");
         }
+
+        #ifdef PLATFORM_OSX
+        content = "#version 330 core\n" + content;
+        #endif
+
+        #ifdef PLATFORM_IOS
+        content = "#version 300 es\n" + content;
+        #endif
+
         const GLchar* p[1] = {content.data()};
         GLint l[1] = {GLint(content.size())};
         glShaderSource(reference, 1, p, l);

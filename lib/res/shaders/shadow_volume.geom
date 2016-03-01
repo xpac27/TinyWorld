@@ -1,5 +1,3 @@
-#version 330
-
 layout(triangles_adjacency) in; // 6 vertice
 layout(triangle_strip, max_vertices = 12) out;
 

@@ -1,5 +1,3 @@
-#version 330 core
-
 layout (location = 4) out vec3 gShadow;
 
 void main()

@@ -1,5 +1,3 @@
-#version 330 core
-
 out vec4 frag_coords;
 in vec2 text_coords;
 
