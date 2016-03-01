@@ -13,7 +13,7 @@ build.ninja
 out/*
 coverage/*
 
-app-ios.xcodeproj/project.xcworkspace/
-app-ios.xcodeproj/xcuserdata/
-lib-core.xcodeproj/project.xcworkspace/
-lib-core.xcodeproj/xcuserdata/
+app-ios/app-ios.xcodeproj/project.xcworkspace/
+app-ios/app-ios.xcodeproj/xcuserdata/
+app-ios/lib-core.xcodeproj/project.xcworkspace/
+app-ios/lib-core.xcodeproj/xcuserdata/

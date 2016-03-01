@@ -2,14 +2,18 @@
 require 'xcodeproj'
 require 'pathname'
 
+project_file = 'app-ios/lib-core.xcodeproj'
+
 sources =
   Dir.glob('lib/src/**/*.cpp') +
   Dir.glob('lib/src/**/*.hpp') +
   Dir.glob('lib/inc/**/*.hpp')
 
-if File.exist?('lib-core.xcodeproj')
+sources.map! {|file| '../' + file}
 
-  project = Xcodeproj::Project.open('lib-core.xcodeproj')
+if File.exist?(project_file)
+
+  project = Xcodeproj::Project.open(project_file)
   group = project.groups.select {|g| g.name == 'src' }.first
 
   project.files.each {|file| file.remove_from_project unless sources.include? file.path }
@@ -19,20 +23,19 @@ if File.exist?('lib-core.xcodeproj')
 
 else
 
-  project = Xcodeproj::Project.new('lib-core.xcodeproj')
+  project = Xcodeproj::Project.new(project_file)
   group = project.new_group('src')
 
   sources.each {|file| group.new_reference(file) }
 
-  target = project.new_target(:dynamic_library, 'lib-core', :ios)
-  target.add_file_references(src.files)
+  target = project.new_target(:static_library, 'lib-core', :ios)
+  target.add_file_references(group.files)
   target.add_system_frameworks('OpenGLES')
-  target.add_system_libraries(['c++'])
   target.build_configuration_list.build_configurations.each {|config|
     config.build_settings["LIBRARY_SEARCH_PATHS"] = '/usr/local/lib'
-    config.build_settings["HEADER_SEARCH_PATHS"] = 'lib/src lib/inc /usr/local/include'
+    config.build_settings["HEADER_SEARCH_PATHS"] = '../lib/src ../lib/inc /usr/local/include'
     config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"] = 'PLATFORM_IOS=1'
-    config.build_settings["SYMROOT"] = 'out'
+    config.build_settings["SYMROOT"] = '../out'
   }
 
 end

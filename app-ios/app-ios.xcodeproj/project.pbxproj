@@ -7,43 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AC230D151C84FFF3007D55E6 /* lib-core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AC230D121C84FFE9007D55E6 /* lib-core.dylib */; };
+		AC0323261C8632FA00FB069F /* res in Resources */ = {isa = PBXBuildFile; fileRef = AC0323241C8632EF00FB069F /* res */; };
+		AC03232D1C86336E00FB069F /* liblib-core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC03232C1C86336600FB069F /* liblib-core.a */; };
 		AC2400B01C8359DD005C6DF6 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */; };
 		AC2400B21C8359E3005C6DF6 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2400B11C8359E3005C6DF6 /* GLKit.framework */; };
-		AC3E69D91C83573500AAAC4F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC3E69D81C83573500AAAC4F /* main.m */; };
-		AC3E69DC1C83573500AAAC4F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC3E69DB1C83573500AAAC4F /* AppDelegate.m */; };
-		AC3E69E31C83573500AAAC4F /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC3E69E21C83573500AAAC4F /* GameViewController.mm */; };
-		AC3E69E61C83573500AAAC4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E41C83573500AAAC4F /* Main.storyboard */; };
-		AC3E69E81C83573500AAAC4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E71C83573500AAAC4F /* Assets.xcassets */; };
-		AC3E69EB1C83573500AAAC4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC3E69E91C83573500AAAC4F /* LaunchScreen.storyboard */; };
-		AC5131111C850A3100F7F84D /* res in Resources */ = {isa = PBXBuildFile; fileRef = AC5131101C850A3100F7F84D /* res */; };
+		ACD3BDF11C86357B00000A26 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ACD3BDF01C86357B00000A26 /* main.m */; };
+		ACD3BDF61C86359500000A26 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ACD3BDF31C86359500000A26 /* AppDelegate.m */; };
+		ACD3BDF71C86359500000A26 /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD3BDF51C86359500000A26 /* GameViewController.mm */; };
+		ACD3BDFE1C8635B300000A26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD3BDFA1C8635B300000A26 /* LaunchScreen.storyboard */; };
+		ACD3BDFF1C8635B300000A26 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD3BDFC1C8635B300000A26 /* Main.storyboard */; };
+		ACD3BE011C8635E000000A26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACD3BE001C8635E000000A26 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		AC230D111C84FFE9007D55E6 /* PBXContainerItemProxy */ = {
+		AC03232B1C86336600FB069F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */;
+			containerPortal = AC0323271C86336600FB069F /* lib-core.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 77F069BABB3E09DEF3D6303F;
+			remoteGlobalIDString = 1382709A82C501D560CD97FA;
+			remoteInfo = "lib-core";
+		};
+		ACEC8AA01C8656FF001FA72B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC0323271C86336600FB069F /* lib-core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 721370A77BAD2D7C8A7A659E;
 			remoteInfo = "lib-core";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "lib-core.xcodeproj"; sourceTree = "<group>"; };
+		AC0323241C8632EF00FB069F /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../lib/res; sourceTree = "<group>"; };
+		AC0323271C86336600FB069F /* lib-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "lib-core.xcodeproj"; sourceTree = "<group>"; };
 		AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		AC2400B11C8359E3005C6DF6 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		AC3E69D41C83573500AAAC4F /* app-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AC3E69D81C83573500AAAC4F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AC3E69DA1C83573500AAAC4F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		AC3E69DB1C83573500AAAC4F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AC3E69E11C83573500AAAC4F /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
-		AC3E69E21C83573500AAAC4F /* GameViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameViewController.mm; sourceTree = "<group>"; };
-		AC3E69E51C83573500AAAC4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		AC3E69E71C83573500AAAC4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AC3E69EA1C83573500AAAC4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		AC3E69EC1C83573500AAAC4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AC5131101C850A3100F7F84D /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = lib/res; sourceTree = "<group>"; };
+		ACD3BDF01C86357B00000A26 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		ACD3BDF21C86359500000A26 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		ACD3BDF31C86359500000A26 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		ACD3BDF41C86359500000A26 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = SOURCE_ROOT; };
+		ACD3BDF51C86359500000A26 /* GameViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameViewController.mm; sourceTree = SOURCE_ROOT; };
+		ACD3BDFB1C8635B300000A26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
+		ACD3BDFD1C8635B300000A26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		ACD3BE001C8635E000000A26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		ACD3BE021C86361C00000A26 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC230D151C84FFF3007D55E6 /* lib-core.dylib in Frameworks */,
+				AC03232D1C86336E00FB069F /* liblib-core.a in Frameworks */,
 				AC2400B21C8359E3005C6DF6 /* GLKit.framework in Frameworks */,
 				AC2400B01C8359DD005C6DF6 /* OpenGLES.framework in Frameworks */,
 			);
@@ -60,10 +67,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AC230D0E1C84FFE9007D55E6 /* Products */ = {
+		AC0323281C86336600FB069F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AC230D121C84FFE9007D55E6 /* lib-core.dylib */,
+				AC03232C1C86336600FB069F /* liblib-core.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,12 +78,12 @@
 		AC3E69CB1C83573500AAAC4F = {
 			isa = PBXGroup;
 			children = (
-				AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */,
+				AC0323271C86336600FB069F /* lib-core.xcodeproj */,
 				AC2400B11C8359E3005C6DF6 /* GLKit.framework */,
 				AC2400AF1C8359DD005C6DF6 /* OpenGLES.framework */,
-				AC5131101C850A3100F7F84D /* res */,
 				AC3E69D51C83573500AAAC4F /* Products */,
 				AC3E69D61C83573500AAAC4F /* app-ios */,
+				AC0323241C8632EF00FB069F /* res */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,14 +99,14 @@
 			isa = PBXGroup;
 			children = (
 				AC3E69D71C83573500AAAC4F /* Supporting Files */,
-				AC3E69DA1C83573500AAAC4F /* AppDelegate.h */,
-				AC3E69DB1C83573500AAAC4F /* AppDelegate.m */,
-				AC3E69E11C83573500AAAC4F /* GameViewController.h */,
-				AC3E69E21C83573500AAAC4F /* GameViewController.mm */,
-				AC3E69E71C83573500AAAC4F /* Assets.xcassets */,
-				AC3E69E41C83573500AAAC4F /* Main.storyboard */,
-				AC3E69E91C83573500AAAC4F /* LaunchScreen.storyboard */,
-				AC3E69EC1C83573500AAAC4F /* Info.plist */,
+				ACD3BDF21C86359500000A26 /* AppDelegate.h */,
+				ACD3BDF31C86359500000A26 /* AppDelegate.m */,
+				ACD3BE021C86361C00000A26 /* Info.plist */,
+				ACD3BDF41C86359500000A26 /* GameViewController.h */,
+				ACD3BDF51C86359500000A26 /* GameViewController.mm */,
+				ACD3BE001C8635E000000A26 /* Assets.xcassets */,
+				ACD3BDFA1C8635B300000A26 /* LaunchScreen.storyboard */,
+				ACD3BDFC1C8635B300000A26 /* Main.storyboard */,
 			);
 			path = "app-ios";
 			sourceTree = "<group>";
@@ -107,7 +114,7 @@
 		AC3E69D71C83573500AAAC4F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AC3E69D81C83573500AAAC4F /* main.m */,
+				ACD3BDF01C86357B00000A26 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -126,6 +133,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				ACEC8AA11C8656FF001FA72B /* PBXTargetDependency */,
 			);
 			name = "app-ios";
 			productName = "app-ios";
@@ -160,8 +168,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = AC230D0E1C84FFE9007D55E6 /* Products */;
-					ProjectRef = AC230D0D1C84FFE9007D55E6 /* lib-core.xcodeproj */;
+					ProductGroup = AC0323281C86336600FB069F /* Products */;
+					ProjectRef = AC0323271C86336600FB069F /* lib-core.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -172,11 +180,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		AC230D121C84FFE9007D55E6 /* lib-core.dylib */ = {
+		AC03232C1C86336600FB069F /* liblib-core.a */ = {
 			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = "lib-core.dylib";
-			remoteRef = AC230D111C84FFE9007D55E6 /* PBXContainerItemProxy */;
+			fileType = archive.ar;
+			path = "liblib-core.a";
+			remoteRef = AC03232B1C86336600FB069F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -186,10 +194,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC5131111C850A3100F7F84D /* res in Resources */,
-				AC3E69E81C83573500AAAC4F /* Assets.xcassets in Resources */,
-				AC3E69E61C83573500AAAC4F /* Main.storyboard in Resources */,
-				AC3E69EB1C83573500AAAC4F /* LaunchScreen.storyboard in Resources */,
+				ACD3BE011C8635E000000A26 /* Assets.xcassets in Resources */,
+				AC0323261C8632FA00FB069F /* res in Resources */,
+				ACD3BDFF1C8635B300000A26 /* Main.storyboard in Resources */,
+				ACD3BDFE1C8635B300000A26 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,29 +208,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC3E69DC1C83573500AAAC4F /* AppDelegate.m in Sources */,
-				AC3E69E31C83573500AAAC4F /* GameViewController.mm in Sources */,
-				AC3E69D91C83573500AAAC4F /* main.m in Sources */,
+				ACD3BDF71C86359500000A26 /* GameViewController.mm in Sources */,
+				ACD3BDF61C86359500000A26 /* AppDelegate.m in Sources */,
+				ACD3BDF11C86357B00000A26 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		AC3E69E41C83573500AAAC4F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AC3E69E51C83573500AAAC4F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		ACEC8AA11C8656FF001FA72B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "lib-core";
+			targetProxy = ACEC8AA01C8656FF001FA72B /* PBXContainerItemProxy */;
 		};
-		AC3E69E91C83573500AAAC4F /* LaunchScreen.storyboard */ = {
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		ACD3BDFA1C8635B300000A26 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AC3E69EA1C83573500AAAC4F /* Base */,
+				ACD3BDFB1C8635B300000A26 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		ACD3BDFC1C8635B300000A26 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACD3BDFD1C8635B300000A26 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -316,12 +332,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				HEADER_SEARCH_PATHS = lib/inc;
-				INFOPLIST_FILE = "app-ios/Info.plist";
+				HEADER_SEARCH_PATHS = ../lib/inc;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "vinz.app-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = out;
+				SYMROOT = ../out;
 			};
 			name = Debug;
 		};
@@ -329,12 +345,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				HEADER_SEARCH_PATHS = lib/inc;
-				INFOPLIST_FILE = "app-ios/Info.plist";
+				HEADER_SEARCH_PATHS = ../lib/inc;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "vinz.app-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = out;
+				SYMROOT = ../out;
 			};
 			name = Release;
 		};
