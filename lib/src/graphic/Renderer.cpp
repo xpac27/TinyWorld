@@ -134,7 +134,13 @@ void Renderer::shadowVolumePass(Aggregator<Model> &models)
     glUniform4fv(program->getLocation("direct_light_direction"), 1, value_ptr(directionalLight.direction));
 
     for (unsigned int t = 0; t < models.size(); t ++) {
+        #ifdef PLATFORM_OSX
         meshStore.getById(t)->drawAdjacency(models.size(t));
+        #endif
+
+        #ifdef PLATFORM_IOS
+        meshStore.getById(t)->draw(models.size(t));
+        #endif
     }
 
     program->idle();

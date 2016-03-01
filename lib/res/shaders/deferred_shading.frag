@@ -1,3 +1,7 @@
+#if __VERSION__ == 300
+precision highp float;
+#endif
+
 out vec4 frag_coords;
 in vec2 text_coords;
 

@@ -2,7 +2,7 @@
 #include "Game.hpp"
 
 Application::Application()
-    : game(new Game())
+    : game(nullptr)
 {
 }
 
@@ -13,6 +13,9 @@ Application::~Application()
 
 void Application::setup(ApplicationParams params)
 {
+    if (game) delete game;
+
+    game = new Game();
     game->load(params.rootPath);
 }
 
@@ -31,10 +34,6 @@ void Application::update(float seconds)
 void Application::draw()
 {
     game->draw();
-}
-
-void Application::tearDown()
-{
 }
 
 bool Application::isRunning()

@@ -16,9 +16,12 @@ public:
 
     void updateMatrices(unsigned int instances, const glm::mat4* matrices);
     void draw(unsigned int instances);
-    void drawAdjacency(unsigned int instances);
     void bindTexture(GLuint diffuse, GLuint metallic, GLuint rough, GLuint normal);
     void debug();
+
+    #ifdef PLATFORM_OSX
+    void drawAdjacency(unsigned int instances);
+    #endif
 
 private:
 

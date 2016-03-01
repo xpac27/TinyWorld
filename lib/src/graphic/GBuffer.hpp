@@ -20,4 +20,6 @@ private:
     GLuint gDiffuse;
     GLuint gMR;
     GLuint gShadow;
+    
+    GLint originalFBO;
 };

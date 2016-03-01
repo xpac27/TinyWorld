@@ -15,7 +15,6 @@ public:
     void onKeyPressed(int key);
     void update(float seconds);
     void draw();
-    void tearDown();
 
     bool isRunning();
 

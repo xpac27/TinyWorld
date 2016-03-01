@@ -1,3 +1,7 @@
+#if __VERSION__ == 300
+precision mediump float;
+#endif
+
 layout (location = 4) out vec3 gShadow;
 
 void main()

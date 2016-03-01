@@ -4,8 +4,8 @@
 GBuffer::GBuffer()
 {
     // TODO get windows size from conf
-    int SCR_WIDTH = 800;
-    int SCR_HEIGHT = 600;
+    int SCR_WIDTH = 750;
+    int SCR_HEIGHT = 1334;
 
     glGenFramebuffers(1, &gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
@@ -62,8 +62,25 @@ GBuffer::GBuffer()
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
     // - Finally check if framebuffer is complete
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        error("Framebuffer failed for GBuffer!");
+    switch (glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
+        case GL_FRAMEBUFFER_COMPLETE: success("Framebuffer created"); break;
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: error("Framebuffer failed for GBuffer: INCOMPLETE_ATTACHMENT"); break;
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: error("Framebuffer failed for GBuffer: INCOMPLETE_MISSING_ATTACHMENT"); break;
+        case GL_FRAMEBUFFER_UNDEFINED: error("Framebuffer failer for GBuffer: UNDEFINED"); break;
+        case GL_FRAMEBUFFER_UNSUPPORTED: error("Framebuffer failed for GBuffer: GL_FRAMEBUFFER_UNSUPPORTED"); break;
+
+        #ifdef PLATFORM_OSX
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: error("Framebuffer failer for GBuffer: INCOMPLETE_DRAW_BUFFER"); break;
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: error("Framebuffer failer for GBuffer: INCOMPLETE_READ_BUFFER"); break;
+        case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: error("Framebuffer failer for GBuffer: INCOMPLETE_MULTISAMPLE"); break;
+        case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS: error("Framebuffer failer for GBuffer: INCOMPLETE_LAYER_TARGETS"); break;
+        #endif
+
+        #ifdef PLATFORM_IOS
+        case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS: error("Framebuffer failed for GBuffer: INCOMPLETE_DIMENSIONS"); break;
+        #endif
+
+        default: error("Framebuffer failed for GBuffer");
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -84,10 +101,11 @@ void GBuffer::bindTextures(GLuint position, GLuint normal, GLuint diffuse, GLuin
 
 void GBuffer::bind()
 {
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &originalFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 }
 
 void GBuffer::idle()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, originalFBO);
 }
