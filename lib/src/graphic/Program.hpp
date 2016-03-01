@@ -25,9 +25,7 @@ private:
     GLuint reference;
 
     Shader vs;
-#ifdef PLATFORM_OSX
     Shader gs;
-#endif
     Shader fs;
 
     void link() const;

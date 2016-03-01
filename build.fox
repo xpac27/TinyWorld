@@ -26,7 +26,6 @@ libdirs = out
 filter system: Darwin
 
     build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
-        defines = PLATFORM_OSX
         frameworks = OpenGL
         includedirs = lib/inc lib/src
 
