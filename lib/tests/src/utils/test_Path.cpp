@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "../../../src/utils/Path.hpp"
 #include <iostream>
+#include <string>
 
 namespace
 {
@@ -10,7 +11,7 @@ namespace
             Path tmp("/tmp");
 
             THEN("it return the correct location") {
-                CHECK(tmp.get() == "/tmp");
+                CHECK(std::string(tmp.data()) == "/tmp");
             }
         }
     }
@@ -24,7 +25,7 @@ namespace
                 Path something(tmp.get("somewhere/else"));
 
                 THEN("the resulting path's location is correct") {
-                    CHECK(something.get() == "/tmp/somewhere/else");
+                    CHECK(std::string(something.data()) == "/tmp/somewhere/else");
                 }
             }
         }

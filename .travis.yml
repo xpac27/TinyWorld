@@ -5,7 +5,7 @@ branches:
     except: /^WIP-.*$/
 
 install:
-    - brew install glew glfw3 glm ninja
+    - brew install glfw3 glm ninja
     - pip install --user buildfox
     - mv /Users/travis/Library/Python/2.7/bin/bf /usr/local/bin/
 
