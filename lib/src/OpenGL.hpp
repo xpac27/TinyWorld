@@ -7,7 +7,3 @@
 #ifdef PLATFORM_IOS
 #include <OpenGLES/ES3/glext.h>
 #endif
-
-#ifdef PLATFORM_IOSSIM
-#include <OpenGLES/ES3/glext.h>
-#endif
