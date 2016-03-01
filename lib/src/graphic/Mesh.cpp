@@ -21,17 +21,17 @@ Mesh::Mesh(MeshParams params)
 
     verifyUVs();
 
-    initializeTriangleData(); // Move to manifold
-    computeTrianglesPlaneEquations(); // Move to manifold
-    computeTrianglesTangents(); // Move to manifold
+    initializeTriangleData(); // TODO Move to manifold
+    computeTrianglesPlaneEquations(); // TODO Move to manifold
+    computeTrianglesTangents(); // TODO Move to manifold
     generateTrianglesAdjacencyIndex(triangles, adjacencyIndexes);
 
     vertexArray->initialize(vertexes, uvs, normals, trianglesTangents, trianglesBitangents);
 
     if (!isEmpty(params.diffuseTexture)) diffuseTexture->load(params.diffuseTexture);
-    if (!isEmpty(params.metallicTexture)) diffuseTexture->load(params.metallicTexture);
-    if (!isEmpty(params.roughTexture)) diffuseTexture->load(params.roughTexture);
-    if (!isEmpty(params.normalTexture)) diffuseTexture->load(params.normalTexture);
+    if (!isEmpty(params.metallicTexture)) metallicTexture->load(params.metallicTexture);
+    if (!isEmpty(params.roughTexture)) roughTexture->load(params.roughTexture);
+    if (!isEmpty(params.normalTexture)) normalTexture->load(params.normalTexture);
 }
 
 Mesh::~Mesh()
@@ -71,10 +71,12 @@ void Mesh::draw(unsigned int instances)
 
 void Mesh::drawAdjacency(unsigned int instances)
 {
+    #ifdef PLATFORM_OSX
     vertexArray->uploadIndexes(adjacencyIndexes);
     vertexArray->bind();
     glDrawElementsInstanced(GL_TRIANGLES_ADJACENCY, GLsizei(adjacencyIndexes.size()), GL_UNSIGNED_INT, 0, instances);
     vertexArray->idle();
+    #endif
 }
 
 void Mesh::verifyUVs()

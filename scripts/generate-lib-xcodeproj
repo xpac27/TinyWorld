@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+require 'xcodeproj'
+require 'pathname'
+
+project = Xcodeproj::Project.new('lib-core.xcodeproj')
+
+src = project.new_group('src')
+
+sources =
+  Dir.glob('lib/src/**/*.cpp') +
+  Dir.glob('lib/src/**/*.hpp') +
+  Dir.glob('lib/inc/**/*.hpp')
+
+sources.each {|file| src.new_reference(file) }
+
+target = project.new_target(:dynamic_library, 'lib-core', :ios)
+target.add_file_references(src.files)
+target.add_system_frameworks('OpenGLES')
+target.add_system_libraries(['c++'])
+target.build_configuration_list.build_configurations.each do |config|
+  config.build_settings["LIBRARY_SEARCH_PATHS"] = '/usr/local/lib'
+  config.build_settings["HEADER_SEARCH_PATHS"] = 'lib/src lib/inc /usr/local/include'
+  config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"] = 'PLATFORM_IOS=1'
+  config.build_settings["SYMROOT"] = 'out'
+end
+
+project.save

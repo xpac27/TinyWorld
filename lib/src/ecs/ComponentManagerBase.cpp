@@ -1,4 +1,4 @@
-#include "../../inc/ecs/ComponentManagerBase.hpp"
+#include "ComponentManagerBase.hpp"
 #include "../utils/Signal.hpp"
 
 namespace ecs {

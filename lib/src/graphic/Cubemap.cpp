@@ -1,4 +1,4 @@
-#include "../../inc/graphic/Cubemap.hpp"
+#include "Cubemap.hpp"
 #include "../utils/PNG.hpp"
 #include <string>
 
@@ -11,9 +11,7 @@ Cubemap::Cubemap(CubemapParams params)
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     for(GLuint i = 0; i < 6; i++) {
-        string filepath = "lib/res/";
-        filepath += filenames[i];
-        PNG png(filepath.data());
+        PNG png(filenames[i]);
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, GLint(png.width()), GLint(png.height()), 0, GL_RGBA, GL_UNSIGNED_BYTE, png.data());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

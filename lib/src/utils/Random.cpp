@@ -1,4 +1,4 @@
-#include "../../inc/utils/Random.hpp"
+#include "Random.hpp"
 #include <stdlib.h>
 
 float Random::get()

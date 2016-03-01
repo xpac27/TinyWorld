@@ -1,8 +1,6 @@
 #include "OBJ.hpp"
 #include "log.hpp"
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
 #include <cstring>
 #include <assert.h>
 
@@ -42,10 +40,7 @@ void OBJ::load(const char *filename)
 
 bool OBJ::openFile(const char *filename, ifstream &fin)
 {
-    // TODO stop assuming paths
-    string filepath = "lib/res/objects/";
-    filepath += filename;
-    fin.open(filepath);
+    fin.open(filename);
     return fin.good();
 }
 

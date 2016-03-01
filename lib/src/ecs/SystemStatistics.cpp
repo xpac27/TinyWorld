@@ -1,4 +1,4 @@
-#include "../../inc/ecs/SystemStatistics.hpp"
+#include "SystemStatistics.hpp"
 #include "../utils/log.hpp"
 #include <math.h>
 

@@ -1,7 +1,7 @@
 #include "log.hpp"
-#include "../../inc/components/Movement.hpp"
-#include "../../inc/components/Life.hpp"
-#include "../../inc/components/Visibility.hpp"
+#include "../components/Movement.hpp"
+#include "../components/Life.hpp"
+#include "../components/Visibility.hpp"
 
 void nl()
 {
@@ -43,13 +43,6 @@ void dump(Life* c)
 void dump(Visibility* c)
 {
     printl("Visibility");
-    switch (c->meshType) {
-        case MeshType::PLAN: printl("  meshType: plan"); break;
-        case MeshType::CUBE: printl("  meshType: cube"); break;
-        case MeshType::SPHERE: printl("  meshType: sphere"); break;
-        case MeshType::TORUS: printl("  meshType: torus"); break;
-        case MeshType::TEAPOT: printl("  meshType: teapot"); break;
-        case MeshType::TWISTED_TORUS: printl("  meshType: twisted-torus"); break;
-    }
+    printl("  meshId: ", c->meshId);
     printl("  scale: ", c->scale.x, c->scale.y, c->scale.z);
 }

@@ -1,4 +1,4 @@
-#include "../../inc/utils/Path.hpp"
+#include "Path.hpp"
 
 using namespace std;
 
@@ -11,8 +11,8 @@ Path Path::get(const string path) const
     return Path(location + "/" + path);
 }
 
-string Path::get() const
+const char* Path::data() const
 {
-    return location;
+    return location.data();
 }
 

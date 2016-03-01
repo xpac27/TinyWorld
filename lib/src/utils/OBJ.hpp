@@ -1,8 +1,8 @@
 #pragma once
-#include <GL/glew.h>
+#include <OpenGL.hpp>
+#include <glm/fwd.hpp>
 #include <vector>
 #include <fstream>
-#include <glm/fwd.hpp>
 
 class OBJ
 {

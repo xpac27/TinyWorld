@@ -1,6 +1,6 @@
-#include "../../inc/utils/Utility.hpp"
+#include "Utility.hpp"
 
 bool isEmpty(const char* c)
 {
-    return c && c[0];
+    return (c && c[0]) == false;
 }

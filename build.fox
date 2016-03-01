@@ -23,23 +23,32 @@ filter toolset: clang
 
 libdirs = out
 
-build objects(out/objects/lib/**/*): auto lib/src/**/*.cpp
-    includedirs = lib/inc lib/src
-build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
-    includedirs = lib/tests/inc lib/inc lib/src
-build objects(out/objects/app/**/*): auto app/src/*.cpp
-    includedirs = lib/inc
-
-build library(out/tw): auto objects(out/objects/lib/**/*)
-
-build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/tw)
-    libs = tw
-
 filter system: Darwin
-    build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/tw)
-        frameworks = CoreVideo Cocoa IOKit OpenGL
-        libs = tw c++ png glfw3 GLEW
 
-filter system: Linux
-    build application(out/tinyworld): auto objects(out/objects/app/**/*) | library(out/tw)
-        libs = png glfw3 GL GLEW X11 Xxf86vm pthread Xrandr Xcursor Xinerama Xi
+    build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
+        defines = PLATFORM_OSX
+        frameworks = OpenGL
+        includedirs = lib/inc lib/src
+
+    build objects(out/objects/lib-ios/**/*): auto lib/src/**/*.cpp
+        defines = PLATFORM_IOS
+        includedirs = /usr/local/include lib/inc lib/src
+        frameworks = OpenGLES
+        cxxflags += -arch arm64
+        cxx = xcrun --sdk iphoneos9.2 clang
+
+    build library(out/core): auto objects(out/objects/lib-osx/**/*)
+        libs = c++
+    build library(out/core-ios): auto objects(out/objects/lib-ios/**/*)
+        libs = c++
+
+    build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
+        includedirs = lib/inc
+    build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/core)
+        frameworks = CoreVideo Cocoa IOKit OpenGL
+        libs = c++ core glfw3
+
+    build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
+        includedirs = lib/tests/inc lib/inc lib/src
+    build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/core)
+        libs = c++ core

@@ -1,5 +1,5 @@
-#include "../../inc/ecs/System.hpp"
-#include "../../inc/ecs/ComponentManagerBase.hpp"
+#include "System.hpp"
+#include "ComponentManagerBase.hpp"
 #include "../utils/Signal.hpp"
 #include "../utils/log.hpp"
 #include <algorithm>

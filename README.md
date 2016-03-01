@@ -24,11 +24,8 @@ Todo:
 
 ## Requirements
 
-* **OpenGL** 4.1 + ([website](https://www.opengl.org/))
-* **GLEW** 1.12.0 + ([website](http://glew.sourceforge.net/))
 * **GLFW** 3.1.1 + ([website](glfw.org/index.html))
 * **GLM** 0.9.6 + ([website](glm.g-truc.net))
-* **LibPNG** ([website](http://www.libpng.org/pub/png/libpng.html))
 * **Ninja** 1.6.0 + ([website](https://martine.github.io/ninja/))
 * **Buildfox** 0.1.2 + ([website](https://github.com/beardsvibe/buildfox))
 
@@ -53,7 +50,7 @@ Optionaly, you can run:
 
 	brew update
 	brew tap homebrew/versions
-	brew install glfw3 glew glm libpng ninja
+	brew install glfw3 glm ninja
 	pip install buildfox
 
 ### Ubuntu
@@ -65,7 +62,7 @@ Prerequisits:
 
 Libs:
 
-    apt-get install libc++-dev libglew-dev libpng12-dev
+    apt-get install libc++-dev libglew-dev
 
 Build system:
 

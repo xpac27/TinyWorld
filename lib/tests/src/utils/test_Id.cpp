@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../inc/utils/Id.hpp"
+#include "../../src/utils/Id.hpp"
 
 namespace
 {

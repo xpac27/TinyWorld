@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../../inc/utils/Store.hpp"
+#include "../../../src/utils/Store.hpp"
 #include <iostream>
 #include <string>
 
