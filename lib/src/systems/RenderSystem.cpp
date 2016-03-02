@@ -1,14 +1,14 @@
-#include "../../inc/systems/RenderSystem.hpp"
-#include "../../inc/ecs/ComponentManager.hpp"
-#include "../../inc/ecs/Id.hpp"
-#include "../../inc/graphic/Renderer.hpp"
+#include "RenderSystem.hpp"
+#include "../ecs/ComponentManager.hpp"
+#include "../ecs/Id.hpp"
+#include "../graphic/Renderer.hpp"
 #include "../utils/Aggregator.hpp"
 #include "../graphic/Model.hpp"
 #include "../utils/log.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <glm/mat4x4.hpp>
+#include <glm/glm.hpp>
 #include <math.h>
 
 using namespace std;
@@ -47,7 +47,7 @@ void RenderSystem::update(Renderer& renderer)
                 modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
             }
 
-            models.add(visibility->meshType, Model(modelTranslation, modelRotation, modelScale));
+            models.add(visibility->meshId, Model(modelTranslation, modelRotation, modelScale));
         }
     }
 

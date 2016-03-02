@@ -1,6 +1,6 @@
-#include "../../inc/systems/MovementSystem.hpp"
-#include "../../inc/ecs/ComponentManager.hpp"
-#include "../../inc/ecs/Id.hpp"
+#include "MovementSystem.hpp"
+#include "../ecs/ComponentManager.hpp"
+#include "../ecs/Id.hpp"
 #include "../utils/log.hpp"
 #include <math.h>
 

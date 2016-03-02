@@ -8,13 +8,13 @@ configure:
 	@ninja -t compdb cxx > out/compile_commands.json
 
 compile:
-	@ninja out/tinyworld
+	@ninja out/app-desktop
 
 run:
-	@./out/tinyworld
+	@./out/app-desktop
 
 debug:
-	@lldb -f out/tinyworld
+	@lldb -f out/app-desktop
 
 test:
 	@ninja out/tests
@@ -47,10 +47,6 @@ coverage:
 	@lcov --list coverage/cov.info
 	@genhtml coverage/cov.info -o coverage &> /dev/null
 	@open coverage/index.html
-
-analysis:
-	@bf debug=true analysis=true
-	@scan-build -V ninja out/tinyworld
 
 tags:
 	./scripts/tags

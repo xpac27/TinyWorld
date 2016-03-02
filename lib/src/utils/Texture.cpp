@@ -9,9 +9,7 @@ void Texture::load(const char *filename)
     if (filename && !filename[0]) return;
     if (loaded) destroy();
 
-    string filepath = "lib/res/";
-    filepath += filename;
-    PNG png(filepath.data());
+    PNG png(filename);
 
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
@@ -44,5 +42,6 @@ void Texture::destroy()
 {
     if (id) {
         glDeleteTextures(1, &id);
+        loaded = false;
     }
 }

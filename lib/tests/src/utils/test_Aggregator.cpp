@@ -1,10 +1,9 @@
 #include "catch.hpp"
 #include "../../src/utils/Aggregator.hpp"
-#include <iostream>
 
 namespace
 {
-    SCENARIO("Aggregator" "[Aggregator]") {
+    SCENARIO("Aggregator") {
         GIVEN("An Aggregator") {
             Aggregator<const char*> aggregator;
 

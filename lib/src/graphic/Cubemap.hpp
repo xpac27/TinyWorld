@@ -1,5 +1,6 @@
 #pragma once
-#include <GL/glew.h>
+#include <graphic/CubemapParams.hpp>
+#include <OpenGL.hpp>
 #include <vector>
 
 class Cubemap
@@ -7,7 +8,7 @@ class Cubemap
 
 public:
 
-    Cubemap(const char* filenames[6]);
+    Cubemap(CubemapParams params);
     ~Cubemap();
 
     void bind(GLuint textureUnit);

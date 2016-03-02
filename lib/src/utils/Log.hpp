@@ -1,5 +1,5 @@
 #pragma once
-#include "../../inc/ecs/Id.hpp"
+#include "../ecs/Id.hpp"
 #include <iostream>
 
 struct Movement;

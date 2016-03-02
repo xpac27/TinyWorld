@@ -1,5 +1,7 @@
 #pragma once
-#include <GL/glew.h>
+#include "ProgramParams.hpp"
+#include "Shader.hpp"
+#include <OpenGL.hpp>
 
 class Program
 {
@@ -7,8 +9,7 @@ class Program
 public:
 
     // TODO pass file objects instead of file paths
-    Program(const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
-    Program(const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath);
+    Program(ProgramParams params);
 
     ~Program();
 
@@ -21,8 +22,12 @@ private:
 
     Program();
 
-    void link() const;
-
     GLuint reference;
+
+    Shader vs;
+    Shader gs;
+    Shader fs;
+
+    void link() const;
 
 };

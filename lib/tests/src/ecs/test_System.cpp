@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "../../inc/ecs/System.hpp"
-#include "../../inc/ecs/ComponentManager.hpp"
-#include "../../inc/ecs/EntityManager.hpp"
-#include "../../inc/ecs/Id.hpp"
-#include "../../inc/components/Life.hpp"
+#include "../../src/ecs/System.hpp"
+#include "../../src/ecs/ComponentManager.hpp"
+#include "../../src/ecs/EntityManager.hpp"
+#include "../../src/ecs/Id.hpp"
+#include "../../src/components/Life.hpp"
 
 namespace
 {

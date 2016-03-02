@@ -1,5 +1,0 @@
-newmtl old_tiles
-map_Kd textures/surfaces/old_tiles/diffuse.png
-map_Ks textures/surfaces/old_tiles/metallicness.png
-map_Ns textures/surfaces/old_tiles/roughness.png
-map_Bump textures/surfaces/old_tiles/normal.png

@@ -1,5 +1,0 @@
-newmtl fan_cobblestone
-map_Kd textures/surfaces/fan_cobblestone/diffuse.png
-map_Ks textures/surfaces/fan_cobblestone/metallicness.png
-map_Ns textures/surfaces/fan_cobblestone/roughness.png
-map_Bump textures/surfaces/fan_cobblestone/normal.png

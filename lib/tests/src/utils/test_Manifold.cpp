@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "../../../src/utils/Manifold.hpp"
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
 
 using namespace std;
 using namespace glm;

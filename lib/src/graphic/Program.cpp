@@ -1,23 +1,22 @@
 #include "Program.hpp"
-#include "Shader.hpp"
+#include "../../inc/utils/Utility.hpp"
 #include "../utils/log.hpp"
 
-Program::Program()
+Program::Program(ProgramParams params)
     : reference(glCreateProgram())
-{}
-
-Program::Program(const char* vertexShaderFilePath, const char* fragmentShaderFilePath) : Program()
+    , vs(GL_VERTEX_SHADER, reference)
+    , gs(GL_GEOMETRY_SHADER, reference)
+    , fs(GL_FRAGMENT_SHADER, reference)
 {
-    Shader vs(GL_VERTEX_SHADER, reference, vertexShaderFilePath);
-    Shader fs(GL_FRAGMENT_SHADER, reference, fragmentShaderFilePath);
-    link();
-}
-
-Program::Program(const char* vertexShaderFilePath, const char* geometryShaderFilePath, const char* fragmentShaderFilePath) : Program()
-{
-    Shader vs(GL_VERTEX_SHADER, reference, vertexShaderFilePath);
-    Shader gs(GL_GEOMETRY_SHADER, reference, geometryShaderFilePath);
-    Shader fs(GL_FRAGMENT_SHADER, reference, fragmentShaderFilePath);
+    if (!isEmpty(params.vertexShader)) {
+        vs.load(params.vertexShader);
+    }
+    if (!isEmpty(params.geometryShader)) {
+        gs.load(params.geometryShader);
+    }
+    if (!isEmpty(params.fragmentShader)) {
+        fs.load(params.fragmentShader);
+    }
     link();
 }
 

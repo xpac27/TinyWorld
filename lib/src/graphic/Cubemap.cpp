@@ -4,14 +4,14 @@
 
 using namespace std;
 
-Cubemap::Cubemap(const char* filenames[6])
+Cubemap::Cubemap(CubemapParams params)
 {
+    const char* filenames[6] {params.right, params.left, params.bottom, params.top, params.back, params.front};
+
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     for(GLuint i = 0; i < 6; i++) {
-        string filepath = "lib/res/";
-        filepath += filenames[i];
-        PNG png(filepath.data());
+        PNG png(filenames[i]);
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, GLint(png.width()), GLint(png.height()), 0, GL_RGBA, GL_UNSIGNED_BYTE, png.data());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
