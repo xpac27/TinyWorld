@@ -5,11 +5,11 @@
 #include "Model.hpp"
 #include "Camera.hpp"
 #include "../utils/Store.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 #include "../utils/Aggregator.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
-#include <OpenGL.hpp>
+#include "OpenGL.hpp"
 
 using namespace std;
 using namespace glm;

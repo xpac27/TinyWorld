@@ -1,6 +1,6 @@
 #pragma once
-#include <OpenGL.hpp>
-#include <glm/glm.hpp>
+#include "OpenGL.hpp"
+#include "GLM.hpp"
 #include <vector>
 
 #define IND_VB 0

@@ -1,6 +1,6 @@
 #include "Program.hpp"
 #include "../../inc/utils/Utility.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 
 Program::Program(ProgramParams params)
     : reference(glCreateProgram())

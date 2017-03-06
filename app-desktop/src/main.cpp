@@ -1,4 +1,4 @@
-#include <GLFW/glfw3.h>
+#include <OpenGL.hpp>
 
 #include <Application.hpp>
 

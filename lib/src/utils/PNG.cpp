@@ -1,5 +1,5 @@
 #include "PNG.hpp"
-#include "log.hpp"
+#include "Log.hpp"
 #include <iostream>
 
 PNG::PNG(const char *filename)

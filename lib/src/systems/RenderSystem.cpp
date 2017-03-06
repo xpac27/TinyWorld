@@ -4,7 +4,7 @@
 #include "../graphic/Renderer.hpp"
 #include "../utils/Aggregator.hpp"
 #include "../graphic/Model.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>

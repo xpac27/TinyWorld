@@ -23,22 +23,65 @@ filter toolset: clang
 
 libdirs = out
 
+filter toolset: gcc
+    cxxflags += -std=c++11 -Wextra
+    cxxflags += -Wno-c++98-compat
+    cxxflags += -Wno-c++98-compat-pedantic
+    cxxflags += -Wno-newline-eof
+    cxxflags += -Wno-padded
+    cxxflags += -Wno-exit-time-destructors
+    cxxflags += -Wno-c99-extensions
+
+    filter debug: true
+        cxxflags += -g
+
+    filter release: true
+        cxxflags += -g0
+
+filter system: Linux
+
+    includedirs = /usr/include
+    libdirs += /usr/lib /usr/lib/x86_64-linux-gnu
+
+    build objects(out/objects/ext/glad/**/*): auto lib/ext/glad/**/*.cpp
+        includedirs += lib/ext/glad/include
+    build library(out/glad): auto objects(out/objects/ext/glad/**/*)
+
+
+    build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
+        includedirs += lib/inc lib/src
+        includedirs += lib/ext/glad/include
+
+    build library(out/core): auto objects(out/objects/lib-osx/**/*) | library(out/glad)
+
+
+    build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
+        includedirs += lib/inc 
+        includedirs += lib/ext/glad/include
+    build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/glad) library(out/core)
+        libs = core glad glfw GL GLU X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor
+
+    build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
+        includedirs += lib/tests/inc lib/inc lib/src
+    build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/core)
+        libs = core
+
 filter system: Darwin
 
     build objects(out/objects/lib-osx/**/*): auto lib/src/**/*.cpp
         frameworks = OpenGL
-        includedirs = lib/inc lib/src
+        includedirs += lib/inc lib/src
 
     build library(out/core): auto objects(out/objects/lib-osx/**/*)
         libs = c++
 
     build objects(out/objects/app-desktop/**/*): auto app-desktop/src/*.cpp
-        includedirs = lib/inc
+        includedirs += lib/inc
     build application(out/app-desktop): auto objects(out/objects/app-desktop/**/*) | library(out/core)
         frameworks = CoreVideo Cocoa IOKit OpenGL
         libs = c++ core glfw3
 
     build objects(out/objects/tests/**/*): auto lib/tests/src/**/*.cpp
-        includedirs = lib/tests/inc lib/inc lib/src
+        includedirs += lib/tests/inc lib/inc lib/src
     build application(out/tests): auto objects(out/objects/tests/**/*) | library(out/core)
         libs = c++ core

@@ -1,7 +1,7 @@
 #include "System.hpp"
 #include "ComponentManagerBase.hpp"
 #include "../utils/Signal.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 #include <algorithm>
 
 namespace ecs {

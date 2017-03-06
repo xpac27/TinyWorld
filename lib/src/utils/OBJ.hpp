@@ -1,5 +1,5 @@
 #pragma once
-#include <OpenGL.hpp>
+#include "OpenGL.hpp"
 #include <glm/fwd.hpp>
 #include <vector>
 #include <fstream>

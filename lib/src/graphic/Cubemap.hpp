@@ -1,6 +1,6 @@
 #pragma once
 #include <graphic/CubemapParams.hpp>
-#include <OpenGL.hpp>
+#include "OpenGL.hpp"
 #include <vector>
 
 class Cubemap

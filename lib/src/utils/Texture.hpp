@@ -1,5 +1,5 @@
 #pragma once
-#include <OpenGL.hpp>
+#include "OpenGL.hpp"
 
 class Texture
 {

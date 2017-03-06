@@ -1,4 +1,4 @@
-#include "log.hpp"
+#include "Log.hpp"
 #include "../components/Movement.hpp"
 #include "../components/Life.hpp"
 #include "../components/Visibility.hpp"
