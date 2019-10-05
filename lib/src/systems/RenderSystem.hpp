@@ -24,8 +24,6 @@ public:
 
 private:
 
-    float count = 0.f;
-
     ecs::ComponentManager<Visibility>* visibilityComponents;
     ecs::ComponentManager<Movement>* movementComponents;
 };

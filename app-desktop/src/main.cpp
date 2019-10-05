@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <Application.hpp>
@@ -46,7 +47,11 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    printf("GL Version %s\n", glGetString(GL_VERSION));
+    if (gladLoadGL()) {
+        printf("GL Version %s\n", glGetString(GL_VERSION));
+    } else {
+        exit(EXIT_FAILURE);
+    }
 
     // Random seed
     srand(unsigned(time(NULL)));

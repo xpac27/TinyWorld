@@ -118,9 +118,11 @@ void Game::reload()
 void Game::setupWorld()
 {
     ecs::id entity = entities.addEntity();
+    movementComponents.addComponent(entity);
     visibilityComponents.addComponent(entity);
     visibilityComponents.getComponent(entity)->meshId = meshStore.getId("plan");
     visibilityComponents.getComponent(entity)->scale = glm::vec3(80, 80, 1);
+    movementComponents.getComponent(entity)->direction = glm::vec3(0.f, -1.f, 0.f);
 }
 
 void Game::addEntity()
@@ -134,4 +136,5 @@ void Game::addEntity()
     movementComponents.getComponent(entity)->position.x = 0.0f;
     movementComponents.getComponent(entity)->position.y = -2.0f;
     movementComponents.getComponent(entity)->position.z = 2.0f;
+    movementComponents.getComponent(entity)->spinSpeed = 0.5f;
 }

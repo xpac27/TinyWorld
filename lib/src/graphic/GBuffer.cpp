@@ -1,5 +1,5 @@
 #include "GBuffer.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 
 GBuffer::GBuffer()
 {

@@ -1,7 +1,7 @@
 #include "MovementSystem.hpp"
 #include "../ecs/ComponentManager.hpp"
 #include "../ecs/Id.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 #include <math.h>
 
 using namespace ecs;
@@ -23,5 +23,6 @@ void MovementSystem::update(float delta)
 
         movement = movementComponents->getComponent(entity);
         movement->position += movement->direction * delta * movement->velocity;
+        movement->spin += movement->spinSpeed * delta;
     }
 }

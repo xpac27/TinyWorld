@@ -1,0 +1,29 @@
+CXX = clang++
+
+CXX_FLAGS = -Wall -Wextra -Wpedantic -std=c++11 -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof -Wno-padded -Wno-exit-time-destructors -Wno-c99-extensions
+CXX_FLAGS += -g0 -O2
+
+LD_FLAGS = -flto
+
+!build_game = |> ^ %o^ $(CXX) $(CXX_FLAGS) -fPIC -Ilib/inc -Ilib/src -Iext -c %f -o %o |> out/obj/%B.o
+
+: foreach lib/src/*.cpp |> !build_game |> {game_objects}
+: foreach lib/src/components/*.cpp |> !build_game |> {game_objects}
+: foreach lib/src/ecs/*.cpp |> !build_game |> {game_objects}
+: foreach lib/src/graphic/*.cpp |> !build_game |> {game_objects}
+: foreach lib/src/systems/*.cpp |> !build_game |> {game_objects}
+: foreach lib/src/utils/*.cpp |> !build_game |> {game_objects}
+
+: {game_objects} |> ^ %o^ $(CXX) $(LD_FLAGS) -shared %f -o %o |> out/libgame.so
+
+: ext/glad/glad.cpp |> ^ %o^ $(CXX) $(LD_FLAGS) -fPIC -shared -Iext %f -o %o |> out/libglad.so
+
+: app-desktop/src/main.cpp | out/libgame.so out/libglad.so |> ^ %o^ $(CXX) $(CXX_FLAGS) $(LD_FLAGS) -lgame -lglad -lglfw -lGL -lX11 -lX11-xcb -lXau -lXcursor -lXdamage -lXdmcp -lXext -lXfixes -lXi -lXinerama -lXrandr -lXrender -lXxf86vm -ldl -ldrm -lm -lpthread -lrt -lxcb -lxcb-dri2 -lxcb-glx -fPIC -Lout -Ilib/inc -Iext %f -o %o |> out/app-desktop
+
+!build_test = |> ^ %o^ $(CXX) $(CXX_FLAGS) -fPIC -Ilib/tests/inc -Ilib/inc -Ilib/src -c %f -o %o |> out/obj/%B.o
+
+: foreach lib/tests/src/*.cpp |> !build_test |> {test_objects}
+: foreach lib/tests/src/utils/*.cpp |> !build_test |> {test_objects}
+: foreach lib/tests/src/ecs/*.cpp |> !build_test |> {test_objects}
+
+: {test_objects} | out/libgame.so out/libglad.so |> ^ %o^ $(CXX) $(LD_FLAGS) -lgame -lglad -ldl -Lout -Ilib/tests/inc %f -o %o |> out/tests

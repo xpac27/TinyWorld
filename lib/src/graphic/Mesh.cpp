@@ -2,7 +2,7 @@
 #include "../../inc/utils/Utility.hpp"
 #include "../utils/Texture.hpp"
 #include "../utils/OBJ.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 #include "../utils/Manifold.hpp"
 #include "Material.hpp"
 #include "MeshVertexArray.hpp"

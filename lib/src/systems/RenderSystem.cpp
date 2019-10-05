@@ -4,7 +4,7 @@
 #include "../graphic/Renderer.hpp"
 #include "../utils/Aggregator.hpp"
 #include "../graphic/Model.hpp"
-#include "../utils/log.hpp"
+#include "../utils/Log.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
@@ -44,14 +44,12 @@ void RenderSystem::update(Renderer& renderer)
 
                 modelTranslation = translate(mat4(1.0f), movement->position);
                 modelRotation = orientation(movement->direction, vec3(-1.0f, 0.0f, 0.0f));
-                modelRotation = rotate(modelRotation, count, vec3(0.0f, 0.0f, 1.0f));
+                modelRotation = rotate(modelRotation, movement->spin, vec3(0.0f, 0.0f, 1.0f));
             }
 
             models.add(visibility->meshId, Model(modelTranslation, modelRotation, modelScale));
         }
     }
-
-    count += 0.01;
 
     renderer.render(models);
 }

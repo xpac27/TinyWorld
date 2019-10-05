@@ -1,5 +1,5 @@
 #include "OBJ.hpp"
-#include "log.hpp"
+#include "Log.hpp"
 #include <glm/glm.hpp>
 #include <cstring>
 #include <assert.h>
