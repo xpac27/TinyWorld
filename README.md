@@ -27,7 +27,7 @@ Todo:
 * **GLFW** 3.1.1 + ([website](glfw.org/index.html))
 * **GLM** 0.9.6 + ([website](glm.g-truc.net))
 * **Ninja** 1.6.0 + ([website](https://martine.github.io/ninja/))
-* **Buildfox** 0.1.2 + ([website](https://github.com/beardsvibe/buildfox))
+* **Tup** 0.1.2 + ([website](http://gittup.org/tup/))
 
 ## Basic usage
 
@@ -39,10 +39,8 @@ Optionaly, you can run:
 - `make compile` - compile the application
 - `make test` - compile and run the tests
 - `make run` - run the application
-- `make clean` - remove all compiled objects
 - `make tidy` - run cland tidy static analyzer
 - `make check` - run cppcheck static analyzer
-- `make coverage` - run llvm-cov code coverage analyzer
 
 ## Setup
 

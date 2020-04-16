@@ -3,25 +3,19 @@
 all: configure compile run
 
 configure:
-	@mkdir -p out
-	@bf debug=true
-	@ninja -t compdb cxx > out/compile_commands.json
+	@tup init
 
 compile:
-	@ninja out/app-desktop
+	@tup
 
 run:
-	@./out/app-desktop
+	@LD_LIBRARY_PATH=out out/app-desktop
 
 debug:
 	@lldb -f out/app-desktop
 
 test:
-	@ninja out/tests
-	@./out/tests
-
-clean:
-	@ninja -t clean
+	@LD_LIBRARY_PATH=out out/tests
 
 reset:
 	@echo "Removing all outputs..."
@@ -35,18 +29,6 @@ check:
 	@./scripts/cppcheck
 	@./scripts/cppcheck-htmlreport --title="TinnyWorld" --source-dir=. --report-dir=out/cppcheck --file=out/cppcheck/result.xml
 	@open out/cppcheck/index.html
-
-coverage:
-	@bf debug=true coverage=true
-	@ninja out/tests
-	@./out/tests
-	@llvm-cov gcov -f `find out -name "*.gcda" | grep -v "dir/tests" | xargs` &> /dev/null
-	@rm -rf coverage && mkdir -p coverage
-	@lcov --directory . --base-directory . --gcov-tool scripts/llvm-gcov.sh --no-external --capture -o coverage/cov.info &> /dev/null
-	@lcov --remove coverage/cov.info 'lib/tests/*' -o coverage/cov.info &> /dev/null
-	@lcov --list coverage/cov.info
-	@genhtml coverage/cov.info -o coverage &> /dev/null
-	@open coverage/index.html
 
 tags:
 	./scripts/tags
