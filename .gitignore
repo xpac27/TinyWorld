@@ -9,6 +9,8 @@
 
 .clangd
 
+.envrc
+
 compile_commands.json
 
 out/*
